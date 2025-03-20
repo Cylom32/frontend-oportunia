@@ -69,6 +69,11 @@ import com.example.oportunia.ui.theme.walterWhite
 
 
 @Composable
+fun prueba() {
+
+}
+
+@Composable
 fun RegisterOptionScreen() {
 
 
