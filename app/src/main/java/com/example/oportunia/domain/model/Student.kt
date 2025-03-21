@@ -1,6 +1,6 @@
 package com.example.oportunia.domain.model
 
-import java.util.Date
+import java.time.LocalDate
 
 /**
  * Represents a student.
@@ -16,6 +16,6 @@ data class Student(
     val name: String,
     val lastName1: String,
     val lastName2: String,
-    val creationDate: Date?,
+    val creationDate: LocalDate?,
     val universityId: Int?
 )
