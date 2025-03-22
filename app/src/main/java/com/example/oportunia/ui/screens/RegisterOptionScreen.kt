@@ -63,18 +63,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.background
+import androidx.navigation.NavHostController
 import com.example.oportunia.ui.theme.blackPanter
 import com.example.oportunia.ui.theme.lilGray
 import com.example.oportunia.ui.theme.walterWhite
 
 
-@Composable
-fun prueba() {
 
-}
 
 @Composable
-fun RegisterOptionScreen() {
+fun RegisterOptionScreen(navController: NavHostController) {
 
 
     Surface(
@@ -208,10 +206,10 @@ fun RegisterOptionScreen() {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun RegisterOptionScreenPreview() {
-    OportunIATheme {
-        RegisterOptionScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun RegisterOptionScreenPreview() {
+//    OportunIATheme {
+//        RegisterOptionScreen()
+//    }
+//}

@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.oportunia.ui.screens.CVScreen
 import com.example.oportunia.ui.screens.LoginScreen
+import com.example.oportunia.ui.screens.RegisterOptionScreen
 import com.example.oportunia.ui.viewmodel.UsersViewModel
 
 
@@ -39,6 +40,10 @@ fun NavGraph(
                 navController = navController,
                 usersViewModel = usersViewModel // ← ESTE es el punto
             )
+        }
+
+        composable(NavRoutes.RegisterOption.ROUTE) {
+            RegisterOptionScreen(navController = navController)
         }
 
 
