@@ -1,17 +1,23 @@
 package com.example.oportunia.data.repository
 
 
-
 import com.example.oportunia.data.datasource.UsersDataSource
 import com.example.oportunia.data.mapper.UsersMapper
 import com.example.oportunia.domain.model.Users
-import com.example.oportunia.domain.repository.UserRepository
+import com.example.oportunia.domain.repository.UsersRepository
 import kotlinx.coroutines.flow.first
 
-class UsersDataSourceImpl(
+/**
+ * Implementation of [UsersRepository] that handles user data operations.
+ * Maps between UsersDTO and Users domain model using [UsersMapper].
+ *
+ * @property dataSource The data source for user operations.
+ * @property mapper The mapper for converting between DTO and domain model.
+ */
+class UsersRepositoryImpl(
     private val dataSource: UsersDataSource,
     private val mapper: UsersMapper
-) : UserRepository {
+) : UsersRepository {
 
     override suspend fun findAllUsers(): Result<List<Users>> = runCatching {
         dataSource.getUsers().first().map { dto ->
@@ -27,4 +33,11 @@ class UsersDataSourceImpl(
     override suspend fun saveUser(user: Users): Result<Unit> = runCatching {
         dataSource.insertUser(mapper.mapToDto(user))
     }
+
+    override suspend fun findUserByEmail(email: String): Result<Users> = runCatching {
+        val dto = dataSource.getUserByEmail(email) ?: error("User not found")
+        mapper.mapToDomain(dto)
+    }
+
+
 }

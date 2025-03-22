@@ -11,4 +11,9 @@ sealed class NavRoutes {
     data object CV : NavRoutes() {
         const val ROUTE = "cv"
     }
+
+    data object Log : NavRoutes() {
+        const val ROUTE = "log"
+
+    }
 }
