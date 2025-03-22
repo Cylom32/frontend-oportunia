@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(usersViewModel: UsersViewModel) {
     val navController = rememberNavController()
-
+    val hola = 0
     LaunchedEffect(Unit) {
         usersViewModel.findAllUsers()
     }
