@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.oportunia.domain.model.Users
 import com.example.oportunia.domain.repository.UserRepository
+import com.example.oportunia.domain.repository.UsersRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -21,7 +22,7 @@ sealed class UsersState {
 
 
 class UsersViewModel(
-    private val repository: UserRepository
+    private val repository: UsersRepository
 ) : ViewModel() {
 
     private val _userState = MutableStateFlow<UsersState>(UsersState.Empty)
@@ -57,4 +58,29 @@ class UsersViewModel(
                 }
         }
     }
+
+    fun validateUserCredentials(correo: String, password: String, onResult: (Boolean) -> Unit) {
+        viewModelScope.launch {
+            _userState.value = UsersState.Loading
+
+            repository.findUserByEmail(correo)
+                .onSuccess { user ->
+                    val isValid = user.password == password
+                    if (isValid) {
+                        _userState.value = UsersState.Success(user)
+                        _selectedUser.value = user
+                        onResult(true)
+                    } else {
+                        _userState.value = UsersState.Error("Contraseña incorrecta")
+                        onResult(false)
+                    }
+                }
+                .onFailure { exception ->
+                    _userState.value = UsersState.Error("Usuario no encontrado: ${exception.message}")
+                    onResult(false)
+                }
+        }
+    }
+
+
 }

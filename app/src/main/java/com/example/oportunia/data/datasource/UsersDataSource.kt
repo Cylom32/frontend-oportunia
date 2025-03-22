@@ -10,4 +10,5 @@ interface UsersDataSource {
     suspend fun insertUser(userDTO: UsersDTO)
     suspend fun updateUser(userDTO: UsersDTO)
     suspend fun deleteUser(userDTO: UsersDTO)
+    suspend fun getUserByEmail(email: String): UsersDTO?
 }
