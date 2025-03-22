@@ -16,4 +16,8 @@ sealed class NavRoutes {
         const val ROUTE = "log"
 
     }
+
+    data object RegisterOption : NavRoutes() {
+        const val ROUTE = "registerOption"
+    }
 }

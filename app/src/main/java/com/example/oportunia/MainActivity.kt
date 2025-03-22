@@ -15,8 +15,6 @@ import com.example.oportunia.data.mapper.UsersMapper
 import com.example.oportunia.data.repository.UsersRepositoryImpl
 import com.example.oportunia.presentation.factory.UsersViewModelFactory
 import com.example.oportunia.presentation.navigation.NavGraph
-import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.ui.screens.LoginScreen
 
 import com.example.oportunia.ui.theme.OportunIATheme
 import com.example.oportunia.ui.viewmodel.UsersViewModel
