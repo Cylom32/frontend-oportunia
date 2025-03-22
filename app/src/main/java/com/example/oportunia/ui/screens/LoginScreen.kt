@@ -47,13 +47,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.background
-
-
-
+import androidx.navigation.NavHostController
 
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(navController: NavHostController)
+ {
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -168,12 +167,16 @@ fun LoginScreen() {
                         PasswordLabel(value = password, onValueChange = { password = it }, "Contraseña")
 
                     }
+                    // Botón de Iniciar sesión reemplazando el Text anterior
                     Text(
                         text = "Iniciar sesión",
                         fontSize = 24.sp,
                         color = Color.White,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .clickable {
+                                navController.navigate("cv") // Aquí se navega a CVScreen
+                            }
                             .padding(top = 16.dp),
                         textAlign = TextAlign.Center,
                         style = TextStyle(
@@ -184,6 +187,7 @@ fun LoginScreen() {
                             )
                         )
                     )
+
 
 
                 }
@@ -228,13 +232,13 @@ fun LoginScreen() {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    OportunIATheme {
-        LoginScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun LoginScreenPreview() {
+//    OportunIATheme {
+//        LoginScreen()
+//    }
+//}
 
 
 
