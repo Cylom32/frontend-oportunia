@@ -27,6 +27,8 @@ import androidx.navigation.NavHostController
 import com.example.oportunia.ui.screens.PasswordLabel
 import com.example.oportunia.ui.viewmodel.UsersViewModel
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.example.oportunia.presentation.navigation.NavRoutes
 
 
 @Composable
@@ -72,11 +74,12 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel) 
 
                     Spacer(modifier = Modifier.height(50.dp))
                     Text(
-                        text = "OportunIA",
+                        text = stringResource(id = R.string.app_name),
                         fontSize = 64.sp,
                         color = Color.White,
                         textAlign = TextAlign.Center
                     )
+
                 }
             }
 
@@ -218,15 +221,20 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel) 
                             modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
                             textAlign = TextAlign.Center
                         )
+
                         Text(
                             text = "Crear cuenta",
                             fontSize = 17.sp,
                             color = Color.White,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 25.dp),
+                                .padding(bottom = 25.dp)
+                                .clickable {
+                                    navController.navigate(NavRoutes.RegisterOption.ROUTE)
+                                },
                             textAlign = TextAlign.Center
                         )
+
                     }
                 }
 

@@ -38,7 +38,7 @@ fun NavGraph(
         composable(NavRoutes.Log.ROUTE) {
             LogScreen(
                 navController = navController,
-                usersViewModel = usersViewModel // ← ESTE es el punto
+                usersViewModel = usersViewModel
             )
         }
 
