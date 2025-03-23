@@ -33,7 +33,16 @@ class UsersProvider {
                 img = null,
                 creationDate = LocalDate.of(2024, 3, 5),
                 roleId = 3 // Student
-            )
+            ),
+            Users(
+                id = 4,
+                email = "gabriel@gmail.com",
+                password = "123",
+                img = null,
+                creationDate = LocalDate.of(2024, 3, 5),
+                roleId = 3 // Student
+            ),
+
         )
 
         /**
