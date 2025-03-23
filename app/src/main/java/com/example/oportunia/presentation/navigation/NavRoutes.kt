@@ -16,6 +16,17 @@ sealed class NavRoutes {
         const val ROUTE = "log"
 
     }
+    data object Home : NavRoutes() {
+        const val ROUTE = "home"
+
+    }    data object Settings : NavRoutes() {
+        const val ROUTE = "settings"
+    }
+
+
+    data object Notifications : NavRoutes() {
+        const val ROUTE = "notifications"
+    }
 
     data object RegisterOption : NavRoutes() {
         const val ROUTE = "registerOption"

@@ -190,7 +190,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel) 
                                 coroutineScope.launch {
                                     usersViewModel.validateUserCredentials(email, password) { isValid ->
                                         if (isValid) {
-                                            navController.navigate("cv")
+                                            navController.navigate("home")
                                         } else {
                                             Log.d("LoginDebug", "Credenciales inválidas para $email")
                                             // poner una alerta
