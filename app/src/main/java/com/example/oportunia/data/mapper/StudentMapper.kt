@@ -5,7 +5,8 @@ import com.example.oportunia.domain.model.Student
 
 class StudentMapper {
     fun mapToDomain(dto: StudentDTO): Student = Student(
-        id = dto.idStudent ?: 0,
+        idStudent = dto.idStudent ?: 0,
+        idUser = dto.idUser ?: 0,
         name = dto.name ?: "",
         lastName1 = dto.lastName1 ?: "",
         lastName2 = dto.lastName2 ?: "",
@@ -14,7 +15,8 @@ class StudentMapper {
     )
 
     fun mapToDto(domain: Student): StudentDTO = StudentDTO(
-        idStudent = domain.id,
+        idStudent = domain.idStudent,
+        idUser = domain.idUser,
         name = domain.name,
         lastName1 = domain.lastName1,
         lastName2 = domain.lastName2,

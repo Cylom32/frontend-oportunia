@@ -8,4 +8,5 @@ import com.example.oportunia.domain.model.Student
 interface StudentRepository {
     suspend fun findAllStudents(): Result<List<Student>>
     suspend fun findStudentById(studentId: Long): Result<Student>
+    suspend fun findStudentByIdUser(idUser: Long): Result<Student>
 }

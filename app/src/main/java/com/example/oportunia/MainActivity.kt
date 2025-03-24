@@ -13,14 +13,19 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.oportunia.data.datasource.UsersDataSourceImple
+import com.example.oportunia.data.datasource.StudentDataSourceImple
 import com.example.oportunia.data.mapper.UsersMapper
+import com.example.oportunia.data.mapper.StudentMapper
 import com.example.oportunia.data.repository.UsersRepositoryImpl
+import com.example.oportunia.data.repository.StudentRepositoryImpl
 import com.example.oportunia.presentation.factory.UsersViewModelFactory
+import com.example.oportunia.presentation.factory.StudentViewModelFactory
 import com.example.oportunia.presentation.navigation.NavGraph
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.ui.screens.BottomNavigationBar
 
 import com.example.oportunia.ui.theme.OportunIATheme
+import com.example.oportunia.ui.viewmodel.StudentViewModel
 import com.example.oportunia.ui.viewmodel.UsersViewModel
 
 class MainActivity : ComponentActivity() {
@@ -39,11 +44,21 @@ class MainActivity : ComponentActivity() {
         UsersViewModelFactory(repository)
     }
 
+
+    private val studentViewModel: StudentViewModel by viewModels {
+        val studentMapper = StudentMapper()
+
+        val studentDataSource = StudentDataSourceImple(studentMapper)
+        val studentRepository = StudentRepositoryImpl(studentDataSource, studentMapper)
+        StudentViewModelFactory(studentRepository)
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             OportunIATheme {
-                MainScreen(usersViewModel)
+                MainScreen(usersViewModel,studentViewModel)
             }
         }
     }
@@ -51,7 +66,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(usersViewModel: UsersViewModel) {
+fun MainScreen(usersViewModel: UsersViewModel,studentViewModel: StudentViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: NavRoutes.Log.ROUTE
@@ -80,7 +95,8 @@ fun MainScreen(usersViewModel: UsersViewModel) {
         NavGraph(
             navController = navController,
             paddingValues = paddingValues,
-            usersViewModel = usersViewModel
+            usersViewModel = usersViewModel,
+            studentViewModel = studentViewModel,
         )
     }
 }
