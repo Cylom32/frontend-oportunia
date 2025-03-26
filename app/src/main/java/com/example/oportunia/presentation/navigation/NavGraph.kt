@@ -47,7 +47,8 @@ fun NavGraph(
 
         composable(NavRoutes.CV.ROUTE) {
             CVScreen(
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
+                studentViewModel
             )
         }
 

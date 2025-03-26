@@ -83,4 +83,9 @@ class UsersViewModel(
     }
 
 
+    fun getAuthenticatedUserId(): Int? {
+        return (userState.value as? UsersState.Success)?.user?.id
+    }
+
+
 }

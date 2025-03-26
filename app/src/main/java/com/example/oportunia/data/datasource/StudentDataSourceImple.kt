@@ -23,6 +23,12 @@ class StudentDataSourceImple(  private val studentMapper: StudentMapper= Student
 
     }
 
+    override suspend fun getStudentByUserId(userId: Int): StudentDTO? {
+        val student = StudentProvider.findStudentByUserId(userId)
+        return student?.let { studentMapper.mapToDto(it) }
+    }
+
+
     override suspend fun updateStudent(studentDTO: StudentDTO) {
 
     }
@@ -35,6 +41,8 @@ class StudentDataSourceImple(  private val studentMapper: StudentMapper= Student
         val user = StudentProvider.findStudentByUserId(id)
         return user?.let { studentMapper.mapToDto(it) }
     }
+
+
 
 
 
