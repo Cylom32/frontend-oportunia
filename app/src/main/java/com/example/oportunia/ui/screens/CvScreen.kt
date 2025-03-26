@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
@@ -35,7 +36,7 @@ import com.example.oportunia.ui.theme.lilBlue
 import com.example.oportunia.ui.viewmodel.StudentState
 import com.example.oportunia.ui.viewmodel.StudentViewModel
 import androidx.compose.runtime.getValue
-
+import com.example.oportunia.ui.theme.walterWhite
 
 
 @Composable
@@ -52,7 +53,8 @@ fun CVScreen(
     ) {
         // Header Section
         HeaderSection(studentViewModel)
-
+        // Spacer to push buttons down
+        Spacer(modifier = Modifier.height(100.dp))
         // Buttons Section
         ButtonSection()
 
@@ -69,11 +71,15 @@ fun HeaderSection(studentViewModel: StudentViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .background(lilBlue)
-            .padding(16.dp)
+            .padding(16.dp),
+            contentAlignment = Alignment.Center
     ) {
         val studentState by studentViewModel.studentState.collectAsState()
 
-        Column() {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
             when (studentState) {
                 is StudentState.Loading -> {
                     Text(
@@ -89,13 +95,13 @@ fun HeaderSection(studentViewModel: StudentViewModel) {
                     Text(
                         text = "${student.name} ${student.lastName1}",
                         color = Color.White,
-                        fontSize = 20.sp,
+                        fontSize = 35.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Text(
                         text = "Curriculum Vitae",
                         color = Color.White,
-                        fontSize = 16.sp,
+                        fontSize = 23.sp,
                         fontWeight = FontWeight.Medium
                     )
                 }
@@ -121,9 +127,8 @@ fun HeaderSection(studentViewModel: StudentViewModel) {
             }
         }
 
-    }
 }
-
+}
 
 
 
@@ -133,50 +138,62 @@ fun ButtonSection() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         Button(
             onClick = { /* Handle Edit CV action */ },
             modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .height(60.dp),
+                .fillMaxWidth(0.95f)
+                .height(90.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = lilBlue
-
-            )
+                containerColor = walterWhite,
+                contentColor = Color.Black
+            ),
+            shape = RoundedCornerShape(12.dp),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
         ) {
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = "Edit CV",
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(32.dp),
+                tint = Color.Black
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Editar CV", fontSize = 18.sp)
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = "Editar CV",
+                fontSize = 22.sp,
+                color = Color.Black
+            )
         }
 
         Button(
             onClick = { /* Handle Neuro CV action */ },
             modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .height(60.dp),
+                .fillMaxWidth(0.95f)
+                .height(90.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = lilBlue
-
-            )
+                containerColor = walterWhite,
+                contentColor = Color.Black
+            ),
+            shape = RoundedCornerShape(12.dp),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
         ) {
             Image(
-                painter= painterResource(id = R.drawable.ia_brain),
+                painter = painterResource(id = R.drawable.ia_brain),
                 contentDescription = "Neuro CV",
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(60.dp)
             )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Neuro CV", fontSize = 18.sp)
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = "Neuro CV",
+                fontSize = 22.sp,
+                color = Color.Black
+            )
         }
     }
 }
-
 
 
 //@Preview(showBackground = true)
