@@ -29,10 +29,11 @@ import com.example.oportunia.ui.viewmodel.UsersViewModel
 import kotlinx.coroutines.launch
 import androidx.compose.ui.res.stringResource
 import com.example.oportunia.presentation.navigation.NavRoutes
+import com.example.oportunia.ui.viewmodel.StudentViewModel
 
 
 @Composable
-fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel) {
+fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, studentViewModel: StudentViewModel) {
 
 
     var email by remember { mutableStateOf("") }

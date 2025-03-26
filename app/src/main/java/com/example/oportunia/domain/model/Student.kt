@@ -12,7 +12,8 @@ import java.time.LocalDate
  * @property universityId The university associated with the student.
  */
 data class Student(
-    val id: Int,
+    val idStudent: Int,
+    val idUser: Int,
     val name: String,
     val lastName1: String,
     val lastName2: String,
