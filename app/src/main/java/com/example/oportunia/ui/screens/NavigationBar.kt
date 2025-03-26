@@ -2,6 +2,7 @@ package com.example.oportunia.ui.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Settings
@@ -31,7 +32,7 @@ fun BottomNavigationBar(selectedScreen: String, onScreenSelected: (String) -> Un
             onClick = { onScreenSelected(NavRoutes.Home.ROUTE) }
         )
         NavigationBarItem(
-            icon = { Icon(Icons.Default.Notifications, contentDescription = "Notifications") },
+            icon = { Icon(Icons.Default.ChatBubbleOutline, contentDescription = "Notifications") },
             label = { Text("Notifications") },
             selected = selectedScreen == NavRoutes.Notifications.ROUTE,
             onClick = { onScreenSelected(NavRoutes.Notifications.ROUTE) }
