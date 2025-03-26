@@ -192,6 +192,12 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                                     usersViewModel.validateUserCredentials(email, password) { isValid ->
                                         if (isValid) {
                                             navController.navigate("home")
+                                            val userId = usersViewModel.getAuthenticatedUserId()
+                                            Log.d("LoginDebug", "Usuario autenticado con ID: $userId")
+                                            userId?.let {
+                                                studentViewModel.loadStudentByUserId(it)
+                                            }
+
                                         } else {
                                             Log.d("LoginDebug", "Credenciales inválidas para $email")
                                             // poner una alerta

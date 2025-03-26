@@ -11,6 +11,5 @@ interface StudentDataSource {
     suspend fun updateStudent(userDTO: StudentDTO)
     suspend fun deleteStudent(userDTO: StudentDTO)
     suspend fun findStudentByUserId(userId: Int): StudentDTO?
-    // suspend fun getStudentByUserId(userId: Int): StudentDTO?
-    //suspend fun getStudentByEmail(email: String): UsersDTO?
+    suspend fun getStudentByUserId(userId: Int): StudentDTO?
 }

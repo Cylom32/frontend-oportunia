@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,9 +32,18 @@ import androidx.compose.ui.unit.sp
 import com.example.oportunia.R
 import com.example.oportunia.ui.theme.OportunIATheme
 import com.example.oportunia.ui.theme.lilBlue
+import com.example.oportunia.ui.viewmodel.StudentState
+import com.example.oportunia.ui.viewmodel.StudentViewModel
+import androidx.compose.runtime.getValue
+
+
 
 @Composable
-fun CVScreen(modifier: Modifier = Modifier) {
+fun CVScreen(
+    modifier: Modifier = Modifier,
+    studentViewModel: StudentViewModel
+)
+ {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -41,7 +51,7 @@ fun CVScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Header Section
-        HeaderSection()
+        HeaderSection(studentViewModel)
 
         // Buttons Section
         ButtonSection()
@@ -54,32 +64,63 @@ fun CVScreen(modifier: Modifier = Modifier) {
 
 
 @Composable
-fun HeaderSection() {
+fun HeaderSection(studentViewModel: StudentViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(lilBlue)
             .padding(16.dp)
     ) {
-        Column {
-            Text(
-                text = "Jhon Doe",
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Universidad Nacional de Costa Rica",
-                color = Color.White,
-                fontSize = 14.sp
-            )
-            Text(
-                text = "Curriculum Vitae",
-                color = Color.White,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium
-            )
+        val studentState by studentViewModel.studentState.collectAsState()
+
+        Column() {
+            when (studentState) {
+                is StudentState.Loading -> {
+                    Text(
+                        text = "Cargando...",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                is StudentState.Success -> {
+                    val student = (studentState as StudentState.Success).student
+                    Text(
+                        text = "${student.name} ${student.lastName1}",
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "Curriculum Vitae",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+
+                is StudentState.Error -> {
+                    val message = (studentState as StudentState.Error).message
+                    Text(
+                        text = "Error: $message",
+                        color = Color.Red,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+
+                StudentState.Empty -> {
+                    Text(
+                        text = "Sin datos de estudiante",
+                        color = Color.LightGray,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            }
         }
+
     }
 }
 
@@ -138,10 +179,10 @@ fun ButtonSection() {
 
 
 
-@Preview(showBackground = true)
-@Composable
-fun CVScreenPreview() {
-    OportunIATheme {
-        CVScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun CVScreenPreview() {
+//    OportunIATheme {
+//        CVScreen()
+//    }
+//}
