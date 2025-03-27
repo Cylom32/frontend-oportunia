@@ -116,6 +116,16 @@ class UsersViewModel(
     }
 
 
+    fun logout() {
+        viewModelScope.launch {
+            _userState.value = UsersState.Empty
+            _selectedUser.value = null
+            Log.d("UsersViewModel", "Sesión cerrada correctamente")
+        }
+    }
+
+
+
 
 
 }
