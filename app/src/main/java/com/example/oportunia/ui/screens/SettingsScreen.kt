@@ -80,7 +80,7 @@ fun SettingScreen(modifier: Modifier = Modifier){
                 Text(
                     text = stringResource(R.string.titleSettings),
                     color = walterWhite,
-                    fontSize = 40.sp,
+                    fontSize = 39.sp,
                   //  fontWeight = FontWeight.Bold
                 )
             }
