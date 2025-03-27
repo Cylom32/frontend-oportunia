@@ -64,8 +64,6 @@ fun CVScreen(
 }
 
 
-
-
 @Composable
 fun HeaderSection(studentViewModel: StudentViewModel) {
     Box(
@@ -76,10 +74,12 @@ fun HeaderSection(studentViewModel: StudentViewModel) {
                 shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
                 clip = false
             )
-            .background(lilBlue,
-                shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+            .background(
+                lilBlue,
+                shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+            )
             .padding(16.dp),
-            contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center
 
     ) {
         val studentState by studentViewModel.studentState.collectAsState()
@@ -135,7 +135,7 @@ fun HeaderSection(studentViewModel: StudentViewModel) {
             }
         }
 
-}
+    }
 }
 
 
@@ -150,16 +150,19 @@ fun ButtonSection() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
+
+        Spacer(modifier = Modifier.height(30.dp))
+
         Button(
             onClick = { /* Handle Edit CV action */ },
             modifier = Modifier
-                .fillMaxWidth(0.95f)
-                .height(90.dp),
+                .fillMaxWidth()
+                .height(150.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = walterWhite,
                 contentColor = Color.Black
             ),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(24.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
         )
 
@@ -179,16 +182,20 @@ fun ButtonSection() {
             )
         }
 
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+
         Button(
             onClick = { /* Handle Neuro CV action */ },
             modifier = Modifier
-                .fillMaxWidth(0.95f)
-                .height(90.dp),
+                .fillMaxWidth()
+                .height(150.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = walterWhite,
                 contentColor = Color.Black
             ),
-            shape = RoundedCornerShape(12.dp),
+            shape = RoundedCornerShape(34.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
         ) {
             Image(
@@ -206,11 +213,3 @@ fun ButtonSection() {
     }
 }
 
-
-//@Preview(showBackground = true)
-//@Composable
-//fun CVScreenPreview() {
-//    OportunIATheme {
-//        CVScreen()
-//    }
-//}
