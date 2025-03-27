@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,17 +26,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.oportunia.R
-import com.example.oportunia.ui.theme.OportunIATheme
 import com.example.oportunia.ui.theme.lilBlue
 import com.example.oportunia.ui.viewmodel.StudentState
 import com.example.oportunia.ui.viewmodel.StudentViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.stringResource
+import com.example.oportunia.ui.theme.blackPanter
+import com.example.oportunia.ui.theme.lilGray
 import com.example.oportunia.ui.theme.walterWhite
+import androidx.compose.material3.Surface
 
 
 @Composable
@@ -46,21 +47,131 @@ fun CVScreen(
     studentViewModel: StudentViewModel
 )
  {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color.LightGray.copy(alpha = 0.2f)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        // Header Section
-        HeaderSection(studentViewModel)
-        // Spacer to push buttons down
-        Spacer(modifier = Modifier.height(100.dp))
+/////////////////////////////////////////////////////////////////////////////////
+     val studentState by studentViewModel.studentState.collectAsState()
+
+     Surface(
+         modifier = Modifier
+             .fillMaxSize()
+             .background(lilGray)
+     ) {
+         Column(
+             modifier = Modifier
+                 .fillMaxSize()
+                 .background(lilGray),
+             horizontalAlignment = Alignment.CenterHorizontally
+         ) {
+
+             // Encabezado
+             Box(
+                 modifier = Modifier
+                     .height(150.dp)
+                     .fillMaxWidth()
+                     .shadow(
+                         elevation = 8.dp,
+                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
+                         clip = false
+                     )
+                     .background(
+                         color = lilBlue,
+                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                     ),
+                 contentAlignment = Alignment.Center
+             ) {
+                 when (studentState) {
+                     is StudentState.Loading -> {
+                         Text(
+                             text = "Cargando...",
+                             color = Color.White,
+                             fontSize = 20.sp,
+                             fontWeight = FontWeight.Bold
+                         )
+                     }
+
+                     is StudentState.Success -> {
+                         val student = (studentState as StudentState.Success).student
+
+                         Column(
+                             horizontalAlignment = Alignment.CenterHorizontally,
+                             modifier = Modifier.fillMaxWidth()
+                         ) {
+                             Text(
+                                 text = "${student.name} ${student.lastName1}",
+                                 color = Color.White,
+                                 fontSize = 25.sp,
+                                 fontWeight = FontWeight.Bold
+                             )
+
+                             Spacer(modifier = Modifier.height(12.dp))
+
+//                             Text(
+//                                 text = "Curriculum Vitae",
+//                                 color = Color.White,
+//                                 fontSize = 23.sp,
+//                                 fontWeight = FontWeight.Medium
+//                             )
+                         }
+                     }
+
+
+                     is StudentState.Error -> {
+                         val message = (studentState as StudentState.Error).message
+                         Text(
+                             text = "Error: $message",
+                             color = Color.Red,
+                             fontSize = 20.sp,
+                             fontWeight = FontWeight.Bold
+                         )
+                     }
+
+                     StudentState.Empty -> {
+                         Text(
+                             text = "Sin datos de estudiante",
+                             color = Color.LightGray,
+                             fontSize = 20.sp,
+                             fontWeight = FontWeight.Bold
+                         )
+                     }
+                 }
+             }
+
+             // Título
+             Text(
+                 text = stringResource(R.string.titleCV),
+                 fontSize = 32.sp,
+                 color = blackPanter,
+                 modifier = Modifier.padding(top = 20.dp)
+             )
+
+                     Spacer(modifier = Modifier.height(20.dp))
         // Buttons Section
         ButtonSection()
+         }
+     }
 
-        Spacer(modifier = Modifier.weight(1f)) // Push buttons up and leave space for bottom nav
-    }
+
+
+
+/////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+//    Column(
+//        modifier = modifier
+//            .fillMaxSize()
+//            .background(Color.LightGray.copy(alpha = 0.2f)),
+//        horizontalAlignment = Alignment.CenterHorizontally
+//    ) {
+//        // Header Section
+////        HeaderSection(studentViewModel)
+////        // Spacer to push buttons down
+////        Spacer(modifier = Modifier.height(100.dp))
+////        // Buttons Section
+////        ButtonSection()
+//
+//        Spacer(modifier = Modifier.weight(1f)) // Push buttons up and leave space for bottom nav
+//    }
 }
 
 
