@@ -223,7 +223,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                     onDismissRequest = { showAlert = false },
                     confirmButton = {
                         TextButton(onClick = { showAlert = false }) {
-                            Text("Aceptar")
+                            Text(stringResource(R.string.acceptText))
                         }
                     },
                     title = { Text(text = stringResource(id = R.string.acceptText)) },

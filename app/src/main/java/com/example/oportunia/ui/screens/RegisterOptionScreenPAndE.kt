@@ -180,7 +180,7 @@ fun RegisterOptionScreenPAndE(
             }
         }
 
-        // AlertDialog
+
         if (showAlert) {
             AlertDialog(
                 onDismissRequest = { showAlert = false },
