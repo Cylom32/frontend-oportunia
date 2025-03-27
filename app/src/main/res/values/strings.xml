@@ -35,5 +35,23 @@
 
     <string name="titleSettings">Ajustes</string>
 
+    <string name="acceptText">Aceptar</string>
+
+    <string name="logPopUpText">Por favor, revise su correo y contraseña.</string>
+
+    <string name="studentInfoAlertTittle">Campos incompletos</string>
+
+    <string name="studentInfoAlertText">Por favor, complete todos los campos y seleccione una universidad válida.</string>
+
+    <string name="bTextConfirmar">Confirmar</string>
+
+    <string name="error_empty_email">El correo no puede estar vacío.</string>
+
+    <string name="error_empty_password">La contraseña no puede estar vacía.</string>
+
+    <string name="error_password_mismatch">Las contraseñas no coinciden.</string>
+
+
+
 
 </resources>
