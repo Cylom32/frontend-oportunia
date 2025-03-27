@@ -1,3 +1,5 @@
+
+
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,6 +40,9 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
     var password by remember { mutableStateOf("") }
     var showAlert by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+
+
+
 
     Surface(
         modifier = Modifier
@@ -214,19 +219,20 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                 }
             }
 
-            // AlertDialog de error
+
             if (showAlert) {
                 AlertDialog(
                     onDismissRequest = { showAlert = false },
                     confirmButton = {
                         TextButton(onClick = { showAlert = false }) {
-                            Text("Aceptar")
+                            Text(stringResource(R.string.acceptText))
                         }
                     },
-                    title = { Text("Credenciales inválidas") },
-                    text = { Text("Por favor, revise su correo y contraseña.") }
+                    title = { Text(text = stringResource(id = R.string.acceptText)) },
+                    text = { Text(text = stringResource(id = R.string.logPopUpText)) }
                 )
             }
+
         }
     }
 }
