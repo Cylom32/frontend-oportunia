@@ -42,13 +42,15 @@ import com.example.oportunia.ui.theme.lilGray
 import com.example.oportunia.ui.theme.walterWhite
 import com.example.oportunia.ui.viewmodel.StudentViewModel
 
-var idSelectedU = 0;
+var idSelectedU = 0
 
 @Composable
 fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: NavHostController) {
 
 
-    //  var selectedUniversity by remember { mutableStateOf<UniversityOption?>(null) }
+
+    var showAlert by remember { mutableStateOf(false) }
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -57,7 +59,6 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                // .verticalScroll(rememberScrollState())
                 .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -133,8 +134,6 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Dropdown de universidad
-            //  var selectedUniversity by remember { mutableStateOf<UniversityOption?>(null) }
 
 
             Box(
@@ -143,7 +142,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                     .padding(horizontal = 48.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
-                var selectedUniversity by remember { mutableStateOf("UNA") }
+                var selectedUniversity by remember { mutableStateOf("    ") }
 
 
                 UniversityDropdown(
@@ -172,19 +171,20 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                     )
                     .clickable {
 
+                        val nombre = studentViewModel.nombre.value.trim()
+                        val apellido1 = studentViewModel.apellido1.value.trim()
+                        val apellido2 = studentViewModel.apellido2.value.trim()
+                        val universidadId = idSelectedU
 
-                        studentViewModel.setIdUniversidad(idSelectedU)
-                        Log.d("Universidad", "$idSelectedU")
-                        Log.d(
-                            "StudentInfo",
-                            "Nombre: ${studentViewModel.nombre.value}, Apellido1: ${studentViewModel.apellido1.value}," +
-                                    " Apellido2: ${studentViewModel.apellido2.value}, " + "$idSelectedU"
-                        )
+                        studentViewModel.setIdUniversidad(universidadId)
 
-                        navController.navigate(NavRoutes.RegisterInformationPAndE.ROUTE)
-
-
-                    },
+                        if (nombre.isNotEmpty() && apellido1.isNotEmpty() && apellido2.isNotEmpty() && universidadId != 0) {
+                            navController.navigate(NavRoutes.RegisterInformationPAndE.ROUTE)
+                        } else {
+                            showAlert = true
+                        }
+                    }
+                ,
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -199,6 +199,20 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
+
+    if (showAlert) {
+        AlertDialog(
+            onDismissRequest = { showAlert = false },
+            confirmButton = {
+                TextButton(onClick = { showAlert = false }) {
+                    Text("Aceptar")
+                }
+            },
+            title = { Text(stringResource(R.string.studentInfoAlertTittle)) },
+            text = { Text(stringResource(R.string.studentInfoAlertText)) }
+        )
+    }
+
 }
 
 @Composable

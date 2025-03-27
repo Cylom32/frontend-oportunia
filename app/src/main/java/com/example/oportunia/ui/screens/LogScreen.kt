@@ -39,6 +39,9 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
     var showAlert by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
+
+
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -214,7 +217,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                 }
             }
 
-            // AlertDialog de error
+
             if (showAlert) {
                 AlertDialog(
                     onDismissRequest = { showAlert = false },
@@ -223,10 +226,11 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                             Text("Aceptar")
                         }
                     },
-                    title = { Text("Credenciales inválidas") },
-                    text = { Text("Por favor, revise su correo y contraseña.") }
+                    title = { Text(text = stringResource(id = R.string.acceptText)) },
+                    text = { Text(text = stringResource(id = R.string.logPopUpText)) }
                 )
             }
+
         }
     }
 }
