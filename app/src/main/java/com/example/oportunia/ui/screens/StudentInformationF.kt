@@ -5,16 +5,12 @@ package com.example.oportunia.ui.screens
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-//import androidx.compose.material.*
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
-
 import androidx.compose.material.icons.filled.ArrowDropUp
-
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,39 +18,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.oportunia.ui.theme.lilRedMain
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.*
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
-import com.example.oportunia.domain.model.UniversityOption
+import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.ui.components.texAndLable
 import com.example.oportunia.ui.theme.blackPanter
-import com.example.oportunia.ui.theme.lilBlue
 import com.example.oportunia.ui.theme.lilGray
 import com.example.oportunia.ui.theme.walterWhite
 import com.example.oportunia.ui.viewmodel.StudentViewModel
@@ -126,23 +110,23 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                 val apellido2 by studentViewModel.apellido2.collectAsState()
 
                 texAndLable(
-                    titulo = "Nombre",
-                    placeholder = "Nombre completo",
+                    titulo = stringResource(R.string.nameTitle),
+                    placeholder = "",
                     valor = nombre,
                     alCambiarValor = { studentViewModel.setNombre(it) }
                 )
 
 
                 texAndLable(
-                    titulo = "Primer Apellido",
-                    placeholder = "apellido 1",
+                    titulo = stringResource(R.string.FirstSurnameTitle),
+                    placeholder = "",
                     valor = apellido1,
                     alCambiarValor = { studentViewModel.setApellido1(it) }
                 )
 
 
                 texAndLable(
-                    titulo = "Segundo Apellido",
+                    titulo = stringResource(R.string.SecondSurnameTitle),
                     placeholder = "apellido 2",
                     valor = apellido2,
                     alCambiarValor = { studentViewModel.setApellido2(it) }
@@ -204,7 +188,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Siguiente",
+                    text = stringResource(R.string.texBoton),
                     fontSize = 25.sp,
                     color = walterWhite,
                     textAlign = TextAlign.Center,
@@ -235,7 +219,7 @@ fun UniversityDropdown(
             value = selectedUniversity,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Universidad", color = Color.Black) },
+            label = { Text(stringResource(R.string.UniversityTitle), color = Color.Black) },
             trailingIcon = {
                 IconButton(onClick = { expanded = !expanded }) {
                     Icon(

@@ -99,7 +99,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
 
 
                     Text(
-                        text = "Correo electrónico",
+                        text = stringResource(id = R.string.emailL),
                         fontSize = 17.sp,
                         color = Color.White,
                         modifier = Modifier
@@ -123,7 +123,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                         com.example.oportunia.ui.screens.Label(
                             email = email,
                             onEmailChange = { email = it },
-                            "Escriba su correo"
+                            ""
                         )
 
 
@@ -132,7 +132,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                     }
 
                     Text(
-                        text = "Contraseña",
+                        text = stringResource(id = R.string.passworL),
                         fontSize = 17.sp,
                         color = Color.White,
                         modifier = Modifier
@@ -153,7 +153,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                             ) // Fondo fuera del TextField
                     ) {
                         // Label(email = password, onEmailChange = { password = it }, "Escriba su contraseña")
-                        PasswordLabel(value = password, onValueChange = { password = it }, "Contraseña")
+                        PasswordLabel(value = password, onValueChange = { password = it }, "")
 
                     }
 
@@ -224,7 +224,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = "¿Olvidó la contraseña?",
+                            text = stringResource(id = R.string.forgotPassword),
                             fontSize = 17.sp,
                             color = Color.White,
                             modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
@@ -232,7 +232,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                         )
 
                         Text(
-                            text = "Crear cuenta",
+                            text = stringResource(id = R.string.craeteAccount),
                             fontSize = 17.sp,
                             color = Color.White,
                             modifier = Modifier
