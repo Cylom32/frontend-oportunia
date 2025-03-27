@@ -10,4 +10,5 @@ interface StudentRepository {
     suspend fun findStudentById(studentId: Int): Result<Student>
     suspend fun findStudentByIdUser(idUser: Int): Result<Student>
     suspend fun insertStudent(student: Student): Result<Unit>
+    suspend fun updateStudent(student: Student): Result<Unit>
 }

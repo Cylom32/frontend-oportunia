@@ -30,4 +30,8 @@ class StudentDataSourceImpl(
     override suspend fun insertStudent(student: Student): Result<Unit> = runCatching {
        // dataSource.insertStudent()
     }
+
+    override suspend fun updateStudent(student: Student): Result<Unit> = runCatching {
+        // dataSource.insertStudent()
+    }
 }

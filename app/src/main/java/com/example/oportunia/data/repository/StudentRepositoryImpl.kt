@@ -37,7 +37,10 @@ class StudentRepositoryImpl(
         dataSource.insertStudent(dto)
     }
 
-
+    override suspend fun updateStudent(student: Student): Result<Unit> = runCatching {
+        val dto = mapper.mapToDto(student)
+        dataSource.updateStudent(dto)
+    }
 
 
 }

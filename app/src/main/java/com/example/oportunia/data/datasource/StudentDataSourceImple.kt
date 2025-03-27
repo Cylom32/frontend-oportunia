@@ -35,7 +35,8 @@ class StudentDataSourceImple(  private val studentMapper: StudentMapper= Student
 
 
     override suspend fun updateStudent(studentDTO: StudentDTO) {
-
+        val student = studentMapper.mapToDomain(studentDTO) // Convertimos DTO a entidad
+        StudentProvider.updateStudent(student) // Llamamos a la función de actualización con la entidad correcta
     }
 
     override suspend fun deleteStudent(studentDTO: StudentDTO) {
