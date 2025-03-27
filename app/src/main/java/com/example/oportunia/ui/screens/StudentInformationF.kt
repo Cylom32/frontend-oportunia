@@ -1,7 +1,6 @@
 package com.example.oportunia.ui.screens
 
 
-
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -44,13 +43,12 @@ import com.example.oportunia.ui.theme.walterWhite
 import com.example.oportunia.ui.viewmodel.StudentViewModel
 
 var idSelectedU = 0;
+
 @Composable
 fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: NavHostController) {
 
 
-
-
-  //  var selectedUniversity by remember { mutableStateOf<UniversityOption?>(null) }
+    //  var selectedUniversity by remember { mutableStateOf<UniversityOption?>(null) }
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -59,7 +57,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
         Column(
             modifier = Modifier
                 .fillMaxSize()
-               // .verticalScroll(rememberScrollState())
+                // .verticalScroll(rememberScrollState())
                 .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -136,7 +134,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
             Spacer(modifier = Modifier.height(24.dp))
 
             // Dropdown de universidad
-         //  var selectedUniversity by remember { mutableStateOf<UniversityOption?>(null) }
+            //  var selectedUniversity by remember { mutableStateOf<UniversityOption?>(null) }
 
 
             Box(
@@ -145,7 +143,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                     .padding(horizontal = 48.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
-               var selectedUniversity by remember { mutableStateOf("UNA") }
+                var selectedUniversity by remember { mutableStateOf("UNA") }
 
 
                 UniversityDropdown(
@@ -155,7 +153,8 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                 )
             }
 
-            Spacer(modifier = Modifier.height(150.dp))
+            Spacer(modifier = Modifier.height(120.dp))
+
 
 
             Box(
@@ -176,12 +175,13 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
 
                         studentViewModel.setIdUniversidad(idSelectedU)
                         Log.d("Universidad", "$idSelectedU")
-                        Log.d("StudentInfo", "Nombre: ${studentViewModel.nombre.value}, Apellido1: ${studentViewModel.apellido1.value}," +
-                                " Apellido2: ${studentViewModel.apellido2.value}, "+ "$idSelectedU")
+                        Log.d(
+                            "StudentInfo",
+                            "Nombre: ${studentViewModel.nombre.value}, Apellido1: ${studentViewModel.apellido1.value}," +
+                                    " Apellido2: ${studentViewModel.apellido2.value}, " + "$idSelectedU"
+                        )
 
                         navController.navigate(NavRoutes.RegisterInformationPAndE.ROUTE)
-                        
-
 
 
                     },
@@ -200,13 +200,14 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
         }
     }
 }
+
 @Composable
 fun UniversityDropdown(
     selectedUniversity: String,
     onUniversitySelected: (String) -> Unit,
     studentViewModel: StudentViewModel
 ) {
-    // Cargar las universidades al entrar
+
     LaunchedEffect(Unit) {
         studentViewModel.loadUniversityOptions()
     }
@@ -258,8 +259,11 @@ fun UniversityDropdown(
                     text = { Text(university.name, color = Color.Black) },
                     onClick = {
 
-                        Log.d("UniversityDropdown", "Seleccionado: ${university.name} (ID: ${university.id})")
-                       // formatearUniversidad(university.id)
+                        Log.d(
+                            "UniversityDropdown",
+                            "Seleccionado: ${university.name} (ID: ${university.id})"
+                        )
+                        // formatearUniversidad(university.id)
                         idSelectedU = university.id
                         onUniversitySelected(university.name)
                         expanded = false
@@ -268,7 +272,6 @@ fun UniversityDropdown(
             }
         }
     }
-
 
 }
 

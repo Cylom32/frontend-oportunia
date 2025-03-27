@@ -31,13 +31,14 @@ import androidx.compose.ui.res.stringResource
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.ui.viewmodel.StudentViewModel
 
-
 @Composable
 fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, studentViewModel: StudentViewModel) {
 
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var showAlert by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -47,56 +48,46 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
             modifier = Modifier
                 .fillMaxSize()
                 .background(lilRedMain),
-
-            ) {
-            // Primer Box arribaaaa
+        ) {
+            // Primer Box arriba
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
                     Image(
                         painter = painterResource(id = R.drawable.shakehands1062821),
                         contentDescription = "Descripción accesible",
-                        modifier = Modifier.size(150.dp).padding(top = 20.dp,bottom = 0.dp),
-                        colorFilter = ColorFilter.tint(Color.White),/// para cambiar el color de la imagen
-                        // o es mejor simplemente subir la imagen blanca?
-
-
+                        modifier = Modifier
+                            .size(150.dp)
+                            .padding(top = 20.dp),
+                        colorFilter = ColorFilter.tint(Color.White),
                     )
 
-
-
-
                     Spacer(modifier = Modifier.height(50.dp))
+
                     Text(
                         text = stringResource(id = R.string.app_name),
                         fontSize = 64.sp,
                         color = Color.White,
                         textAlign = TextAlign.Center
                     )
-
                 }
             }
 
-            // Segundo Box abajooo
+            // Segundo Box abajo
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
                     .background(color = lilRedMain)
-                    .padding(start = 60.dp, top = 120.dp, end = 60.dp, bottom = 0.dp),
+                    .padding(start = 60.dp, top = 120.dp, end = 60.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
                     Text(
                         text = stringResource(id = R.string.emailL),
@@ -109,26 +100,14 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
 
                     Box(
                         modifier = Modifier
-                            .shadow(
-                                elevation = 6.dp,
-                                shape = RoundedCornerShape(10.dp),
-                                clip = true
-                            )
-                            .background(
-                                Color.White,
-                                shape = RoundedCornerShape(10.dp)
-                            ) // Fondo fuera del TextField
+                            .shadow(6.dp, RoundedCornerShape(10.dp), clip = true)
+                            .background(Color.White, RoundedCornerShape(10.dp))
                     ) {
-
                         com.example.oportunia.ui.screens.Label(
                             email = email,
                             onEmailChange = { email = it },
                             ""
                         )
-
-
-
-
                     }
 
                     Text(
@@ -142,43 +121,35 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
 
                     Box(
                         modifier = Modifier
-                            .shadow(
-                                elevation = 6.dp,
-                                shape = RoundedCornerShape(10.dp),
-                                clip = true
-                            )
-                            .background(
-                                Color.White,
-                                shape = RoundedCornerShape(10.dp)
-                            ) // Fondo fuera del TextField
+                            .shadow(6.dp, RoundedCornerShape(10.dp), clip = true)
+                            .background(Color.White, RoundedCornerShape(10.dp))
                     ) {
-                        // Label(email = password, onEmailChange = { password = it }, "Escriba su contraseña")
-                        PasswordLabel(value = password, onValueChange = { password = it }, "")
-
+                        PasswordLabel(
+                            value = password,
+                            onValueChange = { password = it },
+                            ""
+                        )
                     }
-
                 }
-
             }
 
-            Box(   /// tercer box
+            // Tercer Box (Login y enlaces)
+            Box(
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth()
                     .background(lilRedMain)
-                    .padding(start = 80.dp, top = 0.dp, end = 80.dp, bottom = 0.dp),
+                    .padding(start = 80.dp, end = 80.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
 
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(), // ocupa toda la altura
-                    verticalArrangement = Arrangement.SpaceBetween, // separa arriba y abajo
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.SpaceBetween,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Parte de arriba
-                    val coroutineScope = rememberCoroutineScope()
 
                     Text(
                         text = "Login",
@@ -190,19 +161,15 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                             .clickable {
                                 coroutineScope.launch {
                                     usersViewModel.validateUserCredentials(email, password) { isValid ->
-                                        if (isValid) {
+                                        if (isValid && email.isNotEmpty() && password.isNotEmpty()) {
                                             navController.navigate("home")
                                             val userId = usersViewModel.getAuthenticatedUserId()
                                             Log.d("LoginDebug", "Usuario autenticado con ID: $userId")
                                             usersViewModel.selectUserById(userId!!)
-
                                             studentViewModel.loadStudentByUserId(usersViewModel.selectedUserIdValue())
-                                            //arriba le estoy pasado el id de user al modelo de student
-
-
                                         } else {
                                             Log.d("LoginDebug", "Credenciales inválidas para $email")
-
+                                            showAlert = true
                                         }
                                     }
                                 }
@@ -217,8 +184,6 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                         )
                     )
 
-
-                    // Parte de abajo
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         modifier = Modifier.fillMaxWidth()
@@ -227,7 +192,9 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                             text = stringResource(id = R.string.forgotPassword),
                             fontSize = 17.sp,
                             color = Color.White,
-                            modifier = Modifier.fillMaxWidth().padding(bottom = 5.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 5.dp),
                             textAlign = TextAlign.Center
                         )
 
@@ -243,10 +210,22 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                                 },
                             textAlign = TextAlign.Center
                         )
-
                     }
                 }
+            }
 
+            // AlertDialog de error
+            if (showAlert) {
+                AlertDialog(
+                    onDismissRequest = { showAlert = false },
+                    confirmButton = {
+                        TextButton(onClick = { showAlert = false }) {
+                            Text("Aceptar")
+                        }
+                    },
+                    title = { Text("Credenciales inválidas") },
+                    text = { Text("Por favor, revise su correo y contraseña.") }
+                )
             }
         }
     }

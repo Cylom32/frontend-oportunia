@@ -15,9 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -31,25 +29,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.ui.theme.OportunIATheme
-import com.example.oportunia.ui.theme.blackPanter
 import com.example.oportunia.ui.theme.lilBlue
 import com.example.oportunia.ui.theme.lilGray
 import com.example.oportunia.ui.theme.walterWhite
-import com.example.oportunia.ui.viewmodel.StudentState
 import com.example.oportunia.ui.viewmodel.UsersViewModel
 
 
-//@Preview
+
 @Composable
-fun SettingScreen(modifier: Modifier = Modifier,navController:NavHostController,usersViewModel: UsersViewModel){
+fun SettingScreen(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    usersViewModel: UsersViewModel
+) {
 
     Surface(
         modifier = Modifier
@@ -91,47 +88,12 @@ fun SettingScreen(modifier: Modifier = Modifier,navController:NavHostController,
 
             Spacer(modifier = Modifier.height(25.dp))
             // Buttons Section
-            ButtonSectionSettings(navController=navController,usersViewModel=usersViewModel)
+            ButtonSectionSettings(navController = navController, usersViewModel = usersViewModel)
         }
     }
 
 
-
-
-
-
-
 }
-
-
-@Composable
-fun HeaderSectionSettings() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(
-                elevation = 8.dp,
-                shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
-                clip = false
-            )
-            .background(lilBlue, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
-            .padding(16.dp)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally // Center the text horizontally
-        ) {
-
-            Text(
-                text = "Settings",
-                color = Color.White,
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
 
 @Composable
 
@@ -200,6 +162,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 }
 
 
+
                 },
             modifier = Modifier
                 .fillMaxWidth()
@@ -226,12 +189,3 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
         }
     }
 }
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun SettinsScreenPreview() {
-//    OportunIATheme {
-//        SettingScreen()
-//    }
-//}

@@ -31,8 +31,9 @@
 
     <string name="emailExample">ejemplo@algo.com</string>
 
-
     <string name="titleCV">Curriculum Vitae</string>
 
-<string name="titleSettings">Ajustes</string>"
+    <string name="titleSettings">Ajustes</string>
+
+
 </resources>
