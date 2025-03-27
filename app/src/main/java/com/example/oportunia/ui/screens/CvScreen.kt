@@ -36,6 +36,7 @@ import com.example.oportunia.ui.theme.lilBlue
 import com.example.oportunia.ui.viewmodel.StudentState
 import com.example.oportunia.ui.viewmodel.StudentViewModel
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.shadow
 import com.example.oportunia.ui.theme.walterWhite
 
 
@@ -70,9 +71,16 @@ fun HeaderSection(studentViewModel: StudentViewModel) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(lilBlue)
+            .shadow(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
+                clip = false
+            )
+            .background(lilBlue,
+                shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
             .padding(16.dp),
             contentAlignment = Alignment.Center
+
     ) {
         val studentState by studentViewModel.studentState.collectAsState()
 
@@ -153,13 +161,16 @@ fun ButtonSection() {
             ),
             shape = RoundedCornerShape(12.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
-        ) {
+        )
+
+        {
             Icon(
                 imageVector = Icons.Default.Edit,
                 contentDescription = "Edit CV",
                 modifier = Modifier.size(32.dp),
                 tint = Color.Black
             )
+
             Spacer(modifier = Modifier.width(12.dp))
             Text(
                 text = "Editar CV",
