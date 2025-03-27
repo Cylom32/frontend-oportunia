@@ -186,7 +186,7 @@ fun RegisterOptionScreenPAndE(
                 onDismissRequest = { showAlert = false },
                 confirmButton = {
                     TextButton(onClick = { showAlert = false }) {
-                        Text("Aceptar")
+                        Text(stringResource(R.string.acceptText))
                     }
                 },
                 title = { Text("Error") },
