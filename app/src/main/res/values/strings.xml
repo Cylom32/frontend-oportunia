@@ -1,4 +1,29 @@
 <resources>
     <string name="app_name">OportunIA</string>
 
+    <string name="emailL">Correo Electronico</string>
+
+    <string name="passworL">Contraseña</string>
+
+    <string name="craeteAccount">Crear Cuenta</string>
+
+    <string name="forgotPassword">¿Olvidaste tu contraseña?</string>
+
+    <string name="userTypeEst">Estudiante</string>
+
+    <string name="userTypeCom">Empresa</string>
+
+    <string name="userTypTitle">Tipo de usuario</string>"
+
+    <string name="nameTitle">Nombre</string>
+
+    <string name="FirstSurnameTitle">Primer apellido</string>
+
+    <string name="SecondSurnameTitle">Segundo apellido</string>
+
+    <string name="texBoton">Segundo apellido</string>
+
+    <string name="UniversityTitle">Universidad</string>
+
+
 </resources>
