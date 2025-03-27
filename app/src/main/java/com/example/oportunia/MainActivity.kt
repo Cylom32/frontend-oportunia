@@ -25,11 +25,11 @@ import com.example.oportunia.presentation.factory.UsersViewModelFactory
 import com.example.oportunia.presentation.factory.StudentViewModelFactory
 import com.example.oportunia.presentation.navigation.NavGraph
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.ui.screens.BottomNavigationBar
+import com.example.oportunia.presentation.ui.screens.BottomNavigationBar
+import com.example.oportunia.presentation.ui.theme.OportunIATheme
+import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
-import com.example.oportunia.ui.theme.OportunIATheme
-import com.example.oportunia.ui.viewmodel.StudentViewModel
-import com.example.oportunia.ui.viewmodel.UsersViewModel
 
 class MainActivity : ComponentActivity() {
 

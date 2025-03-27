@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.oportunia.domain.repository.StudentRepository
 import com.example.oportunia.domain.repository.UniversityRepository
-import com.example.oportunia.ui.viewmodel.StudentViewModel
+import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
+
 
 class StudentViewModelFactory(
     private val studentRepository: StudentRepository,

@@ -8,18 +8,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.oportunia.ui.screens.CVScreen
-import com.example.oportunia.ui.screens.HomeScreen
-import com.example.oportunia.ui.screens.LoginScreen
-import com.example.oportunia.ui.screens.NotificationsScreen
-import com.example.oportunia.ui.screens.RegisterOptionScreen
-import com.example.oportunia.ui.screens.RegisterOptionScreenF
-import com.example.oportunia.ui.screens.RegisterOptionScreenPAndE
-import com.example.oportunia.ui.screens.SettingScreen
-import com.example.oportunia.ui.screens.StudentInformationSettings2
-import com.example.oportunia.ui.viewmodel.StudentViewModel
-import com.example.oportunia.ui.viewmodel.UsersViewModel
-
+import com.example.oportunia.presentation.ui.screens.CVScreen
+import com.example.oportunia.presentation.ui.screens.HomeScreen
+import com.example.oportunia.presentation.ui.screens.NotificationsScreen
+import com.example.oportunia.presentation.ui.screens.RegisterOptionScreen
+import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenF
+import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenPAndE
+import com.example.oportunia.presentation.ui.screens.SettingScreen
+import com.example.oportunia.presentation.ui.screens.StudentInformationSettings2
+import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
 
 @Composable

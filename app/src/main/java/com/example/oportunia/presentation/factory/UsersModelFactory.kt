@@ -5,7 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.oportunia.domain.repository.UserRepository
 import com.example.oportunia.domain.repository.UsersRepository
-import com.example.oportunia.ui.viewmodel.UsersViewModel
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
+
 
 /**
  * Factory for creating UsersViewModel instances with the required repository.

@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.theme
+package com.example.oportunia.presentation.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.screens
+package com.example.oportunia.presentation.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,8 +29,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.example.oportunia.ui.theme.OportunIATheme
-import com.example.oportunia.ui.theme.lilRedMain
+import com.example.oportunia.presentation.ui.theme.OportunIATheme
+import com.example.oportunia.presentation.ui.theme.lilRedMain
 
 
 
@@ -63,7 +63,7 @@ fun LoginScreen(navController: NavHostController, paddingValues: PaddingValues)
          Column(
              modifier = Modifier
                  .fillMaxSize()
-                 .background(lilRedMain),
+                 .background(com.example.oportunia.presentation.ui.theme.lilRedMain),
 
              ) {
              // Primer Box arribaaaa
@@ -105,7 +105,7 @@ fun LoginScreen(navController: NavHostController, paddingValues: PaddingValues)
                  modifier = Modifier
                      .weight(1f)
                      .fillMaxWidth()
-                     .background(color = lilRedMain)
+                     .background(color = com.example.oportunia.presentation.ui.theme.lilRedMain)
                      .padding(start = 60.dp, top = 50.dp, end = 60.dp, bottom = 100.dp),
                  contentAlignment = Alignment.TopCenter
              ) {
@@ -200,7 +200,7 @@ fun LoginScreen(navController: NavHostController, paddingValues: PaddingValues)
                  modifier = Modifier
                      .height(150.dp)
                      .fillMaxWidth()
-                     .background(lilRedMain)
+                     .background(com.example.oportunia.presentation.ui.theme.lilRedMain)
                      .padding(start = 80.dp, top = 0.dp, end = 80.dp, bottom = 0.dp),
                  contentAlignment = Alignment.TopCenter
              ) {
@@ -366,7 +366,7 @@ fun LoginScreenPreviewContent() {
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(lilRedMain),
+                        .background(com.example.oportunia.presentation.ui.theme.lilRedMain),
 
                     ) {
                     // Primer Box arribaaaa
@@ -408,7 +408,7 @@ fun LoginScreenPreviewContent() {
                         modifier = Modifier
                             .weight(1f)
                             .fillMaxWidth()
-                            .background(color = lilRedMain)
+                            .background(color = com.example.oportunia.presentation.ui.theme.lilRedMain)
                             .padding(start = 60.dp, top = 50.dp, end = 60.dp, bottom = 20.dp),
                         contentAlignment = Alignment.TopCenter
                     ) {
@@ -504,7 +504,7 @@ fun LoginScreenPreviewContent() {
                         modifier = Modifier
                             .height(150.dp)
                             .fillMaxWidth()
-                            .background(lilRedMain)
+                            .background(com.example.oportunia.presentation.ui.theme.lilRedMain)
                             .padding(start = 80.dp, top = 0.dp, end = 80.dp, bottom = 0.dp),
                         contentAlignment = Alignment.TopCenter
                     ) {
@@ -666,7 +666,7 @@ fun LoginScreenPreviewSimple() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(lilRedMain),
+                .background(com.example.oportunia.presentation.ui.theme.lilRedMain),
         ) {
             // Primer Box
             Box(
@@ -736,7 +736,7 @@ fun LoginScreenPreviewSimple() {
                 modifier = Modifier
                     .height(100.dp)
                     .fillMaxWidth()
-                    .background(lilRedMain),
+                    .background(com.example.oportunia.presentation.ui.theme.lilRedMain),
                 contentAlignment = Alignment.TopCenter
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {

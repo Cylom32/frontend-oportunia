@@ -22,16 +22,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import com.example.oportunia.ui.theme.lilRedMain
+
 import androidx.navigation.NavHostController
-import com.example.oportunia.ui.screens.PasswordLabel
-import com.example.oportunia.ui.viewmodel.UsersViewModel
-import kotlinx.coroutines.launch
-import androidx.compose.ui.res.stringResource
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.ui.viewmodel.StudentViewModel
+import com.example.oportunia.presentation.ui.screens.PasswordLabel
+import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
+import kotlinx.coroutines.launch
+
 
 @Composable
 fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, studentViewModel: StudentViewModel) {
@@ -52,7 +53,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(lilRedMain),
+                .background(com.example.oportunia.presentation.ui.theme.lilRedMain),
         ) {
             // Primer Box arriba
             Box(
@@ -88,7 +89,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
-                    .background(color = lilRedMain)
+                    .background(color = com.example.oportunia.presentation.ui.theme.lilRedMain)
                     .padding(start = 60.dp, top = 120.dp, end = 60.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
@@ -108,7 +109,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                             .shadow(6.dp, RoundedCornerShape(10.dp), clip = true)
                             .background(Color.White, RoundedCornerShape(10.dp))
                     ) {
-                        com.example.oportunia.ui.screens.Label(
+                        com.example.oportunia.presentation.ui.screens.Label(
                             email = email,
                             onEmailChange = { email = it },
                             ""
@@ -143,7 +144,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth()
-                    .background(lilRedMain)
+                    .background(com.example.oportunia.presentation.ui.theme.lilRedMain)
                     .padding(start = 80.dp, end = 80.dp),
                 contentAlignment = Alignment.TopCenter
             ) {

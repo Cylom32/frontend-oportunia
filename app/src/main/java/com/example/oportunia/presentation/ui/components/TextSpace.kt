@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.components
+package com.example.oportunia.presentation.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,7 +16,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.oportunia.ui.theme.blackPanter
+import com.example.oportunia.presentation.ui.theme.blackPanter
 
 @Composable
 fun texAndLable(
@@ -34,7 +34,7 @@ fun texAndLable(
         Text(
             text = titulo,
             fontSize = 18.sp,
-            color = blackPanter,
+            color = com.example.oportunia.presentation.ui.theme.blackPanter,
             modifier = Modifier.padding(bottom = 8.dp, top = 4.dp)
         )
 

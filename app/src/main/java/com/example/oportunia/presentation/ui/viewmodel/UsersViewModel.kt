@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.viewmodel
+package com.example.oportunia.presentation.ui.viewmodel
 
 
 
