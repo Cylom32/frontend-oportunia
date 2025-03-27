@@ -159,7 +159,41 @@ class StudentViewModel(
         _contrasenna.value = valor
     }
 
+    fun updateStudent(studentId: Int, userId: Int) {
+        viewModelScope.launch {
+            val updatedStudent = Student(
+                idStudent = studentId,
+                idUser = userId,
+                name = _nombre.value,
+                lastName1 = _apellido1.value,
+                lastName2 = _apellido2.value,
+                creationDate = LocalDate.now(), // O mantener la fecha original si está disponible
+                universityId = _idUniversidadSeleccionada.value
+            )
+            repository.updateStudent(updatedStudent)
+                .onSuccess {
+                    _studentState.value = StudentState.Success(updatedStudent)
+                    _selectedStudent.value = updatedStudent
+                    Log.d("StudentViewModel", "Estudiante actualizado: $updatedStudent")
+                }
+                .onFailure { exception ->
+                    _studentState.value = StudentState.Error("Error al actualizar estudiante: ${exception.message}")
+                    Log.e("StudentViewModel", "Error al actualizar estudiante", exception)
+                }
+        }
+    }
 
+
+
+
+    fun clearStudentData() {
+        _nombre.value = ""
+        _apellido1.value = ""
+        _apellido2.value = ""
+        _correo.value = ""
+        _contrasenna.value = ""
+        _idUniversidadSeleccionada.value = null
+    }
 
 
 

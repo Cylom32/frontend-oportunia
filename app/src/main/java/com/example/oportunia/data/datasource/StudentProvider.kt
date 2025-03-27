@@ -59,5 +59,17 @@ class StudentProvider {
         fun insertStudent(student: Student) {
             studentList.add(student)
         }
+
+        fun updateStudent(student: Student): Boolean {
+            val index = studentList.indexOfFirst { it.idStudent == student.idStudent }
+
+            return if (index != -1) {
+                studentList[index] = student
+                true
+            } else {
+                false
+        }
+        }
+
     }
 }

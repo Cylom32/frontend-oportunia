@@ -106,7 +106,9 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
-            onClick = { /* Handle Edit Account action */ },
+            onClick = { /* Handle Edit Account action */
+            navController.navigate(NavRoutes.StudentInformationSettings2.ROUTE)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(125.dp), // Reducimos la altura para que sea consistente con los otros botones
