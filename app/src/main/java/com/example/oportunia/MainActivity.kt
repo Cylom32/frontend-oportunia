@@ -14,8 +14,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.oportunia.data.datasource.UsersDataSourceImple
 import com.example.oportunia.data.datasource.StudentDataSourceImple
+import com.example.oportunia.data.datasource.UniversityDataSourceImpl
+import com.example.oportunia.data.datasource.model.UniversityRepositoryImpl
 import com.example.oportunia.data.mapper.UsersMapper
 import com.example.oportunia.data.mapper.StudentMapper
+import com.example.oportunia.data.mapper.UniversityMapper
 import com.example.oportunia.data.repository.UsersRepositoryImpl
 import com.example.oportunia.data.repository.StudentRepositoryImpl
 import com.example.oportunia.presentation.factory.UsersViewModelFactory
@@ -48,9 +51,22 @@ class MainActivity : ComponentActivity() {
     private val studentViewModel: StudentViewModel by viewModels {
         val studentMapper = StudentMapper()
 
+        val universityMapper = UniversityMapper()
+
+
+
         val studentDataSource = StudentDataSourceImple(studentMapper)
+
         val studentRepository = StudentRepositoryImpl(studentDataSource, studentMapper)
-        StudentViewModelFactory(studentRepository)
+
+        /////////////////////
+
+        val universityDataSource = UniversityDataSourceImpl(universityMapper)
+
+        val universityRepository = UniversityRepositoryImpl(universityDataSource,universityMapper)
+
+/////////////////////////////////
+        StudentViewModelFactory(studentRepository,universityRepository)
     }
 
 
@@ -64,19 +80,23 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun MainScreen(usersViewModel: UsersViewModel,studentViewModel: StudentViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: NavRoutes.Log.ROUTE
     LaunchedEffect(Unit) {
-        usersViewModel.findAllUsers()
+       // usersViewModel.findAllUsers()
     }
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != NavRoutes.Log.ROUTE && currentRoute != NavRoutes.Login.ROUTE && currentRoute != NavRoutes.RegisterOption.ROUTE) {
+            if (currentRoute != NavRoutes.Log.ROUTE &&
+                currentRoute != NavRoutes.Login.ROUTE &&
+                currentRoute != NavRoutes.RegisterOption.ROUTE &&
+                currentRoute != NavRoutes.RegisterInformationF.ROUTE &&
+                currentRoute != NavRoutes.RegisterInformationPAndE.ROUTE) {
                 BottomNavigationBar(
                     selectedScreen = currentRoute,
                     onScreenSelected = { route ->

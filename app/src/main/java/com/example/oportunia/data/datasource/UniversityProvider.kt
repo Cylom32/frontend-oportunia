@@ -21,14 +21,31 @@ class UniversityProvider {
             University(
                 idUniversity = 3,
                 universityName = "TEC"
+            ),
+            University(
+                idUniversity = 4,
+                universityName = "UTN"
+            ),
+            University(
+                idUniversity = 5,
+                universityName = "UNED"
             )
         )
 
         /**
-         * Returns all available universities.
-         * @return A list of universities.
+         * Encuentra una universidad por su ID.
+         * @param id El ID de la universidad que se desea encontrar.
+         * @return La universidad con el ID indicado, o null si no se encuentra.
          */
-        fun getAllUniversities(): List<University> {
+        fun findUniversityById(id: Int): University? {
+            return universityList.find { it.idUniversity == id }
+        }
+
+        /**
+         * Obtiene todas las universidades.
+         * @return Una lista de todas las universidades.
+         */
+        fun findAllUniversities(): List<University> {
             return universityList
         }
     }

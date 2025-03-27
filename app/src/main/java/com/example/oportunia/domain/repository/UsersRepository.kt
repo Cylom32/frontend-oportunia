@@ -7,7 +7,7 @@ import com.example.oportunia.domain.model.Users
  */
 interface UsersRepository {
     suspend fun findAllUsers(): Result<List<Users>>
-    suspend fun findUserById(userId: Long): Result<Users>
+    suspend fun findUserById(userId: Int): Result<Users>
     suspend fun findUserByEmail(email: String): Result<Users>
     suspend fun saveUser(user: Users): Result<Unit>
 }

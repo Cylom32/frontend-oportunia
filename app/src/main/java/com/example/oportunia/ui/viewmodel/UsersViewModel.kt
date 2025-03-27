@@ -6,11 +6,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.oportunia.domain.model.Users
-import com.example.oportunia.domain.repository.UserRepository
 import com.example.oportunia.domain.repository.UsersRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 
 sealed class UsersState {
@@ -29,12 +29,12 @@ class UsersViewModel(
     val userState: StateFlow<UsersState> = _userState
 
     private val _selectedUser = MutableStateFlow<Users?>(null)
-    val selectedUser: StateFlow<Users?> = _selectedUser
+    val selectedUser: StateFlow<Users?> = _selectedUser // por que no se usa???
 
     private val _userList = MutableStateFlow<List<Users>>(emptyList())
     val userList: StateFlow<List<Users>> = _userList
 
-    fun selectUserById(userId: Long) {
+    fun selectUserById(userId: Int) {
         viewModelScope.launch {
             repository.findUserById(userId)
                 .onSuccess { user ->
@@ -46,15 +46,19 @@ class UsersViewModel(
         }
     }
 
+    fun selectedUserIdValue(): Int{
+       return  selectedUser.value!!.id
+    }
+
     fun findAllUsers() {
         viewModelScope.launch {
             repository.findAllUsers()
                 .onSuccess { users ->
-                    Log.d("UserViewModel", "Total Users: ${users.size}")
+
                     _userList.value = users
                 }
                 .onFailure { exception ->
-                    Log.e("UserViewModel", "Failed to fetch users: ${exception.message}")
+                    Log.e("UserViewModel", "no se econtro nada")
                 }
         }
     }
@@ -69,6 +73,8 @@ class UsersViewModel(
                     if (isValid) {
                         _userState.value = UsersState.Success(user)
                         _selectedUser.value = user
+
+
                         onResult(true)
                     } else {
                         _userState.value = UsersState.Error("Contraseña incorrecta")
@@ -85,7 +91,31 @@ class UsersViewModel(
 
     fun getAuthenticatedUserId(): Int? {
         return (userState.value as? UsersState.Success)?.user?.id
+
+
     }
+
+    fun getNextId() : Int {
+        return _userList.value.maxOfOrNull { it.id }?.plus(1) ?: 1
+    }
+
+    fun saveUser(id: Int, email: String, password: String, roleId: Int?) {
+        val user = Users(
+            id = id,
+            email = email,
+            password = password,
+            img = null,
+            creationDate = LocalDate.now(),
+            roleId = roleId
+        )
+
+        viewModelScope.launch {
+            repository.saveUser(user)
+            Log.d("UsersViewModel", "Usuario guardado: $user")
+        }
+    }
+
+
 
 
 }

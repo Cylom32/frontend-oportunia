@@ -35,7 +35,7 @@ fun texAndLable(
             text = titulo,
             fontSize = 18.sp,
             color = blackPanter,
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = 8.dp, top = 4.dp)
         )
 
         Box(

@@ -18,12 +18,16 @@ class StudentDataSourceImpl(
     }
 
     override suspend fun findStudentById(studentId: Int): Result<Student> = runCatching {
-        val dto = dataSource.getStudentById(studentId.toInt()) ?: error("Student not found")
+        val dto = dataSource.getStudentById(studentId) ?: error("Student not found")
         mapper.mapToDomain(dto)
     }
 
     override suspend fun findStudentByIdUser(idUser: Int): Result<Student> = runCatching {
-        val dto = dataSource.getStudentByUserId(idUser.toInt()) ?: error("Student not found for user ID")
+        val dto = dataSource.getStudentByUserId(idUser) ?: error("Student not found for user ID")
         mapper.mapToDomain(dto)
+    }
+
+    override suspend fun insertStudent(student: Student): Result<Unit> = runCatching {
+       // dataSource.insertStudent()
     }
 }

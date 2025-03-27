@@ -2,6 +2,7 @@ package com.example.oportunia.ui.screens
 
 
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 //import androidx.compose.material.*
@@ -48,16 +49,24 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavHostController
+import com.example.oportunia.domain.model.UniversityOption
+import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.ui.components.texAndLable
 import com.example.oportunia.ui.theme.blackPanter
 import com.example.oportunia.ui.theme.lilBlue
 import com.example.oportunia.ui.theme.lilGray
 import com.example.oportunia.ui.theme.walterWhite
+import com.example.oportunia.ui.viewmodel.StudentViewModel
 
-
-@Preview
+var idSelectedU = 0;
 @Composable
-fun RegisterOptionScreenF() {
+fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: NavHostController) {
+
+
+
+
+  //  var selectedUniversity by remember { mutableStateOf<UniversityOption?>(null) }
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -112,54 +121,63 @@ fun RegisterOptionScreenF() {
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
             ) {
-                var nombre by remember { mutableStateOf("") }
+                val nombre by studentViewModel.nombre.collectAsState()
+                val apellido1 by studentViewModel.apellido1.collectAsState()
+                val apellido2 by studentViewModel.apellido2.collectAsState()
+
                 texAndLable(
                     titulo = "Nombre",
-                    placeholder = "ejemplo@correo.com",
+                    placeholder = "Nombre completo",
                     valor = nombre,
-                    alCambiarValor = { nombre = it }
+                    alCambiarValor = { studentViewModel.setNombre(it) }
                 )
 
-                var apellido1 by remember { mutableStateOf("") }
+
                 texAndLable(
                     titulo = "Primer Apellido",
                     placeholder = "apellido 1",
                     valor = apellido1,
-                    alCambiarValor = { apellido1 = it }
+                    alCambiarValor = { studentViewModel.setApellido1(it) }
                 )
 
-                var apellido2 by remember { mutableStateOf("") }
+
                 texAndLable(
                     titulo = "Segundo Apellido",
                     placeholder = "apellido 2",
                     valor = apellido2,
-                    alCambiarValor = { apellido2 = it }
+                    alCambiarValor = { studentViewModel.setApellido2(it) }
                 )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Dropdown de universidad
-            var selectedUniversity by remember { mutableStateOf("UNA") }
+         //  var selectedUniversity by remember { mutableStateOf<UniversityOption?>(null) }
+
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 48.dp),
                 contentAlignment = Alignment.CenterStart
             ) {
+               var selectedUniversity by remember { mutableStateOf("UNA") }
+
+
                 UniversityDropdown(
                     selectedUniversity = selectedUniversity,
-                    onUniversitySelected = { selectedUniversity = it }
+                    onUniversitySelected = { selectedUniversity = it },
+                    studentViewModel
                 )
             }
 
             Spacer(modifier = Modifier.height(150.dp))
 
-            // Botón siguiente
+
             Box(
                 modifier = Modifier
                     .width(350.dp)
-                    .padding(horizontal = 60.dp, vertical = 32.dp)
+                    .padding(horizontal = 60.dp, vertical = 0.dp)
                     .shadow(
                         elevation = 10.dp,
                         shape = RoundedCornerShape(24.dp),
@@ -168,7 +186,21 @@ fun RegisterOptionScreenF() {
                     .background(
                         color = lilRedMain,
                         shape = RoundedCornerShape(10.dp)
-                    ),
+                    )
+                    .clickable {
+
+
+                        studentViewModel.setIdUniversidad(idSelectedU)
+                        Log.d("Universidad", "$idSelectedU")
+                        Log.d("StudentInfo", "Nombre: ${studentViewModel.nombre.value}, Apellido1: ${studentViewModel.apellido1.value}," +
+                                " Apellido2: ${studentViewModel.apellido2.value}, "+ "$idSelectedU")
+
+                        navController.navigate(NavRoutes.RegisterInformationPAndE.ROUTE)
+                        
+
+
+
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -184,15 +216,18 @@ fun RegisterOptionScreenF() {
         }
     }
 }
-
-
-
 @Composable
 fun UniversityDropdown(
     selectedUniversity: String,
-    onUniversitySelected: (String) -> Unit
+    onUniversitySelected: (String) -> Unit,
+    studentViewModel: StudentViewModel
 ) {
-    val options = listOf("UNA", "UCR", "TEC")
+    // Cargar las universidades al entrar
+    LaunchedEffect(Unit) {
+        studentViewModel.loadUniversityOptions()
+    }
+
+    val options by studentViewModel.universityOptions.collectAsState()
     var expanded by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.width(150.dp)) {
@@ -236,13 +271,21 @@ fun UniversityDropdown(
         ) {
             options.forEach { university ->
                 DropdownMenuItem(
-                    text = { Text(university, color = Color.Black) },
+                    text = { Text(university.name, color = Color.Black) },
                     onClick = {
-                        onUniversitySelected(university)
+
+                        Log.d("UniversityDropdown", "Seleccionado: ${university.name} (ID: ${university.id})")
+                       // formatearUniversidad(university.id)
+                        idSelectedU = university.id
+                        onUniversitySelected(university.name)
                         expanded = false
                     }
                 )
             }
         }
     }
+
+
 }
+
+

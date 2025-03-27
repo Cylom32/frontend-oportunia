@@ -19,9 +19,14 @@ class StudentDataSourceImple(  private val studentMapper: StudentMapper= Student
         return user?.let { studentMapper.mapToDto(it) }
     }
 
-    override suspend fun insertStudent(studentDTO: StudentDTO) {
 
+
+    override suspend fun insertStudent(studentDTO: StudentDTO) {
+        val student = studentMapper.mapToDomain(studentDTO)
+        StudentProvider.insertStudent(student)
     }
+
+
 
     override suspend fun getStudentByUserId(userId: Int): StudentDTO? {
         val student = StudentProvider.findStudentByUserId(userId)

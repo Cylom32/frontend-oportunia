@@ -26,8 +26,10 @@ class UsersDataSourceImple(
     }
 
     override suspend fun insertUser(userDTO: UsersDTO) {
-
+        val user = usersMapper.mapToDomain(userDTO)
+        UsersProvider.insertUser(user)
     }
+
 
     override suspend fun updateUser(userDTO: UsersDTO) {
 

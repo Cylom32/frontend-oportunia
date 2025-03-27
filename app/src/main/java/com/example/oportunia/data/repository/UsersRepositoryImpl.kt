@@ -25,8 +25,8 @@ class UsersRepositoryImpl(
         }
     }
 
-    override suspend fun findUserById(userId: Long): Result<Users> = runCatching {
-        val dto = dataSource.getUserById(userId.toInt()) ?: error("User not found")
+    override suspend fun findUserById(userId: Int): Result<Users> = runCatching {
+        val dto = dataSource.getUserById(userId) ?: error("User not found")
         mapper.mapToDomain(dto)
     }
 

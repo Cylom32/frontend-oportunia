@@ -1,7 +1,7 @@
 package com.example.oportunia.ui.screens
 
 
-
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.oportunia.ui.theme.OportunIATheme
 import com.example.oportunia.ui.theme.lilRedMain
-
-
-
 
 
 import androidx.compose.foundation.background
@@ -49,7 +46,6 @@ import com.example.oportunia.ui.theme.OportunIATheme
 import com.example.oportunia.ui.theme.lilRedMain
 
 
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Icon
@@ -64,11 +60,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.background
 import androidx.navigation.NavHostController
+import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.ui.theme.blackPanter
 import com.example.oportunia.ui.theme.lilGray
 import com.example.oportunia.ui.theme.walterWhite
-
-
 
 
 @Composable
@@ -78,7 +73,8 @@ fun RegisterOptionScreen(navController: NavHostController) {
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .padding(0.dp).background(lilGray)
+            .padding(0.dp)
+            .background(lilGray)
     ) {
 
 
@@ -91,7 +87,8 @@ fun RegisterOptionScreen(navController: NavHostController) {
 
             Column(
                 modifier = Modifier
-                    .fillMaxSize().background(lilGray),
+                    .fillMaxSize()
+                    .background(lilGray),
 
                 ) {
 
@@ -108,7 +105,8 @@ fun RegisterOptionScreen(navController: NavHostController) {
                             color = lilRedMain,
                             shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                         ),
-                    contentAlignment = Alignment.Center)
+                    contentAlignment = Alignment.Center
+                )
                 {
                     Text(
                         text = "OportunIA",
@@ -121,7 +119,8 @@ fun RegisterOptionScreen(navController: NavHostController) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth().padding(top = 20.dp)
+                        .fillMaxWidth()
+                        .padding(top = 20.dp)
                         .background(color = lilGray),
                     contentAlignment = Alignment.Center
                 )
@@ -148,7 +147,10 @@ fun RegisterOptionScreen(navController: NavHostController) {
                         .background(
                             color = walterWhite,
                             shape = RoundedCornerShape(24.dp)
-                        ),
+                        )
+                        .clickable {
+                            navController.navigate(NavRoutes.RegisterInformationF.ROUTE)
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -206,10 +208,3 @@ fun RegisterOptionScreen(navController: NavHostController) {
 }
 
 
-//@Preview(showBackground = true)
-//@Composable
-//fun RegisterOptionScreenPreview() {
-//    OportunIATheme {
-//        RegisterOptionScreen()
-//    }
-//}
