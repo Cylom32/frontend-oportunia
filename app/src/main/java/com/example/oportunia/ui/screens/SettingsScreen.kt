@@ -32,10 +32,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.oportunia.R
+import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.ui.theme.OportunIATheme
 
 
-@Preview
+//@Preview
 @Composable
 fun SettingScreen(modifier: Modifier = Modifier){
     Column(
@@ -149,6 +150,7 @@ fun ButtonSectionSettings() {
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF1A2A44) // Dark blue background
             )
+
         ) {
             Image(
                 painter= painterResource(id = R.drawable.logout),

@@ -1,6 +1,5 @@
 package com.example.oportunia.data.datasource
 
-
 import com.example.oportunia.domain.model.Users
 import java.time.LocalDate
 
@@ -9,7 +8,7 @@ import java.time.LocalDate
  */
 class UsersProvider {
     companion object {
-        private val userList = listOf(
+        private val userList = mutableListOf(
             Users(
                 id = 1,
                 email = "admin@oportunia.com",
@@ -24,7 +23,7 @@ class UsersProvider {
                 password = "123",
                 img = null,
                 creationDate = LocalDate.of(2024, 2, 15),
-                roleId = 2 // Compay
+                roleId = 2 // Company
             ),
             Users(
                 id = 3,
@@ -42,7 +41,6 @@ class UsersProvider {
                 creationDate = LocalDate.of(2024, 3, 5),
                 roleId = 3 // Student
             ),
-
         )
 
         /**
@@ -60,6 +58,14 @@ class UsersProvider {
          */
         fun findAllUsers(): List<Users> {
             return userList
+        }
+
+        /**
+         * Inserts a new user into the list.
+         * @param user The user to insert.
+         */
+        fun insertUser(user: Users) {
+            userList.add(user)
         }
     }
 }

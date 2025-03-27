@@ -32,4 +32,12 @@ class StudentRepositoryImpl(
     }
 
 
+    override suspend fun insertStudent(student: Student): Result<Unit> = runCatching {
+        val dto = mapper.mapToDto(student)
+        dataSource.insertStudent(dto)
+    }
+
+
+
+
 }

@@ -1,7 +1,6 @@
 package com.example.oportunia.presentation.navigation
 
 
-
 sealed class NavRoutes {
 
     data object Login : NavRoutes() {
@@ -16,10 +15,13 @@ sealed class NavRoutes {
         const val ROUTE = "log"
 
     }
+
     data object Home : NavRoutes() {
         const val ROUTE = "home"
 
-    }    data object Settings : NavRoutes() {
+    }
+
+    data object Settings : NavRoutes() {
         const val ROUTE = "settings"
     }
 
@@ -30,5 +32,13 @@ sealed class NavRoutes {
 
     data object RegisterOption : NavRoutes() {
         const val ROUTE = "registerOption"
+    }
+
+    data object RegisterInformationF : NavRoutes() {
+        const val ROUTE = "registerInformationF"
+    }
+
+    data object RegisterInformationPAndE : NavRoutes() {
+        const val ROUTE = "registerInformationPAndE"
     }
 }

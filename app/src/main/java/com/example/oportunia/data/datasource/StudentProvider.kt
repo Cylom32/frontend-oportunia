@@ -5,7 +5,7 @@ import java.time.LocalDate
 
 class StudentProvider {
     companion object {
-        private val studentList = listOf(
+        private val studentList = mutableListOf(
             Student(
                 idStudent = 1,
                 idUser = 3, // Asociado al usuario "student@oportunia.com"
@@ -50,6 +50,14 @@ class StudentProvider {
          */
         fun findAllStudents(): List<Student> {
             return studentList
+        }
+
+        /**
+         * Inserts a new student into the list.
+         * @param student The student to insert.
+         */
+        fun insertStudent(student: Student) {
+            studentList.add(student)
         }
     }
 }

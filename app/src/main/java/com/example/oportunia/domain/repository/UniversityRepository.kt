@@ -7,5 +7,5 @@ import com.example.oportunia.domain.model.University
  */
 interface UniversityRepository {
     suspend fun findAllUniversities(): Result<List<University>>
-    suspend fun findUniversityById(universityId: Long): Result<University>
+    suspend fun findUniversityById(universityId: Int): Result<University>
 }
