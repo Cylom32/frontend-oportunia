@@ -98,17 +98,6 @@ fun SettingScreen(modifier: Modifier = Modifier){
 
 
 
-//    Column(
-//        modifier = modifier
-//            .fillMaxSize()
-//            .background(Color.LightGray.copy(alpha = 0.2f)),
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ){
-//        HeaderSectionSettings()
-//        Spacer(modifier = Modifier.weight(1f))
-//        ButtonSectionSettings()
-//        Spacer(modifier = Modifier.weight(1f))
-//    }
 
 }
 
