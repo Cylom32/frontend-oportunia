@@ -81,7 +81,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "OportunIA",
+                    text = stringResource(R.string.app_name),
                     fontSize = 64.sp,
                     color = Color.White,
                     textAlign = TextAlign.Center
@@ -90,7 +90,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
 
             // Título
             Text(
-                text = "Información",
+                text = stringResource(R.string.screenTitleInfo),
                 fontSize = 32.sp,
                 color = blackPanter,
                 modifier = Modifier.padding(top = 32.dp)
@@ -127,7 +127,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
 
                 texAndLable(
                     titulo = stringResource(R.string.SecondSurnameTitle),
-                    placeholder = "apellido 2",
+                    placeholder = "",
                     valor = apellido2,
                     alCambiarValor = { studentViewModel.setApellido2(it) }
                 )

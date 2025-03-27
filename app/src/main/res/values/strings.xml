@@ -5,6 +5,8 @@
 
     <string name="passworL">Contraseña</string>
 
+    <string name="passworC">Confirmar contraseña</string>
+
     <string name="craeteAccount">Crear Cuenta</string>
 
     <string name="forgotPassword">¿Olvidaste tu contraseña?</string>
@@ -21,9 +23,13 @@
 
     <string name="SecondSurnameTitle">Segundo apellido</string>
 
-    <string name="texBoton">Segundo apellido</string>
+    <string name="texBoton">Siguiente</string>
 
     <string name="UniversityTitle">Universidad</string>
+
+    <string name="screenTitleInfo">Información</string>
+
+    <string name="emailExample">ejemplo@algo.com</string>
 
 
 </resources>

@@ -22,8 +22,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
+import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.ui.components.texAndLable
 import com.example.oportunia.ui.theme.blackPanter
@@ -68,7 +70,7 @@ fun RegisterOptionScreenPAndE(studentViewModel: StudentViewModel, usersViewModel
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "OportunIA",
+                    text = stringResource(R.string.app_name),
                     fontSize = 64.sp,
                     color = Color.White,
                     textAlign = TextAlign.Center
@@ -77,7 +79,7 @@ fun RegisterOptionScreenPAndE(studentViewModel: StudentViewModel, usersViewModel
 
             // Título
             Text(
-                text = "Información",
+                text = stringResource(R.string.screenTitleInfo),
                 fontSize = 32.sp,
                 color = blackPanter,
                 modifier = Modifier.padding(top = 32.dp)
@@ -98,21 +100,21 @@ fun RegisterOptionScreenPAndE(studentViewModel: StudentViewModel, usersViewModel
                 var contraVali by remember { mutableStateOf("") }
 
                 texAndLable(
-                    titulo = "Correo electronico",
-                    placeholder = "ejemplo" + "@gmail.com",
+                    titulo = stringResource(R.string.emailL),
+                    placeholder = stringResource(R.string.emailExample),
                     valor = correo,
                     alCambiarValor = { correo = it }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 texAndLable(
-                    titulo = "Contraseña",
+                    titulo = stringResource(R.string.passworL),
                     placeholder = "",
                     valor = contra,
                     alCambiarValor = { contra = it }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 texAndLable(
-                    titulo = "Comfirmar contraseña",
+                    titulo = stringResource(R.string.passworC),
                     placeholder = "",
                     valor = contraVali,
                     alCambiarValor = { contraVali = it }
@@ -153,6 +155,13 @@ fun RegisterOptionScreenPAndE(studentViewModel: StudentViewModel, usersViewModel
                                 )
 
                                 navController.navigate(NavRoutes.Log.ROUTE)
+
+                                navController.navigate(NavRoutes.Log.ROUTE) {
+                                    popUpTo(0) { inclusive = true }
+                                }
+
+
+                                // aqui?????
 
                             } else {
                                 Log.d("StudentInfo", "Las contraseñas no coinciden")
