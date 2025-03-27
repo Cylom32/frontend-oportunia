@@ -36,10 +36,11 @@ import com.example.oportunia.ui.viewmodel.UsersViewModel
 
 
 @Composable
-fun RegisterOptionScreenPAndE(studentViewModel: StudentViewModel, usersViewModel: UsersViewModel,navController: NavHostController) {
-
-
-
+fun RegisterOptionScreenPAndE(
+    studentViewModel: StudentViewModel,
+    usersViewModel: UsersViewModel,
+    navController: NavHostController
+) {
 
     Surface(
         modifier = Modifier

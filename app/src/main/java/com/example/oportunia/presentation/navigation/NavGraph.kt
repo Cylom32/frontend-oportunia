@@ -32,12 +32,7 @@ fun NavGraph(
         navController = navController,
         startDestination = NavRoutes.Log.ROUTE
     ) {
-        composable(NavRoutes.Login.ROUTE) {
-            LoginScreen(
-                navController = navController,
-                paddingValues = paddingValues
-            )
-        }
+
 
         composable(NavRoutes.Log.ROUTE) {
             LogScreen(
@@ -66,7 +61,9 @@ fun NavGraph(
         }
         composable(NavRoutes.Settings.ROUTE) {
             SettingScreen(
-                modifier = Modifier.padding(paddingValues)
+                modifier = Modifier.padding(paddingValues),
+                navController = navController, // Pasamos el NavController
+                usersViewModel = usersViewModel,
             )
         }
 
