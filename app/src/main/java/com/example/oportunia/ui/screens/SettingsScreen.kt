@@ -78,7 +78,7 @@ fun SettingScreen(modifier: Modifier = Modifier){
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Settings",
+                    text = stringResource(R.string.titleSettings),
                     color = walterWhite,
                     fontSize = 40.sp,
                   //  fontWeight = FontWeight.Bold
