@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.ui.theme.OportunIATheme
@@ -43,11 +44,12 @@ import com.example.oportunia.ui.theme.lilBlue
 import com.example.oportunia.ui.theme.lilGray
 import com.example.oportunia.ui.theme.walterWhite
 import com.example.oportunia.ui.viewmodel.StudentState
+import com.example.oportunia.ui.viewmodel.UsersViewModel
 
 
 //@Preview
 @Composable
-fun SettingScreen(modifier: Modifier = Modifier){
+fun SettingScreen(modifier: Modifier = Modifier,navController:NavHostController,usersViewModel: UsersViewModel){
 
     Surface(
         modifier = Modifier
@@ -89,7 +91,7 @@ fun SettingScreen(modifier: Modifier = Modifier){
 
             Spacer(modifier = Modifier.height(25.dp))
             // Buttons Section
-            ButtonSectionSettings()
+            ButtonSectionSettings(navController=navController,usersViewModel=usersViewModel)
         }
     }
 
@@ -133,7 +135,7 @@ fun HeaderSectionSettings() {
 
 @Composable
 
-fun ButtonSectionSettings() {
+fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -190,7 +192,15 @@ fun ButtonSectionSettings() {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* Handle Logout action */ },
+            onClick = { /* Handle Logout action */
+                usersViewModel.logout() // Cerrar sesión
+                navController.navigate(NavRoutes.Log.ROUTE) { // Redirigir a la pantalla de login
+                    popUpTo(navController.graph.startDestinationId) // Limpiar el backstack
+                    launchSingleTop = true// Evitar multiples instancias
+                }
+
+
+                },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(125.dp),
@@ -218,10 +228,10 @@ fun ButtonSectionSettings() {
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun SettinsScreenPreview() {
-    OportunIATheme {
-        SettingScreen()
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SettinsScreenPreview() {
+//    OportunIATheme {
+//        SettingScreen()
+//    }
+//}
