@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.screens
+package com.example.oportunia.presentation.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,7 +9,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.oportunia.ui.theme.lilRedMain
+import com.example.oportunia.presentation.ui.theme.lilRedMain
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,9 +22,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.ui.theme.blackPanter
-import com.example.oportunia.ui.theme.lilGray
-import com.example.oportunia.ui.theme.walterWhite
+import com.example.oportunia.presentation.ui.theme.blackPanter
+import com.example.oportunia.presentation.ui.theme.lilGray
+import com.example.oportunia.presentation.ui.theme.walterWhite
 import androidx.compose.ui.res.stringResource
 
 @Composable
@@ -35,7 +35,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(0.dp)
-            .background(lilGray)
+            .background(com.example.oportunia.presentation.ui.theme.lilGray)
     ) {
 
 
@@ -49,7 +49,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(lilGray),
+                    .background(com.example.oportunia.presentation.ui.theme.lilGray),
 
                 ) {
 
@@ -63,7 +63,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                             clip = false
                         )
                         .background(
-                            color = lilRedMain,
+                            color = com.example.oportunia.presentation.ui.theme.lilRedMain,
                             shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                         ),
                     contentAlignment = Alignment.Center
@@ -82,7 +82,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                         .weight(1f)
                         .fillMaxWidth()
                         .padding(top = 20.dp)
-                        .background(color = lilGray),
+                        .background(color = com.example.oportunia.presentation.ui.theme.lilGray),
                     contentAlignment = Alignment.Center
                 )
 
@@ -91,7 +91,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                     Text(
                         text = stringResource(R.string.userTypTitle),
                         fontSize = 32.sp,
-                        color = blackPanter,
+                        color = com.example.oportunia.presentation.ui.theme.blackPanter,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 24.dp)
                     )
@@ -108,7 +108,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                             clip = false
                         )
                         .background(
-                            color = walterWhite,
+                            color = com.example.oportunia.presentation.ui.theme.walterWhite,
                             shape = RoundedCornerShape(24.dp)
                         )
                         .clickable {
@@ -119,7 +119,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                     Text(
                         text = stringResource(R.string.userTypeEst),
                         fontSize = 32.sp,
-                        color = blackPanter,
+                        color = com.example.oportunia.presentation.ui.theme.blackPanter,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -136,7 +136,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                             clip = false
                         )
                         .background(
-                            color = walterWhite,
+                            color = com.example.oportunia.presentation.ui.theme.walterWhite,
                             shape = RoundedCornerShape(24.dp)
                         ),
                     contentAlignment = Alignment.Center
@@ -144,7 +144,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                     Text(
                         text = stringResource(R.string.userTypeCom),
                         fontSize = 32.sp,
-                        color = blackPanter,
+                        color = com.example.oportunia.presentation.ui.theme.blackPanter,
                         textAlign = TextAlign.Center
                     )
                 }

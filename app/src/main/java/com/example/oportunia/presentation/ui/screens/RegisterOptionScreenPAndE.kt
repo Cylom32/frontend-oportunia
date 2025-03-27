@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.screens
+package com.example.oportunia.presentation.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.clickable
@@ -19,13 +19,13 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.ui.components.texAndLable
-import com.example.oportunia.ui.theme.blackPanter
-import com.example.oportunia.ui.theme.lilGray
-import com.example.oportunia.ui.theme.lilRedMain
-import com.example.oportunia.ui.theme.walterWhite
-import com.example.oportunia.ui.viewmodel.StudentViewModel
-import com.example.oportunia.ui.viewmodel.UsersViewModel
+import com.example.oportunia.presentation.ui.components.texAndLable
+import com.example.oportunia.presentation.ui.theme.blackPanter
+import com.example.oportunia.presentation.ui.theme.lilGray
+import com.example.oportunia.presentation.ui.theme.lilRedMain
+import com.example.oportunia.presentation.ui.theme.walterWhite
+import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 @Composable
 fun RegisterOptionScreenPAndE(
     studentViewModel: StudentViewModel,
@@ -44,12 +44,12 @@ fun RegisterOptionScreenPAndE(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(lilGray)
+            .background(com.example.oportunia.presentation.ui.theme.lilGray)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(lilGray),
+                .background(com.example.oportunia.presentation.ui.theme.lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -64,7 +64,7 @@ fun RegisterOptionScreenPAndE(
                         clip = false
                     )
                     .background(
-                        color = lilRedMain,
+                        color = com.example.oportunia.presentation.ui.theme.lilRedMain,
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -81,7 +81,7 @@ fun RegisterOptionScreenPAndE(
             Text(
                 text = stringResource(R.string.screenTitleInfo),
                 fontSize = 32.sp,
-                color = blackPanter,
+                color = com.example.oportunia.presentation.ui.theme.blackPanter,
                 modifier = Modifier.padding(top = 32.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -126,7 +126,7 @@ fun RegisterOptionScreenPAndE(
                             clip = false
                         )
                         .background(
-                            color = lilRedMain,
+                            color = com.example.oportunia.presentation.ui.theme.lilRedMain,
                             shape = RoundedCornerShape(10.dp)
                         )
                         .clickable {
@@ -172,7 +172,7 @@ fun RegisterOptionScreenPAndE(
                     Text(
                         text = stringResource(R.string.bTextConfirmar),
                         fontSize = 25.sp,
-                        color = walterWhite,
+                        color = com.example.oportunia.presentation.ui.theme.walterWhite,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(vertical = 12.dp)
                     )

@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.screens
+package com.example.oportunia.presentation.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.ui.theme.lilBlue
-import com.example.oportunia.ui.theme.lilGray
-import com.example.oportunia.ui.theme.walterWhite
-import com.example.oportunia.ui.viewmodel.UsersViewModel
+import com.example.oportunia.presentation.ui.theme.lilBlue
+import com.example.oportunia.presentation.ui.theme.lilGray
+import com.example.oportunia.presentation.ui.theme.walterWhite
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
 
 
@@ -51,12 +51,12 @@ fun SettingScreen(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(lilGray)
+            .background(com.example.oportunia.presentation.ui.theme.lilGray)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(lilGray),
+                .background(com.example.oportunia.presentation.ui.theme.lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -71,14 +71,14 @@ fun SettingScreen(
                         clip = false
                     )
                     .background(
-                        color = lilBlue,
+                        color = com.example.oportunia.presentation.ui.theme.lilBlue,
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(R.string.titleSettings),
-                    color = walterWhite,
+                    color = com.example.oportunia.presentation.ui.theme.walterWhite,
                     fontSize = 39.sp,
                     //  fontWeight = FontWeight.Bold
                 )
@@ -113,7 +113,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 .fillMaxWidth()
                 .height(125.dp), // Reducimos la altura para que sea consistente con los otros botones
             colors = ButtonDefaults.buttonColors(
-                containerColor = walterWhite,
+                containerColor = com.example.oportunia.presentation.ui.theme.walterWhite,
                 contentColor = Color.Black
             ),
             shape = RoundedCornerShape(34.dp),
@@ -138,7 +138,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 .fillMaxWidth()
                 .height(125.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = walterWhite,
+                containerColor = com.example.oportunia.presentation.ui.theme.walterWhite,
                 contentColor = Color.Black
             ),
             shape = RoundedCornerShape(34.dp),
@@ -170,7 +170,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 .fillMaxWidth()
                 .height(125.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = walterWhite, // Cambiamos el color de fondo a walterWhite
+                containerColor = com.example.oportunia.presentation.ui.theme.walterWhite, // Cambiamos el color de fondo a walterWhite
                 contentColor = Color.Black // Cambiamos el color del contenido a negro
             ),
             shape = RoundedCornerShape(34.dp), // Añadimos la misma forma que el botón "Cuenta"

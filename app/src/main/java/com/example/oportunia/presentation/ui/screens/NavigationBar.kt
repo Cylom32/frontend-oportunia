@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.screens
+package com.example.oportunia.presentation.ui.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
@@ -13,7 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.ui.theme.OportunIATheme
+import com.example.oportunia.presentation.ui.theme.OportunIATheme
 
 
 @Composable

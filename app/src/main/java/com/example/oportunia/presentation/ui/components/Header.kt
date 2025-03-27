@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.components
+package com.example.oportunia.presentation.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -25,32 +25,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
-import com.example.oportunia.ui.theme.OportunIATheme
-import com.example.oportunia.ui.theme.lilRedMain
 
-
-
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.background
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
-import com.example.oportunia.ui.components.texAndLable
-import com.example.oportunia.ui.theme.blackPanter
-import com.example.oportunia.ui.theme.lilGray
-import com.example.oportunia.ui.theme.walterWhite
+import com.example.oportunia.presentation.ui.theme.blackPanter
+import com.example.oportunia.presentation.ui.theme.lilGray
+import com.example.oportunia.presentation.ui.theme.walterWhite
 
 
 
@@ -63,12 +43,12 @@ fun Header(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(lilGray)
+            .background(com.example.oportunia.presentation.ui.theme.lilGray)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(lilGray)
+                .background(com.example.oportunia.presentation.ui.theme.lilGray)
         ) {
 
             // Encabezado con color personalizable
@@ -99,20 +79,20 @@ fun Header(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(lilGray)
+                    .background(com.example.oportunia.presentation.ui.theme.lilGray)
             ) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth()
                         .padding(top = 20.dp)
-                        .background(color = lilGray),
+                        .background(color = com.example.oportunia.presentation.ui.theme.lilGray),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "Información",
                         fontSize = 32.sp,
-                        color = blackPanter,
+                        color = com.example.oportunia.presentation.ui.theme.blackPanter,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(top = 24.dp)
                     )
@@ -123,7 +103,7 @@ fun Header(
                         .weight(1f)
                         .fillMaxWidth()
                         .padding(top = 20.dp)
-                        .background(color = lilGray),
+                        .background(color = com.example.oportunia.presentation.ui.theme.lilGray),
                     contentAlignment = Alignment.Center
                 ) {
                     Column(

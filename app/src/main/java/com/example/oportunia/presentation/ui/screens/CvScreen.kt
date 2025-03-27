@@ -1,4 +1,4 @@
-package com.example.oportunia.ui.screens
+package com.example.oportunia.presentation.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,16 +29,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.oportunia.R
-import com.example.oportunia.ui.theme.lilBlue
-import com.example.oportunia.ui.viewmodel.StudentState
-import com.example.oportunia.ui.viewmodel.StudentViewModel
+import com.example.oportunia.presentation.ui.theme.lilBlue
+
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
-import com.example.oportunia.ui.theme.blackPanter
-import com.example.oportunia.ui.theme.lilGray
-import com.example.oportunia.ui.theme.walterWhite
+import com.example.oportunia.presentation.ui.theme.blackPanter
+import com.example.oportunia.presentation.ui.theme.lilGray
+import com.example.oportunia.presentation.ui.theme.walterWhite
 import androidx.compose.material3.Surface
+import com.example.oportunia.presentation.ui.viewmodel.StudentState
+import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 
 
 @Composable
@@ -53,12 +54,12 @@ fun CVScreen(
      Surface(
          modifier = Modifier
              .fillMaxSize()
-             .background(lilGray)
+             .background(com.example.oportunia.presentation.ui.theme.lilGray)
      ) {
          Column(
              modifier = Modifier
                  .fillMaxSize()
-                 .background(lilGray),
+                 .background(com.example.oportunia.presentation.ui.theme.lilGray),
              horizontalAlignment = Alignment.CenterHorizontally
          ) {
 
@@ -73,7 +74,7 @@ fun CVScreen(
                          clip = false
                      )
                      .background(
-                         color = lilBlue,
+                         color = com.example.oportunia.presentation.ui.theme.lilBlue,
                          shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                      ),
                  contentAlignment = Alignment.Center
@@ -139,7 +140,7 @@ fun CVScreen(
              Text(
                  text = stringResource(R.string.titleCV),
                  fontSize = 32.sp,
-                 color = blackPanter,
+                 color = com.example.oportunia.presentation.ui.theme.blackPanter,
                  modifier = Modifier.padding(top = 20.dp)
              )
 
@@ -186,7 +187,7 @@ fun HeaderSection(studentViewModel: StudentViewModel) {
                 clip = false
             )
             .background(
-                lilBlue,
+                com.example.oportunia.presentation.ui.theme.lilBlue,
                 shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
             )
             .padding(16.dp),
@@ -270,7 +271,7 @@ fun ButtonSection() {
                 .fillMaxWidth()
                 .height(150.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = walterWhite,
+                containerColor = com.example.oportunia.presentation.ui.theme.walterWhite,
                 contentColor = Color.Black
             ),
             shape = RoundedCornerShape(24.dp),
@@ -303,7 +304,7 @@ fun ButtonSection() {
                 .fillMaxWidth()
                 .height(150.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = walterWhite,
+                containerColor = com.example.oportunia.presentation.ui.theme.walterWhite,
                 contentColor = Color.Black
             ),
             shape = RoundedCornerShape(34.dp),
