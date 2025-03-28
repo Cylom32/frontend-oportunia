@@ -22,6 +22,17 @@ val badRed = Color(0xFFFF0000)
 val blackPanter = Color(0xFF000000)
 
 
-/// alguitoasdasd dfgdfasdasddd
+/// degradado para el login
+
+val royalBlue = Color(0xFF0440D9)
+val deepSkyBlue = Color(0xFF037EAA)
+val midnightBlue = Color(0xFF022273)
+
+val gradientColors = listOf(
+    royalBlue,
+    deepSkyBlue,
+    midnightBlue
+)
+
 
 

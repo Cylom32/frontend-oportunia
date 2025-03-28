@@ -1,6 +1,6 @@
 package com.example.oportunia.presentation.ui.screens
 
-import android.util.Log
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -44,12 +44,16 @@ import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.texAndLable
-import com.example.oportunia.presentation.ui.theme.blackPanter
-import com.example.oportunia.presentation.ui.theme.lilGray
-import com.example.oportunia.presentation.ui.theme.lilRedMain
-import com.example.oportunia.presentation.ui.theme.walterWhite
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
+
+import androidx.compose.material3.Surface
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import com.example.oportunia.presentation.ui.theme.deepSkyBlue
+import com.example.oportunia.presentation.ui.theme.midnightBlue
+import com.example.oportunia.presentation.ui.theme.royalBlue
+
 
 var idSelectedU2 = 0
 
@@ -87,9 +91,35 @@ fun StudentInformationSettings2(studentViewModel: StudentViewModel, navControlle
                         clip = false
                     )
                     .background(
-                        color = com.example.oportunia.presentation.ui.theme.lilRedMain,
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                royalBlue,
+                                deepSkyBlue,
+                                midnightBlue
+                            ),
+                            start = Offset(0f, 0f),
+                            end = Offset(1000f, 1000f)
+                        ),
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                    ),
+                    )
+
+                /////
+//                    .background(
+//                        brush = Brush.linearGradient(
+//                            colors = listOf(
+//                                royalBlue,
+//                                deepSkyBlue,
+//                                midnightBlue
+//                            ),
+//                            start = Offset(0f, 0f),
+//                            end = Offset(1000f, 1000f)
+//                        ),
+//                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+//                    )
+
+                ////
+
+                ,
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -202,7 +232,15 @@ fun StudentInformationSettings2(studentViewModel: StudentViewModel, navControlle
                                 clip = false
                             )
                             .background(
-                                color = com.example.oportunia.presentation.ui.theme.lilRedMain,
+                                brush = Brush.linearGradient(
+                                    colors = listOf(
+                                        royalBlue,
+                                        deepSkyBlue,
+                                        midnightBlue
+                                    ),
+                                    start = Offset(0f, 0f),
+                                    end = Offset(1000f, 1000f)
+                                ),
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .clickable {
