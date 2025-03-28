@@ -20,3 +20,6 @@ val walterWhite = Color(0xFFFFFFFF)
 val okGreen = Color(0xFF93C393)
 val badRed = Color(0xFFFF0000)
 val blackPanter = Color(0xFF000000)
+
+
+/// alguito
