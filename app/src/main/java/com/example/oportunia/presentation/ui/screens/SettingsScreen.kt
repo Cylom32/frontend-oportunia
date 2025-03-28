@@ -39,6 +39,13 @@ import com.example.oportunia.presentation.ui.theme.lilGray
 import com.example.oportunia.presentation.ui.theme.walterWhite
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
+import androidx.compose.material3.Surface
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
+import com.example.oportunia.presentation.ui.theme.deepSkyBlue
+import com.example.oportunia.presentation.ui.theme.midnightBlue
+import com.example.oportunia.presentation.ui.theme.royalBlue
+
 
 
 @Composable
@@ -71,7 +78,15 @@ fun SettingScreen(
                         clip = false
                     )
                     .background(
-                        color = com.example.oportunia.presentation.ui.theme.lilBlue,
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                royalBlue,
+                                deepSkyBlue,
+                                midnightBlue
+                            ),
+                            start = Offset(0f, 0f),
+                            end = Offset(1000f, 1000f)
+                        ),
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                     ),
                 contentAlignment = Alignment.Center
