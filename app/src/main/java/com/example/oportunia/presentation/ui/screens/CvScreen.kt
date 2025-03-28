@@ -29,14 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.oportunia.R
-import com.example.oportunia.presentation.ui.theme.lilBlue
-
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
-import com.example.oportunia.presentation.ui.theme.blackPanter
 import com.example.oportunia.presentation.ui.theme.lilGray
-import com.example.oportunia.presentation.ui.theme.walterWhite
 import androidx.compose.material3.Surface
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -51,10 +47,7 @@ import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 
 
 @Composable
-fun CVScreen(
-    modifier: Modifier = Modifier,
-    studentViewModel: StudentViewModel
-)
+fun CVScreen(studentViewModel: StudentViewModel)
  {
 /////////////////////////////////////////////////////////////////////////////////
      val studentState by studentViewModel.studentState.collectAsState()
@@ -167,106 +160,7 @@ fun CVScreen(
          }
      }
 
-
-
-
-/////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-//    Column(
-//        modifier = modifier
-//            .fillMaxSize()
-//            .background(Color.LightGray.copy(alpha = 0.2f)),
-//        horizontalAlignment = Alignment.CenterHorizontally
-//    ) {
-//        // Header Section
-////        HeaderSection(studentViewModel)
-////        // Spacer to push buttons down
-////        Spacer(modifier = Modifier.height(100.dp))
-////        // Buttons Section
-////        ButtonSection()
-//
-//        Spacer(modifier = Modifier.weight(1f)) // Push buttons up and leave space for bottom nav
-//    }
 }
-
-
-@Composable
-fun HeaderSection(studentViewModel: StudentViewModel) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .shadow(
-                elevation = 8.dp,
-                shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
-                clip = false
-            )
-            .background(
-                com.example.oportunia.presentation.ui.theme.lilBlue,
-                shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-            )
-            .padding(16.dp),
-        contentAlignment = Alignment.Center
-
-    ) {
-        val studentState by studentViewModel.studentState.collectAsState()
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            when (studentState) {
-                is StudentState.Loading -> {
-                    Text(
-                        text = "Cargando...",
-                        color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                is StudentState.Success -> {
-                    val student = (studentState as StudentState.Success).student
-                    Text(
-                        text = "${student.name} ${student.lastName1}",
-                        color = Color.White,
-                        fontSize = 35.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Text(
-                        text = "Curriculum Vitae",
-                        color = Color.White,
-                        fontSize = 23.sp,
-                        fontWeight = FontWeight.Medium
-                    )
-                }
-
-                is StudentState.Error -> {
-                    val message = (studentState as StudentState.Error).message
-                    Text(
-                        text = "Error: $message",
-                        color = Color.Red,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-
-                StudentState.Empty -> {
-                    Text(
-                        text = "Sin datos de estudiante",
-                        color = Color.LightGray,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-
-    }
-}
-
 
 
 

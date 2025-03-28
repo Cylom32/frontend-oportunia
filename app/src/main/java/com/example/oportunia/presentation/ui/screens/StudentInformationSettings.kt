@@ -46,11 +46,11 @@ import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.texAndLable
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
-
-import androidx.compose.material3.Surface
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.deepSkyBlue
+import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.theme.midnightBlue
 import com.example.oportunia.presentation.ui.theme.royalBlue
 
@@ -101,25 +101,7 @@ fun StudentInformationSettings2(studentViewModel: StudentViewModel, navControlle
                             end = Offset(1000f, 1000f)
                         ),
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                    )
-
-                /////
-//                    .background(
-//                        brush = Brush.linearGradient(
-//                            colors = listOf(
-//                                royalBlue,
-//                                deepSkyBlue,
-//                                midnightBlue
-//                            ),
-//                            start = Offset(0f, 0f),
-//                            end = Offset(1000f, 1000f)
-//                        ),
-//                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-//                    )
-
-                ////
-
-                ,
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -156,7 +138,7 @@ fun StudentInformationSettings2(studentViewModel: StudentViewModel, navControlle
                     LaunchedEffect(student) {
                         studentViewModel.setNombre(student.name)
                         studentViewModel.setApellido1(student.lastName1)
-                        studentViewModel.setApellido2(student.lastName2 ?: "")
+                        studentViewModel.setApellido2(student.lastName2)
                         studentViewModel.setIdUniversidad(student.universityId ?: 0)
                     }
 
@@ -231,18 +213,7 @@ fun StudentInformationSettings2(studentViewModel: StudentViewModel, navControlle
                                 shape = RoundedCornerShape(24.dp),
                                 clip = false
                             )
-                            .background(
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        royalBlue,
-                                        deepSkyBlue,
-                                        midnightBlue
-                                    ),
-                                    start = Offset(0f, 0f),
-                                    end = Offset(1000f, 1000f)
-                                ),
-                                shape = RoundedCornerShape(10.dp)
-                            )
+                            .gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(10.dp))
                             .clickable {
                                 val nombre = studentViewModel.nombre.value.trim()
                                 val apellido1 = studentViewModel.apellido1.value.trim()

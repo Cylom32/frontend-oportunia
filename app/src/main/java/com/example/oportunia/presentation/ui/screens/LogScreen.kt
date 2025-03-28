@@ -1,4 +1,4 @@
-
+package com.example.oportunia.presentation.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -29,8 +29,8 @@ import androidx.compose.ui.text.style.TextAlign
 
 import androidx.navigation.NavHostController
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.presentation.ui.screens.PasswordLabel
-import com.example.oportunia.presentation.ui.theme.gradientColors
+import com.example.oportunia.presentation.ui.components.PasswordLabel
+import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import kotlinx.coroutines.launch
@@ -50,7 +50,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
-                    colors = gradientColors,
+                    colors = gradientColorsBlue,
                     start = Offset(0f, 0f),
                     end = Offset(1000f, 1000f)
                 )
@@ -121,7 +121,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                                 .shadow(6.dp, RoundedCornerShape(10.dp), clip = true)
                                 .background(Color.White, RoundedCornerShape(10.dp))
                         ) {
-                            com.example.oportunia.presentation.ui.screens.Label(
+                            com.example.oportunia.presentation.ui.components.Label(
                                 email = email,
                                 onEmailChange = { email = it },
                                 ""

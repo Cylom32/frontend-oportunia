@@ -28,7 +28,7 @@ val royalBlue = Color(0xFF0440D9)
 val deepSkyBlue = Color(0xFF037EAA)
 val midnightBlue = Color(0xFF022273)
 
-val gradientColors = listOf(
+val gradientColorsBlue = listOf(
     royalBlue,
     deepSkyBlue,
     midnightBlue

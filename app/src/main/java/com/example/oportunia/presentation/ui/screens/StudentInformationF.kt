@@ -37,8 +37,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
+import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.components.texAndLable
 import com.example.oportunia.presentation.ui.theme.blackPanter
+import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.theme.lilGray
 import com.example.oportunia.presentation.ui.theme.walterWhite
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
@@ -74,11 +76,8 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
                         clip = false
                     )
-                    .background(
-                        color = com.example.oportunia.presentation.ui.theme.lilRedMain,
-                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                    .gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+                    contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(R.string.app_name),
@@ -92,7 +91,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
             Text(
                 text = stringResource(R.string.screenTitleInfo),
                 fontSize = 32.sp,
-                color = com.example.oportunia.presentation.ui.theme.blackPanter,
+                color = blackPanter,
                 modifier = Modifier.padding(top = 32.dp)
             )
 
@@ -166,10 +165,7 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                         shape = RoundedCornerShape(24.dp),
                         clip = false
                     )
-                    .background(
-                        color = com.example.oportunia.presentation.ui.theme.lilRedMain,
-                        shape = RoundedCornerShape(10.dp)
-                    )
+                    .gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(10.dp))
                     .clickable {
 
                         val nombre = studentViewModel.nombre.value.trim()

@@ -1,6 +1,6 @@
 package com.example.oportunia.presentation.navigation
 
-import LogScreen
+
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.oportunia.presentation.ui.screens.CVScreen
 import com.example.oportunia.presentation.ui.screens.HomeScreen
+import com.example.oportunia.presentation.ui.screens.LogScreen
 import com.example.oportunia.presentation.ui.screens.NotificationsScreen
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreen
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenF
@@ -43,7 +44,6 @@ fun NavGraph(
 
         composable(NavRoutes.CV.ROUTE) {
             CVScreen(
-                modifier = Modifier.padding(paddingValues),
                 studentViewModel
             )
         }
@@ -60,7 +60,6 @@ fun NavGraph(
         }
         composable(NavRoutes.Settings.ROUTE) {
             SettingScreen(
-                modifier = Modifier.padding(paddingValues),
                 navController = navController, // Pasamos el NavController
                 usersViewModel = usersViewModel,
             )

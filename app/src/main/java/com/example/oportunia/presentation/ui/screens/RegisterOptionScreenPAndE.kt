@@ -11,6 +11,8 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -19,13 +21,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
+import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.components.texAndLable
-import com.example.oportunia.presentation.ui.theme.blackPanter
-import com.example.oportunia.presentation.ui.theme.lilGray
-import com.example.oportunia.presentation.ui.theme.lilRedMain
-import com.example.oportunia.presentation.ui.theme.walterWhite
+import com.example.oportunia.presentation.ui.theme.deepSkyBlue
+import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
+import com.example.oportunia.presentation.ui.theme.midnightBlue
+import com.example.oportunia.presentation.ui.theme.royalBlue
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
+
+
 @Composable
 fun RegisterOptionScreenPAndE(
     studentViewModel: StudentViewModel,
@@ -41,6 +46,26 @@ fun RegisterOptionScreenPAndE(
 
     val context = LocalContext.current
 
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.linearGradient(
+                    colors = gradientColorsBlue,
+                    start = Offset(0f, 0f),
+                    end = Offset(1000f, 1000f)
+                )
+            )
+    ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(0.dp),
+            color = Color.Transparent
+        ) {}
+    }
+
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -53,7 +78,7 @@ fun RegisterOptionScreenPAndE(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Encabezado
+
             Box(
                 modifier = Modifier
                     .height(150.dp)
@@ -62,11 +87,8 @@ fun RegisterOptionScreenPAndE(
                         elevation = 8.dp,
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
                         clip = false
-                    )
-                    .background(
-                        color = com.example.oportunia.presentation.ui.theme.lilRedMain,
-                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                    ),
+                    ).gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+//
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -77,7 +99,7 @@ fun RegisterOptionScreenPAndE(
                 )
             }
 
-            // Título
+
             Text(
                 text = stringResource(R.string.screenTitleInfo),
                 fontSize = 32.sp,
@@ -114,7 +136,7 @@ fun RegisterOptionScreenPAndE(
                     alCambiarValor = { contraVali = it }
                 )
 
-                Spacer(modifier = Modifier.height(200.dp))
+                Spacer(modifier = Modifier.height(150.dp))
 
                 Box(
                     modifier = Modifier
@@ -126,7 +148,15 @@ fun RegisterOptionScreenPAndE(
                             clip = false
                         )
                         .background(
-                            color = com.example.oportunia.presentation.ui.theme.lilRedMain,
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    royalBlue,
+                                    deepSkyBlue,
+                                    midnightBlue
+                                ),
+                                start = Offset(0f, 0f),
+                                end = Offset(1000f, 1000f)
+                            ),
                             shape = RoundedCornerShape(10.dp)
                         )
                         .clickable {
@@ -135,12 +165,15 @@ fun RegisterOptionScreenPAndE(
                                     alertMessage = context.getString(R.string.error_empty_email)
                                     showAlert = true
                                 }
+
                                 contra.isBlank() -> {
                                     alertMessage = context.getString(R.string.error_empty_password)
                                     showAlert = true
                                 }
+
                                 contra != contraVali -> {
-                                    alertMessage = context.getString(R.string.error_password_mismatch)
+                                    alertMessage =
+                                        context.getString(R.string.error_password_mismatch)
                                     showAlert = true
                                 }
 
