@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.oportunia.presentation.ui.theme.lilRedMain
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,10 +21,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.presentation.ui.theme.blackPanter
 import com.example.oportunia.presentation.ui.theme.lilGray
-import com.example.oportunia.presentation.ui.theme.walterWhite
 import androidx.compose.ui.res.stringResource
+import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
+import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 
 @Composable
 fun RegisterOptionScreen(navController: NavHostController) {
@@ -35,7 +34,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(0.dp)
-            .background(com.example.oportunia.presentation.ui.theme.lilGray)
+            .background(lilGray)
     ) {
 
 
@@ -49,7 +48,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(com.example.oportunia.presentation.ui.theme.lilGray),
+                    .background(lilGray),
 
                 ) {
 
@@ -62,10 +61,8 @@ fun RegisterOptionScreen(navController: NavHostController) {
                             shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
                             clip = false
                         )
-                        .background(
-                            color = com.example.oportunia.presentation.ui.theme.lilRedMain,
-                            shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                        ),
+                        .gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+//,
                     contentAlignment = Alignment.Center
                 )
                 {
@@ -82,7 +79,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                         .weight(1f)
                         .fillMaxWidth()
                         .padding(top = 20.dp)
-                        .background(color = com.example.oportunia.presentation.ui.theme.lilGray),
+                        .background(color = lilGray),
                     contentAlignment = Alignment.Center
                 )
 

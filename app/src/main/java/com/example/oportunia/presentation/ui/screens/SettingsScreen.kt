@@ -34,23 +34,15 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.presentation.ui.theme.lilBlue
 import com.example.oportunia.presentation.ui.theme.lilGray
 import com.example.oportunia.presentation.ui.theme.walterWhite
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-
-import androidx.compose.material3.Surface
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import com.example.oportunia.presentation.ui.theme.deepSkyBlue
-import com.example.oportunia.presentation.ui.theme.midnightBlue
-import com.example.oportunia.presentation.ui.theme.royalBlue
-
+import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
+import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 
 
 @Composable
 fun SettingScreen(
-    modifier: Modifier = Modifier,
     navController: NavHostController,
     usersViewModel: UsersViewModel
 ) {
@@ -58,12 +50,12 @@ fun SettingScreen(
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(com.example.oportunia.presentation.ui.theme.lilGray)
+            .background(lilGray)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(com.example.oportunia.presentation.ui.theme.lilGray),
+                .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
@@ -77,25 +69,14 @@ fun SettingScreen(
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
                         clip = false
                     )
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                royalBlue,
-                                deepSkyBlue,
-                                midnightBlue
-                            ),
-                            start = Offset(0f, 0f),
-                            end = Offset(1000f, 1000f)
-                        ),
-                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                    ),
+                    .gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+//,
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(R.string.titleSettings),
-                    color = com.example.oportunia.presentation.ui.theme.walterWhite,
-                    fontSize = 39.sp,
-                    //  fontWeight = FontWeight.Bold
+                    color = walterWhite,
+                    fontSize = 39.sp
                 )
             }
 
@@ -128,7 +109,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 .fillMaxWidth()
                 .height(125.dp), // Reducimos la altura para que sea consistente con los otros botones
             colors = ButtonDefaults.buttonColors(
-                containerColor = com.example.oportunia.presentation.ui.theme.walterWhite,
+                containerColor = walterWhite,
                 contentColor = Color.Black
             ),
             shape = RoundedCornerShape(34.dp),
@@ -153,7 +134,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 .fillMaxWidth()
                 .height(125.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = com.example.oportunia.presentation.ui.theme.walterWhite,
+                containerColor = walterWhite,
                 contentColor = Color.Black
             ),
             shape = RoundedCornerShape(34.dp),
@@ -185,7 +166,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 .fillMaxWidth()
                 .height(125.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = com.example.oportunia.presentation.ui.theme.walterWhite, // Cambiamos el color de fondo a walterWhite
+                containerColor = walterWhite, // Cambiamos el color de fondo a walterWhite
                 contentColor = Color.Black // Cambiamos el color del contenido a negro
             ),
             shape = RoundedCornerShape(34.dp), // Añadimos la misma forma que el botón "Cuenta"
