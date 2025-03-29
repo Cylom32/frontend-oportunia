@@ -1,7 +1,6 @@
 package com.example.oportunia.data.datasource
 
 import com.example.oportunia.data.datasource.model.StudentDTO
-import com.example.oportunia.data.datasource.model.UsersDTO
 import kotlinx.coroutines.flow.Flow
 
 interface StudentDataSource {

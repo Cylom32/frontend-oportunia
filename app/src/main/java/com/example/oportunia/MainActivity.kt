@@ -12,13 +12,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.oportunia.data.datasource.CvDataSourceImpl
 import com.example.oportunia.data.datasource.UsersDataSourceImple
 import com.example.oportunia.data.datasource.StudentDataSourceImple
 import com.example.oportunia.data.datasource.UniversityDataSourceImpl
 import com.example.oportunia.data.datasource.model.UniversityRepositoryImpl
+import com.example.oportunia.data.mapper.CvMapper
 import com.example.oportunia.data.mapper.UsersMapper
 import com.example.oportunia.data.mapper.StudentMapper
 import com.example.oportunia.data.mapper.UniversityMapper
+import com.example.oportunia.data.repository.CvRepositoryImpl
 import com.example.oportunia.data.repository.UsersRepositoryImpl
 import com.example.oportunia.data.repository.StudentRepositoryImpl
 import com.example.oportunia.presentation.factory.UsersViewModelFactory
@@ -50,23 +53,22 @@ class MainActivity : ComponentActivity() {
 
     private val studentViewModel: StudentViewModel by viewModels {
         val studentMapper = StudentMapper()
-
         val universityMapper = UniversityMapper()
-
-
+        val cvMapper = CvMapper()
 
         val studentDataSource = StudentDataSourceImple(studentMapper)
+        val universityDataSource = UniversityDataSourceImpl(universityMapper)
+        val cvDataSource = CvDataSourceImpl(cvMapper)
 
         val studentRepository = StudentRepositoryImpl(studentDataSource, studentMapper)
+        val universityRepository = UniversityRepositoryImpl(universityDataSource, universityMapper)
+        val cvRepository = CvRepositoryImpl(cvDataSource, cvMapper)
 
-        /////////////////////
-
-        val universityDataSource = UniversityDataSourceImpl(universityMapper)
-
-        val universityRepository = UniversityRepositoryImpl(universityDataSource,universityMapper)
-
-/////////////////////////////////
-        StudentViewModelFactory(studentRepository,universityRepository)
+        StudentViewModelFactory(
+            studentRepository = studentRepository,
+            universityRepository = universityRepository,
+            cvRepository = cvRepository
+        )
     }
 
 

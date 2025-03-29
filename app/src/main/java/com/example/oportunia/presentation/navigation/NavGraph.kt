@@ -45,7 +45,7 @@ fun NavGraph(
 
         composable(NavRoutes.CV.ROUTE) {
             CVScreen(
-                studentViewModel
+                studentViewModel, navController
             )
         }
 
@@ -86,7 +86,7 @@ fun NavGraph(
         }
 
         composable(NavRoutes.EditUCVScreen.ROUTE) {
-            EditUCVScreen()
+            EditUCVScreen(studentViewModel)
         }
 
 
