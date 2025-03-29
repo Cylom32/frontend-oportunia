@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.oportunia.presentation.ui.screens.CVScreen
+import com.example.oportunia.presentation.ui.screens.EditUCVScreen
 import com.example.oportunia.presentation.ui.screens.HomeScreen
 import com.example.oportunia.presentation.ui.screens.LogScreen
 import com.example.oportunia.presentation.ui.screens.NotificationsScreen
@@ -30,7 +31,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.Log.ROUTE
+        startDestination = NavRoutes.EditUCVScreen.ROUTE
     ) {
 
 
@@ -60,7 +61,7 @@ fun NavGraph(
         }
         composable(NavRoutes.Settings.ROUTE) {
             SettingScreen(
-                navController = navController, // Pasamos el NavController
+                navController = navController,
                 usersViewModel = usersViewModel,
             )
         }
@@ -82,6 +83,10 @@ fun NavGraph(
 
         composable(NavRoutes.StudentInformationSettings2 .ROUTE) {
             StudentInformationSettings2(studentViewModel, navController)
+        }
+
+        composable(NavRoutes.EditUCVScreen.ROUTE) {
+            EditUCVScreen()
         }
 
 

@@ -44,4 +44,10 @@ sealed class NavRoutes {
     data object StudentInformationSettings2 : NavRoutes() {
         const val ROUTE = "studentInformationSettings2"
     }
+
+    data object EditUCVScreen : NavRoutes() {
+
+        const val ROUTE = "editUCVScreen"
+
+    }
 }
