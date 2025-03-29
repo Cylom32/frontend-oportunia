@@ -36,6 +36,8 @@ import com.example.oportunia.presentation.ui.theme.lilGray
 import androidx.compose.material3.Surface
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.navigation.NavHostController
+import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.theme.deepSkyBlue
 import com.example.oportunia.presentation.ui.theme.midnightBlue
 import com.example.oportunia.presentation.ui.theme.royalBlue
@@ -47,7 +49,7 @@ import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 
 
 @Composable
-fun CVScreen(studentViewModel: StudentViewModel)
+fun CVScreen(studentViewModel: StudentViewModel, navController: NavHostController)
  {
 /////////////////////////////////////////////////////////////////////////////////
      val studentState by studentViewModel.studentState.collectAsState()
@@ -115,12 +117,6 @@ fun CVScreen(studentViewModel: StudentViewModel)
 
                              Spacer(modifier = Modifier.height(12.dp))
 
-//                             Text(
-//                                 text = "Curriculum Vitae",
-//                                 color = Color.White,
-//                                 fontSize = 23.sp,
-//                                 fontWeight = FontWeight.Medium
-//                             )
                          }
                      }
 
@@ -156,7 +152,7 @@ fun CVScreen(studentViewModel: StudentViewModel)
 
                      Spacer(modifier = Modifier.height(20.dp))
         // Buttons Section
-        ButtonSection()
+        ButtonSection(navController)
          }
      }
 
@@ -165,7 +161,7 @@ fun CVScreen(studentViewModel: StudentViewModel)
 
 
 @Composable
-fun ButtonSection() {
+fun ButtonSection(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,7 +173,9 @@ fun ButtonSection() {
         Spacer(modifier = Modifier.height(30.dp))
 
         Button(
-            onClick = { /* Handle Edit CV action */ },
+            onClick = {
+                navController.navigate(NavRoutes.EditUCVScreen.ROUTE)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp),
