@@ -17,13 +17,17 @@ import com.example.oportunia.data.datasource.UsersDataSourceImple
 import com.example.oportunia.data.datasource.StudentDataSourceImple
 import com.example.oportunia.data.datasource.UniversityDataSourceImpl
 import com.example.oportunia.data.datasource.model.UniversityRepositoryImpl
+import com.example.oportunia.data.datasource.network.UserDeserializer
+import com.example.oportunia.data.datasource.network.UserService
 import com.example.oportunia.data.mapper.CvMapper
 import com.example.oportunia.data.mapper.UsersMapper
 import com.example.oportunia.data.mapper.StudentMapper
 import com.example.oportunia.data.mapper.UniversityMapper
 import com.example.oportunia.data.repository.CvRepositoryImpl
+import com.example.oportunia.data.repository.RemoteUsersRepository
 import com.example.oportunia.data.repository.UsersRepositoryImpl
 import com.example.oportunia.data.repository.StudentRepositoryImpl
+import com.example.oportunia.domain.model.Users
 import com.example.oportunia.presentation.factory.UsersViewModelFactory
 import com.example.oportunia.presentation.factory.StudentViewModelFactory
 import com.example.oportunia.presentation.navigation.NavGraph
@@ -32,23 +36,34 @@ import com.example.oportunia.presentation.ui.screens.BottomNavigationBar
 import com.example.oportunia.presentation.ui.theme.OportunIATheme
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
+import com.google.gson.GsonBuilder
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity : ComponentActivity() {
 
     private val usersViewModel: UsersViewModel by viewModels {
-
         val mapper = UsersMapper()
-
-
         val dataSource = UsersDataSourceImple(mapper)
-
-
         val repository = UsersRepositoryImpl(dataSource, mapper)
 
+        // Ahora con remoteRepo
+        val gson = GsonBuilder()
+            .registerTypeAdapter(Users::class.java, UserDeserializer())
+            .create()
 
-        UsersViewModelFactory(repository)
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://67e9d753bdcaa2b7f5ba4752.mockapi.io/api/v1/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+        val userService = retrofit.create(UserService::class.java)
+        val remoteRepo = RemoteUsersRepository(userService)
+
+        UsersViewModelFactory(repository, remoteRepo)
     }
+
 
 
     private val studentViewModel: StudentViewModel by viewModels {

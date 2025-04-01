@@ -177,6 +177,10 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                                 .fillMaxWidth()
                                 .padding(top = 16.dp)
                                 .clickable {
+
+
+                                    usersViewModel.probarConexionConMockApi()
+
                                     coroutineScope.launch {
                                         usersViewModel.validateUserCredentials(
                                             email,

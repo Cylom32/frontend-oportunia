@@ -5,6 +5,7 @@ package com.example.oportunia.presentation.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.oportunia.data.repository.RemoteUsersRepository
 import com.example.oportunia.domain.model.Users
 import com.example.oportunia.domain.repository.UsersRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +23,9 @@ sealed class UsersState {
 
 
 class UsersViewModel(
-    private val repository: UsersRepository
+    private val repository: UsersRepository,
+    private val remoteRepository: RemoteUsersRepository
+
 ) : ViewModel() {
 
     private val _userState = MutableStateFlow<UsersState>(UsersState.Empty)
@@ -123,6 +126,21 @@ class UsersViewModel(
             Log.d("UsersViewModel", "Sesión cerrada correctamente")
         }
     }
+
+    fun probarConexionConMockApi() {
+        viewModelScope.launch {
+            val users = remoteRepository.getAllUsers()
+            if (users != null) {
+                Log.d("MockAPI", "Se recibieron ${users.size} usuarios desde la API.")
+                users.forEach {
+                    Log.d("MockAPI", "Usuario → ID: ${it.id}, Email: ${it.email}, RoleID: ${it.roleId}")
+                }
+            } else {
+                Log.e("MockAPI", "Error al conectar con la API.")
+            }
+        }
+    }
+
 
 
 
