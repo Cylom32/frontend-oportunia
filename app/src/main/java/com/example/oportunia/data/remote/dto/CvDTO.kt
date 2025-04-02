@@ -1,4 +1,4 @@
-package com.example.oportunia.data.datasource.model
+package com.example.oportunia.data.remote.dto
 
 data class CvDTO(
     val id: Int? = null,

@@ -26,28 +26,29 @@ import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 fun NavGraph(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    usersViewModel: UsersViewModel,
-    studentViewModel: StudentViewModel
+    usersViewModel: UsersViewModel
+   // studentViewModel: StudentViewModel
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.EditUCVScreen.ROUTE
+        startDestination = NavRoutes.Log.ROUTE
     ) {
 
 
         composable(NavRoutes.Log.ROUTE) {
             LogScreen(
                 navController = navController,
-                usersViewModel = usersViewModel, studentViewModel,
+                usersViewModel = usersViewModel
+                        //studentViewModel,
             )
         }
 
 
-        composable(NavRoutes.CV.ROUTE) {
-            CVScreen(
-                studentViewModel, navController
-            )
-        }
+//        composable(NavRoutes.CV.ROUTE) {
+//            CVScreen(
+//                studentViewModel, navController
+//            )
+//        }
 
         composable(NavRoutes.Home.ROUTE) {
             HomeScreen(
@@ -71,23 +72,23 @@ fun NavGraph(
             RegisterOptionScreen(navController)
         }
 
-        composable(NavRoutes.RegisterInformationF.ROUTE) {
-            RegisterOptionScreenF(studentViewModel, navController)
-        }
-
-        composable(NavRoutes.RegisterInformationPAndE.ROUTE) {
-            RegisterOptionScreenPAndE(studentViewModel, usersViewModel, navController)
-
-
-        }
-
-        composable(NavRoutes.StudentInformationSettings2 .ROUTE) {
-            StudentInformationSettings2(studentViewModel, navController)
-        }
-
-        composable(NavRoutes.EditUCVScreen.ROUTE) {
-            EditUCVScreen(studentViewModel)
-        }
+//        composable(NavRoutes.RegisterInformationF.ROUTE) {
+//            RegisterOptionScreenF(studentViewModel, navController)
+//        }
+//
+//        composable(NavRoutes.RegisterInformationPAndE.ROUTE) {
+//            RegisterOptionScreenPAndE(studentViewModel, usersViewModel, navController)
+//
+//
+//        }
+//
+//        composable(NavRoutes.StudentInformationSettings2 .ROUTE) {
+//            StudentInformationSettings2(studentViewModel, navController)
+//        }
+//
+//        composable(NavRoutes.EditUCVScreen.ROUTE) {
+//            EditUCVScreen(studentViewModel)
+//        }
 
 
 

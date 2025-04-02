@@ -37,7 +37,9 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, studentViewModel: StudentViewModel) {
+fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
+              //studentViewModel: StudentViewModel
+    ) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -179,7 +181,9 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                                 .clickable {
 
 
-                                    usersViewModel.probarConexionConMockApi()
+                                    usersViewModel.findAllUsers()
+
+                                 //   usersViewModel.probarConexionConMockApi()
 
                                     coroutineScope.launch {
                                         usersViewModel.validateUserCredentials(
@@ -194,7 +198,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                                                     "Usuario autenticado con ID: $userId"
                                                 )
                                                 usersViewModel.selectUserById(userId!!)
-                                                studentViewModel.loadStudentByUserId(usersViewModel.selectedUserIdValue())
+                                             //   studentViewModel.loadStudentByUserId(usersViewModel.selectedUserIdValue())
                                             } else {
                                                 Log.d(
                                                     "LoginDebug",

@@ -1,6 +1,6 @@
 package com.example.oportunia.data.mapper
 
-import com.example.oportunia.data.datasource.model.UniversityDTO
+import com.example.oportunia.data.remote.dto.UniversityDTO
 import com.example.oportunia.domain.model.University
 
 class UniversityMapper {

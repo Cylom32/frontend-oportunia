@@ -1,6 +1,6 @@
 package com.example.oportunia.data.mapper
 
-import com.example.oportunia.data.datasource.model.CvDTO
+import com.example.oportunia.data.remote.dto.CvDTO
 import com.example.oportunia.domain.model.Cv
 
 class CvMapper {

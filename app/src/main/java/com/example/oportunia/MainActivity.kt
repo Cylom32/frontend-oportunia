@@ -12,100 +12,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.oportunia.data.datasource.CvDataSourceImpl
-import com.example.oportunia.data.datasource.UsersDataSourceImple
-import com.example.oportunia.data.datasource.StudentDataSourceImple
-import com.example.oportunia.data.datasource.UniversityDataSourceImpl
-import com.example.oportunia.data.datasource.model.UniversityRepositoryImpl
-import com.example.oportunia.data.datasource.network.UserDeserializer
-import com.example.oportunia.data.datasource.network.UserService
-import com.example.oportunia.data.mapper.CvMapper
-import com.example.oportunia.data.mapper.UsersMapper
-import com.example.oportunia.data.mapper.StudentMapper
-import com.example.oportunia.data.mapper.UniversityMapper
-import com.example.oportunia.data.repository.CvRepositoryImpl
-import com.example.oportunia.data.repository.RemoteUsersRepository
-import com.example.oportunia.data.repository.UsersRepositoryImpl
-import com.example.oportunia.data.repository.StudentRepositoryImpl
-import com.example.oportunia.domain.model.Users
-import com.example.oportunia.presentation.factory.UsersViewModelFactory
-import com.example.oportunia.presentation.factory.StudentViewModelFactory
 import com.example.oportunia.presentation.navigation.NavGraph
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.screens.BottomNavigationBar
 import com.example.oportunia.presentation.ui.theme.OportunIATheme
-import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-import com.google.gson.GsonBuilder
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val usersViewModel: UsersViewModel by viewModels {
-        val mapper = UsersMapper()
-        val dataSource = UsersDataSourceImple(mapper)
-        val repository = UsersRepositoryImpl(dataSource, mapper)
-
-        // Ahora con remoteRepo
-        val gson = GsonBuilder()
-            .registerTypeAdapter(Users::class.java, UserDeserializer())
-            .create()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://67e9d753bdcaa2b7f5ba4752.mockapi.io/api/v1/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-
-        val userService = retrofit.create(UserService::class.java)
-        val remoteRepo = RemoteUsersRepository(userService)
-
-        UsersViewModelFactory(repository, remoteRepo)
-    }
-
-
-
-    private val studentViewModel: StudentViewModel by viewModels {
-        val studentMapper = StudentMapper()
-        val universityMapper = UniversityMapper()
-        val cvMapper = CvMapper()
-
-        val studentDataSource = StudentDataSourceImple(studentMapper)
-        val universityDataSource = UniversityDataSourceImpl(universityMapper)
-        val cvDataSource = CvDataSourceImpl(cvMapper)
-
-        val studentRepository = StudentRepositoryImpl(studentDataSource, studentMapper)
-        val universityRepository = UniversityRepositoryImpl(universityDataSource, universityMapper)
-        val cvRepository = CvRepositoryImpl(cvDataSource, cvMapper)
-
-        StudentViewModelFactory(
-            studentRepository = studentRepository,
-            universityRepository = universityRepository,
-            cvRepository = cvRepository
-        )
-    }
-
+    private val usersViewModel: UsersViewModel by viewModels() // ← Hilt inyecta automáticamente
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             OportunIATheme {
-                MainScreen(usersViewModel,studentViewModel)
+                MainScreen(usersViewModel)
             }
         }
     }
 }
 
-
 @Composable
-fun MainScreen(usersViewModel: UsersViewModel,studentViewModel: StudentViewModel) {
+fun MainScreen(usersViewModel: UsersViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: NavRoutes.Log.ROUTE
-    LaunchedEffect(Unit) {
-       // usersViewModel.findAllUsers()
-    }
 
     Scaffold(
         bottomBar = {
@@ -113,10 +46,9 @@ fun MainScreen(usersViewModel: UsersViewModel,studentViewModel: StudentViewModel
                 currentRoute != NavRoutes.Login.ROUTE &&
                 currentRoute != NavRoutes.RegisterOption.ROUTE &&
                 currentRoute != NavRoutes.RegisterInformationF.ROUTE &&
-                currentRoute != NavRoutes.RegisterInformationPAndE.ROUTE&&
+                currentRoute != NavRoutes.RegisterInformationPAndE.ROUTE &&
                 currentRoute != NavRoutes.StudentInformationSettings2.ROUTE
-
-                ) {
+            ) {
                 BottomNavigationBar(
                     selectedScreen = currentRoute,
                     onScreenSelected = { route ->
@@ -135,11 +67,8 @@ fun MainScreen(usersViewModel: UsersViewModel,studentViewModel: StudentViewModel
         NavGraph(
             navController = navController,
             paddingValues = paddingValues,
-            usersViewModel = usersViewModel,
-            studentViewModel = studentViewModel,
+            usersViewModel = usersViewModel
+            // studentViewModel = studentViewModel, // ← Puede añadirlo luego si aplica
         )
     }
 }
-
-
-

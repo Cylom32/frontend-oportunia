@@ -1,16 +1,16 @@
-package com.example.oportunia.data.datasource.network
-
+package com.example.oportunia.data.remote.interceptor
 
 
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import java.io.IOException
+import javax.inject.Inject
 
 /**
  * Interceptor to log and optionally modify HTTP responses.
  */
-class ResponseInterceptor : Interceptor {
+class ResponseInterceptor @Inject constructor() : Interceptor {
 
     /**
      * Intercepts the HTTP response to log and optionally modify it.
@@ -19,22 +19,20 @@ class ResponseInterceptor : Interceptor {
      * @return The intercepted and potentially modified response.
      * @throws IOException If an I/O error occurs during the interception.
      */
+    @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
-        val request = chain.request()
+        // Proceed with the request
+        val response = chain.proceed(chain.request())
 
-        // 🔍 Mostramos la URL que se está llamando
-        println(">> URL llamada por Retrofit: ${request.url}")
-
-        val response = chain.proceed(request)
+        // Convert the response body to a string
         val responseBodyString = response.body?.string()
 
+        // Log the raw response
         println("Raw Response: $responseBodyString")
 
+        // Return the response by re-creating the body with the intercepted content
         return response.newBuilder()
             .body((responseBodyString ?: "").toResponseBody(response.body?.contentType()))
             .build()
     }
-
-
-
 }

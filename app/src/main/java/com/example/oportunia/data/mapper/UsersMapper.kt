@@ -1,10 +1,11 @@
 package com.example.oportunia.data.mapper
 
-import com.example.oportunia.data.datasource.model.UsersDTO
+import com.example.oportunia.data.remote.dto.UsersDTO
 import com.example.oportunia.domain.model.Users
 import java.time.LocalDate
+import javax.inject.Inject // 👈 IMPORTANTE
 
-class UsersMapper {
+class UsersMapper @Inject constructor() {
     fun mapToDomain(dto: UsersDTO): Users = Users(
         id = dto.idUser ?: 0,
         email = dto.email,

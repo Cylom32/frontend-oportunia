@@ -1,6 +1,6 @@
 package com.example.oportunia.data.mapper
 
-import com.example.oportunia.data.datasource.model.RoleDTO
+import com.example.oportunia.data.remote.dto.RoleDTO
 import com.example.oportunia.domain.model.Role
 
 

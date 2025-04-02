@@ -1,4 +1,4 @@
-package com.example.oportunia.data.datasource.model
+package com.example.oportunia.data.remote.dto
 
 import java.time.LocalDate
 

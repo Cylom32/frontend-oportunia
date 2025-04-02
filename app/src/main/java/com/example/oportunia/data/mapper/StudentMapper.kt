@@ -1,6 +1,6 @@
 package com.example.oportunia.data.mapper
 
-import com.example.oportunia.data.datasource.model.StudentDTO
+import com.example.oportunia.data.remote.dto.StudentDTO
 import com.example.oportunia.domain.model.Student
 
 class StudentMapper {

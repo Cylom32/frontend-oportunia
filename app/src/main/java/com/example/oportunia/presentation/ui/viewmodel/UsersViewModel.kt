@@ -5,26 +5,26 @@ package com.example.oportunia.presentation.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.oportunia.data.repository.RemoteUsersRepository
 import com.example.oportunia.domain.model.Users
 import com.example.oportunia.domain.repository.UsersRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import javax.inject.Inject
 
 
-sealed class UsersState {
+sealed class UsersState  {
     data object Loading : UsersState()
     data class Success(val user: Users) : UsersState()
     data object Empty : UsersState()
     data class Error(val message: String) : UsersState()
 }
 
-
-class UsersViewModel(
-    private val repository: UsersRepository,
-    private val remoteRepository: RemoteUsersRepository
+@HiltViewModel
+class UsersViewModel @Inject constructor(
+    private val repository: UsersRepository
 
 ) : ViewModel() {
 
@@ -53,18 +53,24 @@ class UsersViewModel(
        return  selectedUser.value!!.id
     }
 
+
+
     fun findAllUsers() {
+        Log.d("UserDebug", "🔍 findAllUsers() fue invocado")
+
         viewModelScope.launch {
             repository.findAllUsers()
                 .onSuccess { users ->
-
+                    Log.d("UserDebug", "✅ Usuarios recibidos: ${users.size}")
                     _userList.value = users
                 }
                 .onFailure { exception ->
-                    Log.e("UserViewModel", "no se econtro nada")
+                    Log.e("UserDebug", "❌ Error al traer usuarios: ${exception.message}")
                 }
         }
     }
+
+
 
     fun validateUserCredentials(correo: String, password: String, onResult: (Boolean) -> Unit) {
         viewModelScope.launch {
@@ -127,19 +133,7 @@ class UsersViewModel(
         }
     }
 
-    fun probarConexionConMockApi() {
-        viewModelScope.launch {
-            val users = remoteRepository.getAllUsers()
-            if (users != null) {
-                Log.d("MockAPI", "Se recibieron ${users.size} usuarios desde la API.")
-                users.forEach {
-                    Log.d("MockAPI", "Usuario → ID: ${it.id}, Email: ${it.email}, RoleID: ${it.roleId}")
-                }
-            } else {
-                Log.e("MockAPI", "Error al conectar con la API.")
-            }
-        }
-    }
+
 
 
 

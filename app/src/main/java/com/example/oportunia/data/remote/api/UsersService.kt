@@ -1,0 +1,66 @@
+package com.example.oportunia.data.remote.api
+
+
+import com.example.oportunia.data.remote.dto.UsersDTO
+import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+
+/**
+ * Retrofit service interface that defines the API endpoints for user operations.
+ * This service interacts with the remote user API using HTTP methods.
+ */
+interface UsersService {
+
+    /**
+     * Retrieves all users from the remote API.
+     *
+     * @return [Response] containing a list of [UsersDTO] objects if successful
+     */
+    @GET("users")
+    suspend fun getAllUsers(): Response<List<UsersDTO>>
+
+    /**
+     * Retrieves a specific user by their unique identifier.
+     *
+     * @param id The unique identifier of the user to retrieve
+     * @return [Response] containing the requested [UsersDTO] if successful
+     */
+    @GET("users/{id}")
+    suspend fun getUserById(@Path("id") id: Int): Response<UsersDTO>
+
+    /**
+     * Creates a new user in the remote API.
+     *
+     * @param user The [UsersDTO] object containing the user data to create
+     * @return [Response] containing the created [UsersDTO] with server-assigned ID if successful
+     */
+    @POST("users/")
+    suspend fun createUser(@Body user: UsersDTO): Response<UsersDTO>
+
+    /**
+     * Updates an existing user in the remote API.
+     *
+     * @param id The unique identifier of the user to update
+     * @param user The [UsersDTO] object containing the updated user data
+     * @return [Response] containing the updated [UsersDTO] if successful
+     */
+    @PUT("users/{id}")
+    suspend fun updateUser(
+        @Path("id") id: Int,
+        @Body user: UsersDTO
+    ): Response<UsersDTO>
+
+    /**
+     * Deletes a user from the remote API.
+     *
+     * @param id The unique identifier of the user to delete
+     * @return [Response] indicating the success of the operation
+     */
+    @DELETE("users/{id}")
+    suspend fun deleteUser(@Path("id") id: Int): Response<Unit>
+}
