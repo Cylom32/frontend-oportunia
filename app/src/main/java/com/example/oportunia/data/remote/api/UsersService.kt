@@ -21,7 +21,7 @@ interface UsersService {
      *
      * @return [Response] containing a list of [UsersDTO] objects if successful
      */
-    @GET("users")
+    @GET("papurris")
     suspend fun getAllUsers(): Response<List<UsersDTO>>
 
     /**
@@ -63,4 +63,9 @@ interface UsersService {
      */
     @DELETE("users/{id}")
     suspend fun deleteUser(@Path("id") id: Int): Response<Unit>
+
+
+    @POST("login")
+    suspend fun loginUser(@Body credentials: Map<String, String>): Response<UsersDTO>
+
 }

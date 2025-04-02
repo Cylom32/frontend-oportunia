@@ -76,26 +76,42 @@ class UsersViewModel @Inject constructor(
         viewModelScope.launch {
             _userState.value = UsersState.Loading
 
-            repository.findUserByEmail(correo)
+            repository.loginUser(correo, password)
                 .onSuccess { user ->
-                    val isValid = user.password == password
-                    if (isValid) {
-                        _userState.value = UsersState.Success(user)
-                        _selectedUser.value = user
-
-
-                        onResult(true)
-                    } else {
-                        _userState.value = UsersState.Error("Contraseña incorrecta")
-                        onResult(false)
-                    }
+                    _userState.value = UsersState.Success(user)
+                    _selectedUser.value = user
+                    onResult(true)
                 }
                 .onFailure { exception ->
-                    _userState.value = UsersState.Error("Usuario no encontrado: ${exception.message}")
+                    _userState.value = UsersState.Error("Credenciales inválidas: ${exception.message}")
                     onResult(false)
                 }
         }
     }
+
+
+    fun loginTest() {
+        val email = "seanwade@gallagher.com"
+        val password = "@(mb0k!s7I"
+
+        viewModelScope.launch {
+            try {
+                val response = repository.loginUser(email, password)
+                response
+                    .onSuccess { user ->
+                        println("✅ Usuario encontrado: ${user.email}")
+                    }
+                    .onFailure {
+                        println("❌ Credenciales inválidas: ${it.message}")
+                    }
+            } catch (e: Exception) {
+                println("❌ Error en la petición: ${e.message}")
+            }
+        }
+    }
+
+
+
 
 
     fun getAuthenticatedUserId(): Int? {

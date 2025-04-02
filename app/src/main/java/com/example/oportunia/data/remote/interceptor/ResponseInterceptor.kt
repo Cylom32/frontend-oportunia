@@ -28,7 +28,7 @@ class ResponseInterceptor @Inject constructor() : Interceptor {
         val responseBodyString = response.body?.string()
 
         // Log the raw response
-        println("Raw Response: $responseBodyString")
+       // println("Raw Response: $responseBodyString")
 
         // Return the response by re-creating the body with the intercepted content
         return response.newBuilder()

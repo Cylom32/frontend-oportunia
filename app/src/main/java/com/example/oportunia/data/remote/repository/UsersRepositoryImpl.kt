@@ -46,7 +46,18 @@ class UsersRepositoryImpl @Inject constructor(
 
     override suspend fun findUserByEmail(email: String): Result<Users> {
         return Result.failure(Exception("Not implemented"))
-        // Cuando lo implemente en UsersRemoteDataSource, puede usar:
-        // return remoteDataSource.getUserByEmail(email).map { usersMapper.mapToDomain(it) }
     }
+
+    override suspend fun loginUser(email: String, password: String): Result<Users> {
+        return try {
+            remoteDataSource.loginUser(email, password).map { dto ->
+                usersMapper.mapToDomain(dto)
+            }
+        } catch (e: UnknownHostException) {
+            Result.failure(Exception("Network error: Cannot connect to server. Please check your internet connection."))
+        } catch (e: Exception) {
+            Result.failure(Exception("Login failed: ${e.message}"))
+        }
+    }
+
 }

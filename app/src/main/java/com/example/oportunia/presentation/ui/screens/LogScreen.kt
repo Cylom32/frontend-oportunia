@@ -181,33 +181,37 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
                                 .clickable {
 
 
-                                    usersViewModel.findAllUsers()
+                                   // usersViewModel.findAllUsers()
 
-                                 //   usersViewModel.probarConexionConMockApi()
+                                    usersViewModel.loginTest()
+
+
+                                    //   usersViewModel.probarConexionConMockApi()
 
                                     coroutineScope.launch {
-                                        usersViewModel.validateUserCredentials(
-                                            email,
-                                            password
-                                        ) { isValid ->
-                                            if (isValid && email.isNotEmpty() && password.isNotEmpty()) {
-                                                navController.navigate("home")
-                                                val userId = usersViewModel.getAuthenticatedUserId()
-                                                Log.d(
-                                                    "LoginDebug",
-                                                    "Usuario autenticado con ID: $userId"
-                                                )
-                                                usersViewModel.selectUserById(userId!!)
-                                             //   studentViewModel.loadStudentByUserId(usersViewModel.selectedUserIdValue())
-                                            } else {
-                                                Log.d(
-                                                    "LoginDebug",
-                                                    "Credenciales inválidas para $email"
-                                                )
-                                                showAlert = true
+                                        if (email.isNotEmpty() && password.isNotEmpty()) {
+                                            usersViewModel.validateUserCredentials(email, password) { isValid ->
+                                                if (isValid) {
+                                                    navController.navigate("home")
+
+                                                    val userId = usersViewModel.getAuthenticatedUserId()
+                                                    Log.d("LoginDebug", "Usuario autenticado con ID: $userId")
+
+                                                    if (userId != null) {
+                                                        usersViewModel.selectUserById(userId)
+                                                        // studentViewModel.loadStudentByUserId(userId)
+                                                    }
+                                                } else {
+                                                    Log.d("LoginDebug", "Credenciales inválidas para $email")
+                                                    showAlert = true
+                                                }
                                             }
+                                        } else {
+                                            Log.d("LoginDebug", "Campos vacíos")
+                                            showAlert = true
                                         }
                                     }
+
                                 },
                             textAlign = TextAlign.Center,
                             style = TextStyle(

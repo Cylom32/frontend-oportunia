@@ -69,4 +69,16 @@ class UsersRemoteDataSource @Inject constructor(
     } catch (e: Exception) {
         Result.failure(e)
     }
+
+    /**
+     * Attempts to log in a user by verifying credentials.
+     */
+    suspend fun loginUser(email: String, password: String): Result<UsersDTO> = safeApiCall {
+        val credentials = mapOf(
+            "email" to email,
+            "password" to password
+        )
+        usersService.loginUser(credentials)
+    }
+
 }
