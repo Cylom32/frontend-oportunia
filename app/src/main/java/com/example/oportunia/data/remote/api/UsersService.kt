@@ -9,6 +9,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * Retrofit service interface that defines the API endpoints for user operations.
@@ -21,7 +22,7 @@ interface UsersService {
      *
      * @return [Response] containing a list of [UsersDTO] objects if successful
      */
-    @GET("papurris")
+    @GET("users")
     suspend fun getAllUsers(): Response<List<UsersDTO>>
 
     /**
@@ -65,7 +66,11 @@ interface UsersService {
     suspend fun deleteUser(@Path("id") id: Int): Response<Unit>
 
 
-    @POST("login")
-    suspend fun loginUser(@Body credentials: Map<String, String>): Response<UsersDTO>
+    @GET("users")
+    suspend fun loginUser(
+        @Query("email") email: String,
+        @Query("password") password: String
+    ): Response<List<UsersDTO>>
+
 
 }

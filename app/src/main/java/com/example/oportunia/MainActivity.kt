@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val usersViewModel: UsersViewModel by viewModels() // ← Hilt inyecta automáticamente
+    private val usersViewModel: UsersViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,7 +68,7 @@ fun MainScreen(usersViewModel: UsersViewModel) {
             navController = navController,
             paddingValues = paddingValues,
             usersViewModel = usersViewModel
-            // studentViewModel = studentViewModel, // ← Puede añadirlo luego si aplica
+           // studentViewModel = studentViewModel
         )
     }
 }

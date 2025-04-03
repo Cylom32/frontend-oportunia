@@ -57,12 +57,12 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(com.example.oportunia.presentation.ui.theme.lilGray)
+            .background(lilGray)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(com.example.oportunia.presentation.ui.theme.lilGray),
+                .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 

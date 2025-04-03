@@ -51,6 +51,10 @@
 
     <string name="error_password_mismatch">Las contraseñas no coinciden.</string>
 
+    <string name="LanguageSettingTitle">Idioma</string>
+
+    <string name="LanguageSetting">Idioma</string>
+
 
 
 

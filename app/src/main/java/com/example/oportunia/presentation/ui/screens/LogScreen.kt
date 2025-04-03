@@ -181,9 +181,9 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
                                 .clickable {
 
 
-                                   // usersViewModel.findAllUsers()
+                                    usersViewModel.findAllUsers()
 
-                                    usersViewModel.loginTest()
+                                  //  usersViewModel.loginTest()
 
 
                                     //   usersViewModel.probarConexionConMockApi()

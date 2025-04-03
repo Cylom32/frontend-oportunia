@@ -80,6 +80,16 @@ class UsersViewModel @Inject constructor(
                 .onSuccess { user ->
                     _userState.value = UsersState.Success(user)
                     _selectedUser.value = user
+
+                    // Imprimir todos los datos del usuario autenticado
+                    Log.d("UsersViewModel", "✅ Usuario logueado:")
+                    Log.d("UsersViewModel", "ID: ${user.id}")
+                    Log.d("UsersViewModel", "Email: ${user.email}")
+                    Log.d("UsersViewModel", "Password: ${user.password}")
+                    Log.d("UsersViewModel", "Img: ${user.img}")
+                    Log.d("UsersViewModel", "Fecha: ${user.creationDate}")
+                    Log.d("UsersViewModel", "Rol: ${user.roleId}")
+
                     onResult(true)
                 }
                 .onFailure { exception ->
@@ -90,25 +100,27 @@ class UsersViewModel @Inject constructor(
     }
 
 
-    fun loginTest() {
-        val email = "seanwade@gallagher.com"
-        val password = "@(mb0k!s7I"
 
-        viewModelScope.launch {
-            try {
-                val response = repository.loginUser(email, password)
-                response
-                    .onSuccess { user ->
-                        println("✅ Usuario encontrado: ${user.email}")
-                    }
-                    .onFailure {
-                        println("❌ Credenciales inválidas: ${it.message}")
-                    }
-            } catch (e: Exception) {
-                println("❌ Error en la petición: ${e.message}")
-            }
-        }
-    }
+
+//    fun loginTest() {
+//        val email = "seanwade@gallagher.com"
+//        val password = "@(mb0k!s7I"
+//
+//        viewModelScope.launch {
+//            try {
+//                val response = repository.loginUser(email, password)
+//                response
+//                    .onSuccess { user ->
+//                        println("Usuario encontrado: ${user.email}")
+//                    }
+//                    .onFailure {
+//                        println("redenciales inválidas: ${it.message}")
+//                    }
+//            } catch (e: Exception) {
+//                println("irror en la petición: ${e.message}")
+//            }
+//        }
+//    }
 
 
 

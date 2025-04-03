@@ -21,7 +21,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object UsersNetworkModule {
-    private const val BASE_URL = "http://10.0.2.2:3000/"
+    private const val BASE_URL = "https://67e9d753bdcaa2b7f5ba4752.mockapi.io/api/v1/"
 
 
     private const val DATE_FORMAT = "yyyy-MM-dd"

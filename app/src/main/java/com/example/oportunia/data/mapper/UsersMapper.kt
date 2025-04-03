@@ -3,7 +3,7 @@ package com.example.oportunia.data.mapper
 import com.example.oportunia.data.remote.dto.UsersDTO
 import com.example.oportunia.domain.model.Users
 import java.time.LocalDate
-import javax.inject.Inject // 👈 IMPORTANTE
+import javax.inject.Inject
 
 class UsersMapper @Inject constructor() {
     fun mapToDomain(dto: UsersDTO): Users = Users(
