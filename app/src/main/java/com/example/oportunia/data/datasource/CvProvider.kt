@@ -4,23 +4,8 @@ import com.example.oportunia.domain.model.Cv
 
 class CvProvider {
     companion object {
-        private val cvList = mutableListOf(
-            Cv(
-                id = 41753,
-                name = "document%3A1000000037",
-                file = "content://com.android.providers.media.documents/document/document%3A1000000037",
-                studentId = 2,
-                status = true // o false según lo desee
-            ),
-            Cv(
-                id = 9331,
-                name = "document%3A1000000036",
-                file = "content://com.android.providers.media.documents/document/document%3A1000000036",
-                studentId = 2,
-                status = false
-            )
+        private val cvList = mutableListOf<Cv>()
 
-        )
 
         fun findCvById(id: Int): Cv? {
             return cvList.find { it.id == id }

@@ -10,6 +10,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -43,6 +45,8 @@ fun EditUCVScreen(
     val cvs by studentViewModel.cvList.collectAsState()
     val studentState by studentViewModel.studentState.collectAsState()
 
+    var showLimitDialog by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         studentViewModel.loadCvsBySelectedStudent()
         studentViewModel.printStudentAndCvs()
@@ -74,6 +78,20 @@ fun EditUCVScreen(
             }
         }
     )
+
+    // Alerta si ya hay 4 CVs
+    if (showLimitDialog) {
+        AlertDialog(
+            onDismissRequest = { showLimitDialog = false },
+            confirmButton = {
+                TextButton(onClick = { showLimitDialog = false }) {
+                    Text("Aceptar")
+                }
+            },
+            title = { Text("Límite alcanzado") },
+            text = { Text("Solo puede tener 4 CVs. Elimine uno para agregar otro.") }
+        )
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize().background(lilGray)
@@ -109,7 +127,6 @@ fun EditUCVScreen(
 
                     is StudentState.Success -> {
                         val student = (studentState as StudentState.Success).student
-
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxWidth()
@@ -120,12 +137,9 @@ fun EditUCVScreen(
                                 fontSize = 25.sp,
                                 fontWeight = FontWeight.Bold
                             )
-
                             Spacer(modifier = Modifier.height(12.dp))
-
                         }
                     }
-
 
                     is StudentState.Error -> {
                         val message = (studentState as StudentState.Error).message
@@ -161,12 +175,15 @@ fun EditUCVScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
                     onClick = {
-                        pdfPickerLauncher.launch(arrayOf("application/pdf"))
+                        if (cvs.size >= 4) {
+                            showLimitDialog = true
+                        } else {
+                            pdfPickerLauncher.launch(arrayOf("application/pdf"))
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                     shape = RoundedCornerShape(10.dp),
@@ -182,26 +199,29 @@ fun EditUCVScreen(
                     )
                 }
 
-                cvs.forEach { cv ->
-                    CVCard(
-                        fileName = cv.name,
-                        filePath = cv.file,
-                        status = cv.status,
-                        onDelete = {
-                            studentViewModel.deleteCv(cv)
-                        },
-                        onStatusChange = {
-                            studentViewModel.setCvAsActive(cv.id)
-                        }
-                    )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(390.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    itemsIndexed(cvs.take(4)) { _, cv ->
+                        CVCard(
+                            fileName = cv.name,
+                            filePath = cv.file,
+                            status = cv.status,
+                            onDelete = { studentViewModel.deleteCv(cv) },
+                            onStatusChange = { studentViewModel.setCvAsActive(cv.id) }
+                        )
+                    }
                 }
-
-
             }
         }
     }
 }
-
 
 @Composable
 fun CVCard(
