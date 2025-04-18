@@ -67,7 +67,7 @@ fun SentRequestScreen() {
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                // Aquí podés poner contenido como un título, por ejemplo:
+
                 Text(
                     text = "Solicitudes enviadas",
                     color = walterWhite,
@@ -85,7 +85,7 @@ fun SentRequestScreen() {
                 items(10) { index ->
                     InternshipCard(
                         companyName = "UNASA",
-                        logoResId = R.drawable.world, // cambiá esto por tu recurso real
+                        logoResId = R.drawable.world,
                         internshipTitle = "Pasantía",
                         fileName = "CV_$index.pdf",
                         date = "18/04/2025",
@@ -126,7 +126,7 @@ fun InternshipCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // Izquierda: Logo y nombre de compañía
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.width(80.dp)
@@ -145,7 +145,7 @@ fun InternshipCard(
                 )
             }
 
-            // Centro: Título, nombre del archivo y fecha
+
             Column(
                 modifier = Modifier.weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -168,7 +168,7 @@ fun InternshipCard(
                 )
             }
 
-            // Derecha: Check
+
             Icon(
                 imageVector = Icons.Default.Check,
                 contentDescription = "Aprobado",
