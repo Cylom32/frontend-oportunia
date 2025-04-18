@@ -50,4 +50,8 @@ sealed class NavRoutes {
         const val ROUTE = "editUCVScreen"
 
     }
+
+    data object SentRequestScreen : NavRoutes() {
+        const val ROUTE = "sentRequestScreen"
+    }
 }
