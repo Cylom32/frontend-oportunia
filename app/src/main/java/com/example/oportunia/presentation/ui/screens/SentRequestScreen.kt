@@ -42,65 +42,67 @@ import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import java.io.File
 import java.io.FileOutputStream
 
-@Preview
+
+@Preview(showBackground = true)
 @Composable
 fun SentRequestScreen() {
-    Surface(
-        modifier = Modifier.fillMaxSize().background(lilGray)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize().background(lilGray),
-            horizontalAlignment = Alignment.CenterHorizontally
+    BoxWithConstraints {
+        val screenHeight = maxHeight
+        val screenWidth = maxWidth
+
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(lilGray)
         ) {
-            Box(
-                modifier = Modifier
-                    .height(150.dp)
-                    .fillMaxWidth()
-                    .shadow(8.dp, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(royalBlue, deepSkyBlue, midnightBlue),
-                            start = Offset.Zero,
-                            end = Offset(1000f, 1000f)
+            Column(
+                modifier = Modifier.fillMaxSize().background(lilGray),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(screenHeight * 0.2f)
+                        .fillMaxWidth()
+                        .shadow(8.dp, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(royalBlue, deepSkyBlue, midnightBlue),
+                                start = Offset.Zero,
+                                end = Offset(1000f, 1000f)
+                            ),
+                            shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                         ),
-                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Text(
-                    text = "Solicitudes enviadas",
-                    color = walterWhite,
-                    fontSize = 39.sp
-                )
-            }
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 80.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(16.dp)
-            ) {
-                items(10) { index ->
-                    InternshipCard(
-                        companyName = "UNASA",
-                        logoResId = R.drawable.world,
-                        internshipTitle = "Pasantía",
-                        fileName = "CV_$index.pdf",
-                        date = "18/04/2025",
-                        onCheckClick = { /* Acción al hacer check */ }
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Solicitudes enviadas",
+                        color = walterWhite,
+                        fontSize = (screenWidth.value * 0.07).sp // Tamaño relativo al ancho
                     )
                 }
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 80.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(10) { index ->
+                        InternshipCard(
+                            companyName = "UNASA",
+                            logoResId = R.drawable.world,
+                            internshipTitle = "Pasantía",
+                            fileName = "CV_$index.pdf",
+                            date = "18/04/2025",
+                            onCheckClick = { /* Acción al hacer check */ }
+                        )
+                    }
+                }
             }
-
         }
-
-
     }
-
 }
-
 
 @Composable
 fun InternshipCard(
@@ -114,7 +116,7 @@ fun InternshipCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -126,7 +128,6 @@ fun InternshipCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.width(80.dp)
@@ -145,10 +146,11 @@ fun InternshipCard(
                 )
             }
 
-
             Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp),
+                horizontalAlignment = Alignment.Start
             ) {
                 Text(
                     text = internshipTitle,
@@ -168,7 +170,6 @@ fun InternshipCard(
                 )
             }
 
-
             Icon(
                 imageVector = Icons.Default.Check,
                 contentDescription = "Aprobado",
@@ -180,4 +181,3 @@ fun InternshipCard(
         }
     }
 }
-

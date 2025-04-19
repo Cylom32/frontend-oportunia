@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import com.example.oportunia.presentation.ui.screens.CVScreen
 import com.example.oportunia.presentation.ui.screens.EditUCVScreen
 import com.example.oportunia.presentation.ui.screens.HomeScreen
+import com.example.oportunia.presentation.ui.screens.HomeScreenS
 import com.example.oportunia.presentation.ui.screens.LogScreen
 import com.example.oportunia.presentation.ui.screens.NotificationsScreen
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreen
@@ -32,7 +33,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.SentRequestScreen.ROUTE
+        startDestination = NavRoutes.HomeScreenS.ROUTE
     ) {
 
 
@@ -40,7 +41,7 @@ fun NavGraph(
             LogScreen(
                 navController = navController,
                 usersViewModel = usersViewModel
-                        //studentViewModel,
+                //studentViewModel,
             )
         }
 
@@ -56,6 +57,11 @@ fun NavGraph(
                 modifier = Modifier.padding(paddingValues)
             )
         }
+
+        composable(NavRoutes.HomeScreenS.ROUTE) {
+            HomeScreenS()
+        }
+
         composable(NavRoutes.Notifications.ROUTE) {
             NotificationsScreen(
                 modifier = Modifier.padding(paddingValues)
@@ -73,7 +79,7 @@ fun NavGraph(
             RegisterOptionScreen(navController)
         }
 
-        composable(NavRoutes.SentRequestScreen.ROUTE){
+        composable(NavRoutes.SentRequestScreen.ROUTE) {
             SentRequestScreen()
         }
 
@@ -94,8 +100,6 @@ fun NavGraph(
 //        composable(NavRoutes.EditUCVScreen.ROUTE) {
 //            EditUCVScreen(studentViewModel)
 //        }
-
-
 
 
     }

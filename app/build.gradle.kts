@@ -59,6 +59,16 @@ dependencies {
     implementation(libs.androidx.navigation.runtime)
     implementation(libs.androidx.compose.material)
 
+
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
+
+    implementation(libs.accompanist.swiperefresh)
+
+
+
+
+
     // Retrofit + Gson + OkHttp
     implementation(libs.retrofit)
     implementation(libs.converter.gson)

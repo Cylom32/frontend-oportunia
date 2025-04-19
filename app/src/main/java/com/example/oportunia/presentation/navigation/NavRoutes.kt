@@ -54,4 +54,9 @@ sealed class NavRoutes {
     data object SentRequestScreen : NavRoutes() {
         const val ROUTE = "sentRequestScreen"
     }
+
+    data object HomeScreenS : NavRoutes() {
+        const val ROUTE = "homeScreenS"
+
+    }
 }
