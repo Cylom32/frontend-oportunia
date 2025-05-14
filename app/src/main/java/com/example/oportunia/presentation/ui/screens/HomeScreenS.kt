@@ -457,7 +457,7 @@ fun RemuneradoPopup(
 
 
 
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ImageScroll(modifier: Modifier = Modifier) {
     val images = List(10) { R.drawable.ochoamejorquenavas }

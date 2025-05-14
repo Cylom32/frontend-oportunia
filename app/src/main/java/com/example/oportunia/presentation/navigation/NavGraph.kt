@@ -9,9 +9,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.oportunia.presentation.ui.screens.CVScreen
+import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenS
 import com.example.oportunia.presentation.ui.screens.EditUCVScreen
 import com.example.oportunia.presentation.ui.screens.HomeScreen
 import com.example.oportunia.presentation.ui.screens.HomeScreenS
+import com.example.oportunia.presentation.ui.screens.LanguageOptionsScreenSC
 import com.example.oportunia.presentation.ui.screens.LogScreen
 import com.example.oportunia.presentation.ui.screens.NotificationsScreen
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreen
@@ -33,7 +35,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.HomeScreenS.ROUTE
+        startDestination = NavRoutes.CompanyInfoScreenS.ROUTE
     ) {
 
 
@@ -42,6 +44,13 @@ fun NavGraph(
                 navController = navController,
                 usersViewModel = usersViewModel
                 //studentViewModel,
+            )
+        }
+
+        composable(NavRoutes.LanguageOptionsSC.ROUTE) {
+            LanguageOptionsScreenSC(
+                navController = navController,
+               // usersViewModel = usersViewModel
             )
         }
 
@@ -82,6 +91,14 @@ fun NavGraph(
         composable(NavRoutes.SentRequestScreen.ROUTE) {
             SentRequestScreen()
         }
+
+        composable(NavRoutes.CompanyInfoScreenS.ROUTE) {
+            CompanyInfoScreenS(navController)
+        }
+
+//        composable (NavRoutes.LanguageOptionsSC.ROUTE){
+//            LanguageOptionsSC()
+//        }
 
 //        composable(NavRoutes.RegisterInformationF.ROUTE) {
 //            RegisterOptionScreenF(studentViewModel, navController)

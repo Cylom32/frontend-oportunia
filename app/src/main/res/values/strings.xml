@@ -53,7 +53,13 @@
 
     <string name="LanguageSettingTitle">Idioma</string>
 
-    <string name="LanguageSetting">Idioma</string>
+
+    <string name="LanguageOptiongTitle">Idioma</string>
+
+
+    <string name="ApplyButtonText">Aplicar</string>
+
+
 
 
 

@@ -59,4 +59,12 @@ sealed class NavRoutes {
         const val ROUTE = "homeScreenS"
 
     }
+
+    data object LanguageOptionsSC : NavRoutes() {
+        const val ROUTE = "languageOptionsSC"
+    }
+
+    data object CompanyInfoScreenS : NavRoutes() {
+        const val ROUTE = "companyInfoScreenS"
+    }
 }

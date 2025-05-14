@@ -87,6 +87,11 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
+
 }
 
 kapt {

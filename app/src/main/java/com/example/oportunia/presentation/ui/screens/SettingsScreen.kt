@@ -59,7 +59,7 @@ fun SettingScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            // Encabezado
+
             Box(
                 modifier = Modifier
                     .height(150.dp)
@@ -83,7 +83,7 @@ fun SettingScreen(
 
 
             Spacer(modifier = Modifier.height(25.dp))
-            // Buttons Section
+
             ButtonSectionSettings(navController = navController, usersViewModel = usersViewModel)
         }
     }
@@ -107,7 +107,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(125.dp), // Reducimos la altura para que sea consistente con los otros botones
+                .height(125.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = walterWhite,
                 contentColor = Color.Black
