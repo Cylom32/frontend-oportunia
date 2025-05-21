@@ -67,4 +67,8 @@ sealed class NavRoutes {
     data object CompanyInfoScreenS : NavRoutes() {
         const val ROUTE = "companyInfoScreenS"
     }
+
+    data object GridPublicationsScreenS : NavRoutes() {
+        const val ROUTE = "gridPublicationsScreenS"
+    }
 }
