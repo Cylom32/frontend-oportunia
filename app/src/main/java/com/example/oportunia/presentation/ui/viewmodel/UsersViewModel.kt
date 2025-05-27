@@ -5,6 +5,8 @@ package com.example.oportunia.presentation.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.oportunia.data.remote.dto.AuthResponseDto
+import com.example.oportunia.domain.model.AuthResult
 import com.example.oportunia.domain.model.Users
 import com.example.oportunia.domain.repository.UsersRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +24,15 @@ sealed class UsersState  {
     data class Error(val message: String) : UsersState()
 }
 
+// en UsersViewModel.kt o donde defines AuthState
+sealed class AuthState {
+    object Loading                   : AuthState()
+    object Empty                     : AuthState()
+    data class Success(val auth: AuthResult) : AuthState()
+    data class Error(val message: String)      : AuthState()
+}
+
+
 @HiltViewModel
 class UsersViewModel @Inject constructor(
     private val repository: UsersRepository
@@ -36,6 +47,13 @@ class UsersViewModel @Inject constructor(
 
     private val _userList = MutableStateFlow<List<Users>>(emptyList())
     val userList: StateFlow<List<Users>> = _userList
+
+
+
+    private val _authState = MutableStateFlow<AuthState>(AuthState.Empty)
+    val authState: StateFlow<AuthState> = _authState
+
+
 
     fun selectUserById(userId: Int) {
         viewModelScope.launch {
@@ -55,49 +73,49 @@ class UsersViewModel @Inject constructor(
 
 
 
-    fun findAllUsers() {
-        Log.d("UserDebug", "🔍 findAllUsers() fue invocado")
+//    fun findAllUsers() {
+//        Log.d("UserDebug", "🔍 findAllUsers() fue invocado")
+//
+//        viewModelScope.launch {
+//            repository.findAllUsers()
+//                .onSuccess { users ->
+//                    Log.d("UserDebug", "✅ Usuarios recibidos: ${users.size}")
+//                    _userList.value = users
+//                }
+//                .onFailure { exception ->
+//                    Log.e("UserDebug", "❌ Error al traer usuarios: ${exception.message}")
+//                }
+//        }
+//    }
 
-        viewModelScope.launch {
-            repository.findAllUsers()
-                .onSuccess { users ->
-                    Log.d("UserDebug", "✅ Usuarios recibidos: ${users.size}")
-                    _userList.value = users
-                }
-                .onFailure { exception ->
-                    Log.e("UserDebug", "❌ Error al traer usuarios: ${exception.message}")
-                }
-        }
-    }
 
 
-
-    fun validateUserCredentials(correo: String, password: String, onResult: (Boolean) -> Unit) {
-        viewModelScope.launch {
-            _userState.value = UsersState.Loading
-
-            repository.loginUser(correo, password)
-                .onSuccess { user ->
-                    _userState.value = UsersState.Success(user)
-                    _selectedUser.value = user
-
-                    // Imprimir todos los datos del usuario autenticado
-                    Log.d("UsersViewModel", "✅ Usuario logueado:")
-                    Log.d("UsersViewModel", "ID: ${user.id}")
-                    Log.d("UsersViewModel", "Email: ${user.email}")
-                    Log.d("UsersViewModel", "Password: ${user.password}")
-                    Log.d("UsersViewModel", "Img: ${user.img}")
-                    Log.d("UsersViewModel", "Fecha: ${user.creationDate}")
-                    Log.d("UsersViewModel", "Rol: ${user.roleId}")
-
-                    onResult(true)
-                }
-                .onFailure { exception ->
-                    _userState.value = UsersState.Error("Credenciales inválidas: ${exception.message}")
-                    onResult(false)
-                }
-        }
-    }
+//    fun validateUserCredentials(correo: String, password: String, onResult: (Boolean) -> Unit) {
+//        viewModelScope.launch {
+//            _userState.value = UsersState.Loading
+//
+//            repository.loginUser(correo, password)
+//                .onSuccess { user ->
+//                    _userState.value = UsersState.Success(user)
+//                    _selectedUser.value = user
+//
+//                    // Imprimir todos los datos del usuario autenticado
+//                    Log.d("UsersViewModel", "✅ Usuario logueado:")
+//                    Log.d("UsersViewModel", "ID: ${user.id}")
+//                    Log.d("UsersViewModel", "Email: ${user.email}")
+//                    Log.d("UsersViewModel", "Password: ${user.password}")
+//                    Log.d("UsersViewModel", "Img: ${user.img}")
+//                    Log.d("UsersViewModel", "Fecha: ${user.creationDate}")
+//                    Log.d("UsersViewModel", "Rol: ${user.roleId}")
+//
+//                    onResult(true)
+//                }
+//                .onFailure { exception ->
+//                    _userState.value = UsersState.Error("Credenciales inválidas: ${exception.message}")
+//                    onResult(false)
+//                }
+//        }
+//    }
 
 
 
@@ -163,8 +181,36 @@ class UsersViewModel @Inject constructor(
 
 
 
+    fun login(
+        correo: String,
+        password: String,
+        onResult: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch {
+            _authState.value = AuthState.Loading
 
+            repository.loginUser(correo, password)
+                .onSuccess { authResponse ->
+                    _authState.value = AuthState.Success(authResponse)
+                    Log.d("LoginDebug", "AuthResponse recibido: $authResponse")
+                    onResult(true)
+                }
+                .onFailure { ex ->
+                    _authState.value = AuthState.Error("Credenciales inválidas: ${ex.message}")
+                    onResult(false)
+                }
+        }
+    }
 
+    // Si necesitas obtener el token o el userId en otras partes:
+    fun getToken(): String? =
+        (authState.value as? AuthState.Success)?.auth?.token
+
+    fun getUserId(): Int? =
+        (authState.value as? AuthState.Success)
+            ?.auth
+            ?.userId
+            ?.toIntOrNull()
 
 
 

@@ -181,7 +181,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
                                 .clickable {
 
 
-                                    usersViewModel.findAllUsers()
+                                  //  usersViewModel.findAllUsers()
 
                                   //  usersViewModel.loginTest()
 
@@ -190,16 +190,19 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
 
                                     coroutineScope.launch {
                                         if (email.isNotEmpty() && password.isNotEmpty()) {
-                                            usersViewModel.validateUserCredentials(email, password) { isValid ->
+                                            usersViewModel.login(email, password) { isValid ->
                                                 if (isValid) {
+                                                    // 1) Navega a Home
                                                     navController.navigate("home")
 
-                                                    val userId = usersViewModel.getAuthenticatedUserId()
+                                                    // 2) Obtén el ID como Int?
+                                                    val userId = usersViewModel.getUserId()
                                                     Log.d("LoginDebug", "Usuario autenticado con ID: $userId")
 
-                                                    if (userId != null) {
-                                                        usersViewModel.selectUserById(userId)
-                                                        // studentViewModel.loadStudentByUserId(userId)
+                                                    // 3) Si existe, selecciónalo
+                                                    userId?.let {
+                                                        usersViewModel.selectUserById(it)
+                                                        // studentViewModel.loadStudentByUserId(it)
                                                     }
                                                 } else {
                                                     Log.d("LoginDebug", "Credenciales inválidas para $email")
@@ -211,6 +214,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
                                             showAlert = true
                                         }
                                     }
+
 
                                 },
                             textAlign = TextAlign.Center,

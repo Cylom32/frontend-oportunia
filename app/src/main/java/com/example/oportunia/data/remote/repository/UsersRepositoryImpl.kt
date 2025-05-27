@@ -1,12 +1,17 @@
 package com.example.oportunia.data.remote.repository
 
 import com.example.oportunia.data.mapper.UsersMapper
+import com.example.oportunia.data.remote.AuthRemoteDataSource
 import com.example.oportunia.data.remote.UsersRemoteDataSource
+import com.example.oportunia.data.remote.dto.AuthResponseDto
+import com.example.oportunia.domain.model.AuthResult
 import com.example.oportunia.domain.model.Users
 import com.example.oportunia.domain.repository.UsersRepository
 import kotlinx.coroutines.flow.first
 import java.net.UnknownHostException
 import javax.inject.Inject
+
+import com.example.oportunia.domain.model.Credentials
 
 
 /**
@@ -19,7 +24,8 @@ import javax.inject.Inject
 
 class UsersRepositoryImpl @Inject constructor(
     private val remoteDataSource: UsersRemoteDataSource,
-    private val usersMapper: UsersMapper
+    private val usersMapper: UsersMapper,
+    private val authRemoteDataSource: AuthRemoteDataSource
 ) : UsersRepository {
 
     override suspend fun findAllUsers(): Result<List<Users>> {
@@ -48,19 +54,27 @@ class UsersRepositoryImpl @Inject constructor(
         return Result.failure(Exception("Not implemented"))
     }
 
-    override suspend fun loginUser(email: String, password: String): Result<Users> {
-        return try {
-            remoteDataSource.loginUser(email, password).map { dto ->
-                usersMapper.mapToDomain(dto)
-            }
-        } catch (e: UnknownHostException) {
-            Result.failure(Exception("Network error: Cannot connect to server. Please check your internet connection."))
-        } catch (e: Exception) {
-            Result.failure(Exception("Login failed: ${e.message}"))
-        }
+//    override suspend fun loginUser(email: String, password: String): Result<Users> {
+//        return try {
+//            remoteDataSource.loginUser(email, password).map { dto ->
+//                usersMapper.mapToDomain(dto)
+//            }
+//        } catch (e: UnknownHostException) {
+//            Result.failure(Exception("Network error: Cannot connect to server. Please check your internet connection."))
+//        } catch (e: Exception) {
+//            Result.failure(Exception("Login failed: ${e.message}"))
+//        }
+//    }
+
+    override suspend fun loginUser(email: String, password: String): Result<AuthResult> {
+        // utiliza tu Domain-model Credentials
+        val creds = Credentials(username = email, password = password)
+        // delega directamente en el data source
+        return authRemoteDataSource.login(creds)
     }
-
-
-
-
 }
+
+
+
+
+

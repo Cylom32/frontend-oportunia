@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import com.example.oportunia.presentation.ui.screens.CVScreen
 import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenS
 import com.example.oportunia.presentation.ui.screens.EditUCVScreen
+import com.example.oportunia.presentation.ui.screens.GridPublicationsScreenS
 import com.example.oportunia.presentation.ui.screens.HomeScreen
 import com.example.oportunia.presentation.ui.screens.HomeScreenS
 import com.example.oportunia.presentation.ui.screens.LanguageOptionsScreenSC
@@ -35,9 +36,15 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.CompanyInfoScreenS.ROUTE
+        startDestination = NavRoutes.Log.ROUTE
     ) {
 
+        composable(NavRoutes.GridPublicationsScreenS.ROUTE) {
+            GridPublicationsScreenS(
+                navController = navController,
+            )
+        }
+ // pa un commit
 
         composable(NavRoutes.Log.ROUTE) {
             LogScreen(
