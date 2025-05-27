@@ -28,6 +28,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.PasswordLabel
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
@@ -78,14 +80,28 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
-                        Image(
-                            painter = painterResource(id = R.drawable.shakehands1062821),
-                            contentDescription = "Descripción accesible",
+
+                        AsyncImage(
+                            model = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/2048px-Instagram_logo_2022.svg.png",
+                            contentDescription = "Logo handshake",
                             modifier = Modifier
                                 .size(150.dp)
-                                .padding(top = 20.dp),
-                            colorFilter = ColorFilter.tint(Color.White),
+                                .padding(top = 20.dp)
                         )
+
+
+//                        Image(
+//                          //  painter = painterResource(id = R.drawable.shakehands1062821),
+//
+//                            painter = rememberAsyncImagePainter(
+//                                "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/2048px-Instagram_logo_2022.svg.png"
+//                            ),
+//                            contentDescription = "Descripción accesible",
+//                            modifier = Modifier
+//                                .size(150.dp)
+//                                .padding(top = 20.dp),
+//                            colorFilter = ColorFilter.tint(Color.White),
+//                        )
 
                         Spacer(modifier = Modifier.height(50.dp))
 
