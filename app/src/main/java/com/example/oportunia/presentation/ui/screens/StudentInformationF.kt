@@ -48,7 +48,7 @@ import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 var idSelectedU = 0
 
 @Composable
-fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: NavHostController) {
+fun RegisterOptionScreenF(navController: NavHostController) {
 
 
 
@@ -104,31 +104,31 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
             ) {
-                val nombre by studentViewModel.nombre.collectAsState()
-                val apellido1 by studentViewModel.apellido1.collectAsState()
-                val apellido2 by studentViewModel.apellido2.collectAsState()
+//                val nombre by studentViewModel.nombre.collectAsState()
+//                val apellido1 by studentViewModel.apellido1.collectAsState()
+//                val apellido2 by studentViewModel.apellido2.collectAsState()
 
                 texAndLable(
                     titulo = stringResource(R.string.nameTitle),
                     placeholder = "",
-                    valor = nombre,
-                    alCambiarValor = { studentViewModel.setNombre(it) }
+                    valor = "asd",
+                    alCambiarValor = { }
                 )
 
 
                 texAndLable(
                     titulo = stringResource(R.string.FirstSurnameTitle),
                     placeholder = "",
-                    valor = apellido1,
-                    alCambiarValor = { studentViewModel.setApellido1(it) }
+                    valor = "apellido1",
+                    alCambiarValor = {  }
                 )
 
 
                 texAndLable(
                     titulo = stringResource(R.string.SecondSurnameTitle),
                     placeholder = "",
-                    valor = apellido2,
-                    alCambiarValor = { studentViewModel.setApellido2(it) }
+                    valor = "apellido2",
+                    alCambiarValor = {  }
                 )
             }
 
@@ -145,11 +145,11 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                 var selectedUniversity by remember { mutableStateOf("    ") }
 
 
-                UniversityDropdown(
-                    selectedUniversity = selectedUniversity,
-                    onUniversitySelected = { selectedUniversity = it },
-                    studentViewModel
-                )
+//                UniversityDropdown(
+//                    selectedUniversity = selectedUniversity,
+//                    onUniversitySelected = { selectedUniversity = it },
+//                    studentViewModel
+//                )
             }
 
             Spacer(modifier = Modifier.height(120.dp))
@@ -168,18 +168,18 @@ fun RegisterOptionScreenF(studentViewModel: StudentViewModel, navController: Nav
                     .gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(10.dp))
                     .clickable {
 
-                        val nombre = studentViewModel.nombre.value.trim()
-                        val apellido1 = studentViewModel.apellido1.value.trim()
-                        val apellido2 = studentViewModel.apellido2.value.trim()
-                        val universidadId = idSelectedU
+//                        val nombre = studentViewModel.nombre.value.trim()
+//                        val apellido1 = studentViewModel.apellido1.value.trim()
+//                        val apellido2 = studentViewModel.apellido2.value.trim()
+//                        val universidadId = idSelectedU
 
-                        studentViewModel.setIdUniversidad(universidadId)
+                        //studentViewModel.setIdUniversidad(universidadId)
 
-                        if (nombre.isNotEmpty() && apellido1.isNotEmpty() && apellido2.isNotEmpty() && universidadId != 0) {
-                            navController.navigate(NavRoutes.RegisterInformationPAndE.ROUTE)
-                        } else {
-                            showAlert = true
-                        }
+//                        if (nombre.isNotEmpty() && apellido1.isNotEmpty() && apellido2.isNotEmpty() && universidadId != 0) {
+//                            navController.navigate(NavRoutes.RegisterInformationPAndE.ROUTE)
+//                        } else {
+//                            showAlert = true
+//                        }
                     }
                 ,
                 contentAlignment = Alignment.Center

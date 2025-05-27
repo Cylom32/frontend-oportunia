@@ -33,7 +33,6 @@ import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
 @Composable
 fun RegisterOptionScreenPAndE(
-    studentViewModel: StudentViewModel,
     usersViewModel: UsersViewModel,
     navController: NavHostController
 ) {
@@ -178,21 +177,21 @@ fun RegisterOptionScreenPAndE(
                                 }
 
                                 else -> {
-                                    studentViewModel.setCorreo(correo)
-                                    studentViewModel.setContrasenna(contraVali)
+//                                    studentViewModel.setCorreo(correo)
+//                                    studentViewModel.setContrasenna(contraVali)
 
-                                    Log.d("StudentInfo", "Correo guardado: $correo")
-                                    Log.d("StudentInfo", "Contraseña guardada: $contraVali")
+//                                    Log.d("StudentInfo", "Correo guardado: $correo")
+//                                    Log.d("StudentInfo", "Contraseña guardada: $contraVali")
 
                                     val userId = usersViewModel.getNextId()
-                                    studentViewModel.saveStudent(userId)
+                                 //   studentViewModel.saveStudent(userId)
 
-                                    usersViewModel.saveUser(
-                                        id = userId,
-                                        email = studentViewModel.correo.value,
-                                        password = studentViewModel.contrasenna.value,
-                                        roleId = 3
-                                    )
+//                                    usersViewModel.saveUser(
+//                                        id = userId,
+//                                        email = studentViewModel.correo.value,
+//                                        password = studentViewModel.contrasenna.value,
+//                                        roleId = 3
+//                                    )
 
                                     navController.navigate(NavRoutes.Log.ROUTE) {
                                         popUpTo(0) { inclusive = true }

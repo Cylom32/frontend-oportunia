@@ -107,15 +107,13 @@ fun NavGraph(
 //            LanguageOptionsSC()
 //        }
 
-//        composable(NavRoutes.RegisterInformationF.ROUTE) {
-//            RegisterOptionScreenF(studentViewModel, navController)
-//        }
-//
-//        composable(NavRoutes.RegisterInformationPAndE.ROUTE) {
-//            RegisterOptionScreenPAndE(studentViewModel, usersViewModel, navController)
-//
-//
-//        }
+        composable(NavRoutes.RegisterInformationF.ROUTE) {
+            RegisterOptionScreenF(navController)
+        }
+
+        composable(NavRoutes.RegisterInformationPAndE.ROUTE) {
+            RegisterOptionScreenPAndE(usersViewModel, navController)
+        }
 //
 //        composable(NavRoutes.StudentInformationSettings2 .ROUTE) {
 //            StudentInformationSettings2(studentViewModel, navController)
