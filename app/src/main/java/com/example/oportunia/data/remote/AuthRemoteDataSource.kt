@@ -40,7 +40,8 @@ class AuthRemoteDataSource @Inject constructor(
                 if (response.isSuccessful) {
                     // First try Authorization header
                     val authHeader = response.headers()["Authorization"]
-                    if (!authHeader.isNullOrBlank()) {
+                    val body = response.body()
+                    if (!authHeader.isNullOrBlank() && body !=null) {
                         Log.d(
                             "AuthRemoteDataSource",
                             "Found token in Authorization header: ${authHeader.take(15)}..."
@@ -48,10 +49,17 @@ class AuthRemoteDataSource @Inject constructor(
                         return@withContext Result.success(
                             AuthResult(
                                 token = authHeader,
-                                userId = "" // placeholder or parse from header if available
+                                email = body.email // placeholder or parse from header if available
                             )
                         )
                     }
+
+                    // Fallback to response body  -->Esto no se al rato esta de mas
+                    if (body != null) {
+                        Log.d("AuthRemoteDataSource", "Login successful with body: $body")
+                        return@withContext Result.success(AuthMapper.dtoToAuthResult(body))
+                    }
+
                     // Fallback to response body
                     response.body()?.let { dto ->
                         Log.d("AuthRemoteDataSource", "Login successful with body: $dto")

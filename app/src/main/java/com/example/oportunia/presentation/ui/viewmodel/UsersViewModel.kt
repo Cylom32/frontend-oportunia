@@ -209,7 +209,7 @@ class UsersViewModel @Inject constructor(
     fun getUserId(): Int? =
         (authState.value as? AuthState.Success)
             ?.auth
-            ?.userId
+            ?.email
             ?.toIntOrNull()
 
 

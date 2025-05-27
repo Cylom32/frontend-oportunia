@@ -25,6 +25,6 @@ object AuthMapper {
     fun dtoToAuthResult(dto: AuthResponseDto): AuthResult =
         AuthResult(
             token  = dto.token,
-            userId = dto.userId
+            email = dto.email
         )
 }
