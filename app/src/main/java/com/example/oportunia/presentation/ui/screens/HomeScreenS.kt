@@ -46,7 +46,6 @@ import com.example.oportunia.R
 import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
 import java.io.File
 import java.io.FileOutputStream
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
@@ -57,13 +56,14 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ExperimentalMaterialApi
 import coil.compose.AsyncImage
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-@Preview(showBackground = true)
+
 @Composable
-fun HomeScreenS() {
+fun HomeScreenS(companyViewModel: CompanyViewModel) {
     BoxWithConstraints {
         val screenHeight = maxHeight
         val screenWidth = maxWidth
@@ -490,7 +490,7 @@ fun ImageScroll(modifier: Modifier = Modifier) {
                     model = imageUrl,
                     contentDescription = "Imagen full screen",
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds // → estira para cubrir todo, sin bordes
+                    contentScale = ContentScale.FillBounds
                 )
 
 

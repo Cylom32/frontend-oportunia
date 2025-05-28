@@ -17,7 +17,6 @@ abstract class UsersRepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUsersRepository(
-        //impl: UsersRepositoryImpl
         impl: UsersRepositoryImpl
     ): UsersRepository
 }

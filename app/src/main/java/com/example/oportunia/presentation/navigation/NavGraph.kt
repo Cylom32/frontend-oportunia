@@ -22,6 +22,7 @@ import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenF
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenPAndE
 import com.example.oportunia.presentation.ui.screens.SentRequestScreen
 import com.example.oportunia.presentation.ui.screens.SettingScreen
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 //import com.example.oportunia.presentation.ui.screens.StudentInformationSettings2
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
@@ -32,7 +33,8 @@ fun NavGraph(
     navController: NavHostController,
     paddingValues: PaddingValues,
     usersViewModel: UsersViewModel,
-    studentViewModel: StudentViewModel
+    studentViewModel: StudentViewModel,
+    companyViewModel: CompanyViewModel
 ) {
     NavHost(
         navController = navController,
@@ -75,7 +77,7 @@ fun NavGraph(
         }
 
         composable(NavRoutes.HomeScreenS.ROUTE) {
-            HomeScreenS()
+            HomeScreenS(companyViewModel)
         }
 
         composable(NavRoutes.Notifications.ROUTE) {

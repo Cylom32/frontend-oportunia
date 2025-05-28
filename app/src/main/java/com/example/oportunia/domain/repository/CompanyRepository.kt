@@ -1,11 +1,15 @@
 package com.example.oportunia.domain.repository
 
+import com.example.oportunia.data.remote.dto.CompanyWithoutIdDTO
 import com.example.oportunia.domain.model.Company
+import com.example.oportunia.domain.model.CompanyWithNetworks
 
-/**
- * This interface represents the CompanyRepository.
- */
 interface CompanyRepository {
     suspend fun findAllCompanies(): Result<List<Company>>
-    suspend fun findCompanyById(companyId: Long): Result<Company>
+    suspend fun findCompanyById(id: Int): Result<Company>
+//    suspend fun saveCompanyNoId(dto: CompanyWithoutIdDTO): Result<Company>
+//    suspend fun insertCompany(company: Company): Result<Unit>
+//    suspend fun updateCompany(company: Company): Result<Unit>
+//    suspend fun deleteCompany(id: Int): Result<Unit>
+//    suspend fun findCompanyWithNetworks(id: Int): Result<CompanyWithNetworks>
 }

@@ -16,6 +16,7 @@ import com.example.oportunia.presentation.navigation.NavGraph
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.screens.BottomNavigationBar
 import com.example.oportunia.presentation.ui.theme.OportunIATheme
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,20 +26,21 @@ class MainActivity : ComponentActivity() {
 
     private val usersViewModel: UsersViewModel by viewModels()
     private val studentViewModel: StudentViewModel by viewModels()
+    private val companyViewModel: CompanyViewModel by viewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             OportunIATheme {
-                MainScreen(usersViewModel,studentViewModel)
+                MainScreen(usersViewModel,studentViewModel, companyViewModel)
             }
         }
     }
 }
 
 @Composable
-fun MainScreen(usersViewModel: UsersViewModel, studentViewModel: StudentViewModel) {
+fun MainScreen(usersViewModel: UsersViewModel, studentViewModel: StudentViewModel, companyViewModel: CompanyViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: NavRoutes.Log.ROUTE
@@ -71,7 +73,8 @@ fun MainScreen(usersViewModel: UsersViewModel, studentViewModel: StudentViewMode
             navController = navController,
             paddingValues = paddingValues,
             usersViewModel = usersViewModel,
-            studentViewModel = studentViewModel
+            studentViewModel = studentViewModel,
+            companyViewModel = companyViewModel
         )
     }
 }
