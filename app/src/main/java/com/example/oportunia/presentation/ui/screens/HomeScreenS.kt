@@ -56,6 +56,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ExperimentalMaterialApi
+import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -460,23 +461,20 @@ fun RemuneradoPopup(
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ImageScroll(modifier: Modifier = Modifier) {
-    val images = List(10) { R.drawable.ochoamejorquenavas }
-    val logos = List(10) { R.drawable.intellogo }
+    val imageUrl = "https://images.unsplash.com/photo-1564754943164-e83c08469116?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dmVydGljYWx8ZW58MHx8MHx8fDA%3D"
+    val images = List(10) { imageUrl }
+    val logos  = List(10) { imageUrl }
     val pagerState = rememberPagerState(pageCount = { images.size })
 
     var isRefreshing by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isRefreshing,
-        onRefresh = {
-            isRefreshing = true
-            coroutineScope.launch {
-                delay(1000)
-                isRefreshing = false
-            }
+    val pullRefreshState = rememberPullRefreshState(isRefreshing, {
+        isRefreshing = true
+        coroutineScope.launch {
+            delay(1000)
+            isRefreshing = false
         }
-    )
+    })
 
     Box(
         modifier = modifier
@@ -487,17 +485,19 @@ fun ImageScroll(modifier: Modifier = Modifier) {
             state = pagerState,
             modifier = Modifier.fillMaxSize()
         ) { page ->
-            Box(modifier = Modifier.fillMaxSize()) {
-                Image(
-                    painter = painterResource(id = images[page]),
-                    contentDescription = "Imagen $page",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
+            Box(Modifier.fillMaxSize()) {
+                AsyncImage(
+                    model = imageUrl,
+                    contentDescription = "Imagen full screen",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillBounds // → estira para cubrir todo, sin bordes
                 )
 
-                Image(
-                    painter = painterResource(id = logos[page]),
-                    contentDescription = "Logo empresa",
+
+
+                AsyncImage(
+                    model = logos[page],
+                    contentDescription = "Logo $page",
                     modifier = Modifier
                         .size(72.dp)
                         .padding(12.dp)
@@ -507,7 +507,6 @@ fun ImageScroll(modifier: Modifier = Modifier) {
                 )
             }
         }
-
         PullRefreshIndicator(
             refreshing = isRefreshing,
             state = pullRefreshState,
@@ -515,7 +514,6 @@ fun ImageScroll(modifier: Modifier = Modifier) {
         )
     }
 }
-
 
 
 

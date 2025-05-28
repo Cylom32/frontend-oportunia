@@ -39,10 +39,11 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
-    //studentViewModel: StudentViewModel
+fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel
 ) {
 
+    val token by usersViewModel.token.collectAsState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showAlert by remember { mutableStateOf(false) }
@@ -89,19 +90,6 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
                                 .padding(top = 20.dp)
                         )
 
-
-//                        Image(
-//                          //  painter = painterResource(id = R.drawable.shakehands1062821),
-//
-//                            painter = rememberAsyncImagePainter(
-//                                "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/2048px-Instagram_logo_2022.svg.png"
-//                            ),
-//                            contentDescription = "Descripción accesible",
-//                            modifier = Modifier
-//                                .size(150.dp)
-//                                .padding(top = 20.dp),
-//                            colorFilter = ColorFilter.tint(Color.White),
-//                        )
 
                         Spacer(modifier = Modifier.height(50.dp))
 
@@ -198,35 +186,21 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
 
 
 
-                                    //  usersViewModel.findAllUsers()
 
-                                    //  usersViewModel.loginTest()
-
-
-                                    //   usersViewModel.probarConexionConMockApi()
 
                                     coroutineScope.launch {
                                         if (email.isNotEmpty() && password.isNotEmpty()) {
                                             usersViewModel.login(email, password) { isValid ->
                                                 if (isValid) {
-                                                    // llamamos aquí a fetchUserByEmail y manejamos el id en el lambda
-//                                                    usersViewModel.fetchUserByEmail("1") { idUser ->
-//                                                        if (idUser != null) {
-//                                                            Log.d("LoginDebug", "Usuario autenticado con ID: $idUser")
-//                                                            // 1) Navega a Home
+                                                    usersViewModel.fetchUserByEmail(email) { userId ->
+                                                        if (userId != null) {
+                                                            val token = usersViewModel.token.value.orEmpty()
+                                                            studentViewModel.fetchStudentByUserId(token, userId)
                                                             navController.navigate("home")
-//                                                            // 2) Selecciona usuario
-//                                                            usersViewModel.selectUserById(idUser)
-//                                                            usersViewModel.printIdUser()
-//                                                            usersViewModel.fetchUniversities()
-//                                                            // (y luego studentViewModel.loadStudentByUserId(idUser), si hace falta)
-//                                                        } else {
-//                                                            Log.d("LoginDebug", "No se obtuvo id_user")
-//                                                            showAlert = true
-//                                                        }
-//                                                    }
-
-                                                        usersViewModel.fetchUniversities()
+                                                        } else {
+                                                            showAlert = true
+                                                        }
+                                                    }
                                                 } else {
                                                     Log.d("LoginDebug", "Credenciales inválidas para $email")
                                                     showAlert = true

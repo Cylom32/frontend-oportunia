@@ -35,15 +35,15 @@ class StudentRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun findStudentByIdUser(idUser: Int): Result<Student> {
-        return try {
-            remoteDataSource.getStudentByUserId(idUser).map { dto ->
-                studentMapper.mapToDomain(dto)
-            }
-        } catch (e: Exception) {
-            Result.failure(Exception("Error fetching student for user id=$idUser: ${e.message}"))
-        }
-    }
+//    override suspend fun findStudentByIdUser(idUser: Int): Result<Student> {
+//        return try {
+//            remoteDataSource.getStudentByUserId(idUser).map { dto ->
+//                studentMapper.mapToDomain(dto)
+//            }
+//        } catch (e: Exception) {
+//            Result.failure(Exception("Error fetching student for user id=$idUser: ${e.message}"))
+//        }
+//    }
 
     override suspend fun insertStudent(student: Student): Result<Unit> {
         return try {
@@ -73,4 +73,13 @@ class StudentRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
         Result.failure(Exception("Error creating student without ID: ${e.message}"))
     }
+
+
+
+    override suspend fun findStudentByUserId(token: String, userId: Int): Result<Student> =
+        remoteDataSource
+            .getStudentByUserId(token, userId)
+            .map { dto -> studentMapper.mapToDomain(dto) }
+
+
 }

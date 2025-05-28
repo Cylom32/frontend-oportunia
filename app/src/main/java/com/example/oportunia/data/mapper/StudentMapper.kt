@@ -24,4 +24,7 @@ class StudentMapper @Inject constructor() {
         creationDate= domain.creationDate,
         idUniversity= domain.universityId
     )
+
+
+
 }

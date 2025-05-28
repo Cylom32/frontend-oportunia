@@ -9,9 +9,11 @@ import com.example.oportunia.domain.model.Student
 interface StudentRepository {
     suspend fun findAllStudents(): Result<List<Student>>
     suspend fun findStudentById(studentId: Int): Result<Student>
-    suspend fun findStudentByIdUser(idUser: Int): Result<Student>
+  //  suspend fun findStudentByIdUser(idUser: Int): Result<Student>
     suspend fun insertStudent(student: Student): Result<Unit>
     suspend fun updateStudent(student: Student): Result<Unit>
     suspend fun saveStudentNoId(dto: StudentWihtoutIdDTO): Result<Student>
+    suspend fun findStudentByUserId(token: String, userId: Int): Result<Student>
+
 
 }

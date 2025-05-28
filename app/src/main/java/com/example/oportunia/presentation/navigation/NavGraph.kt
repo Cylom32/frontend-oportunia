@@ -33,11 +33,10 @@ fun NavGraph(
     paddingValues: PaddingValues,
     usersViewModel: UsersViewModel,
     studentViewModel: StudentViewModel
-    //studentViewModel: StudentViewModel
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.Log.ROUTE
+        startDestination = NavRoutes.HomeScreenS.ROUTE
     ) {
 
         composable(NavRoutes.GridPublicationsScreenS.ROUTE) {
@@ -50,8 +49,8 @@ fun NavGraph(
         composable(NavRoutes.Log.ROUTE) {
             LogScreen(
                 navController = navController,
-                usersViewModel = usersViewModel
-                //studentViewModel,
+                usersViewModel = usersViewModel,
+                studentViewModel
             )
         }
 

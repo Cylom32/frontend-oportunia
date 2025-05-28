@@ -50,89 +50,6 @@ class StudentViewModel @Inject constructor(
     private val _universityOptions = MutableStateFlow<List<UniversityOption>>(emptyList())
     val universityOptions: StateFlow<List<UniversityOption>> = _universityOptions
 
-    // Campos para crear/actualizar estudiante
-    private val _nombre = MutableStateFlow("")
-    val nombre: StateFlow<String> = _nombre
-
-    private val _apellido1 = MutableStateFlow("")
-    val apellido1: StateFlow<String> = _apellido1
-
-    private val _apellido2 = MutableStateFlow("")
-    val apellido2: StateFlow<String> = _apellido2
-
-    private val _idUniversidadSeleccionada = MutableStateFlow<Int?>(null)
-    val idUniversidadSeleccionada: StateFlow<Int?> = _idUniversidadSeleccionada
-
-    fun loadStudentByUserId(userId: Int) {
-        viewModelScope.launch {
-            _studentState.value = StudentState.Loading
-            repository.findStudentByIdUser(userId)
-                .onSuccess { student ->
-                    _studentState.value = StudentState.Success(student)
-                    _selectedStudent.value = student
-                }
-                .onFailure { exception ->
-                    _studentState.value =
-                        StudentState.Error("Error al obtener estudiante: ${exception.message}")
-                    Log.e(
-                        "StudentViewModel",
-                        "Error al buscar estudiante por userId: $userId",
-                        exception
-                    )
-                }
-        }
-    }
-
-    fun saveStudent(userId: Int) {
-        viewModelScope.launch {
-            val studentListResult = repository.findAllStudents()
-            val nextStudentId = (studentListResult.getOrNull()?.size ?: 0) + 1
-            val student = Student(
-                idStudent = nextStudentId,
-                idUser = userId,
-                name = _nombre.value,
-                lastName1 = _apellido1.value,
-                lastName2 = _apellido2.value,
-                creationDate = LocalDate.now(),
-                universityId = _idUniversidadSeleccionada.value
-            )
-            repository.insertStudent(student)
-            Log.d("StudentViewModel", "Estudiante guardado: $student")
-        }
-    }
-
-    fun updateStudent(studentId: Int, userId: Int) {
-        viewModelScope.launch {
-            val updatedStudent = Student(
-                idStudent = studentId,
-                idUser = userId,
-                name = _nombre.value,
-                lastName1 = _apellido1.value,
-                lastName2 = _apellido2.value,
-                creationDate = LocalDate.now(),
-                universityId = _idUniversidadSeleccionada.value
-            )
-            repository.updateStudent(updatedStudent)
-                .onSuccess {
-                    _studentState.value = StudentState.Success(updatedStudent)
-                    _selectedStudent.value = updatedStudent
-                    Log.d("StudentViewModel", "Estudiante actualizado: $updatedStudent")
-                }
-                .onFailure { exception ->
-                    _studentState.value =
-                        StudentState.Error("Error al actualizar estudiante: ${exception.message}")
-                    Log.e("StudentViewModel", "Error al actualizar estudiante", exception)
-                }
-        }
-    }
-
-    fun clearStudentData() {
-        _nombre.value = ""
-        _apellido1.value = ""
-        _apellido2.value = ""
-        _idUniversidadSeleccionada.value = null
-    }
-
 
     fun createStudentWithoutId(
         userId: Int,
@@ -142,7 +59,7 @@ class StudentViewModel @Inject constructor(
         universityId: Int
     ) {
         viewModelScope.launch {
-            // 1) Construye el DTO con los campos que espera el backend
+
             val studentDto = StudentWihtoutIdDTO(
                 firstName    = rawFirstName,
                 lastName1    = rawLastName1,
@@ -151,16 +68,39 @@ class StudentViewModel @Inject constructor(
                 idUniversity = universityId
             )
 
-            // 2) Llama al repositorio
+
             val result: Result<Student> = repository.saveStudentNoId(studentDto)
 
-            // 3) Manejo de respuesta
+
             result
                 .onSuccess { created ->
-                    Log.d("StudentVM", "✅ Estudiante creado: $created")
+                   // Log.d("StudentVM", "✅ Estudiante creado: $created")
                 }
                 .onFailure { error ->
-                    Log.e("StudentVM", "❌ Error al crear estudiante", error)
+                    //Log.e("StudentVM", "❌ Error al crear estudiante", error)
+                }
+        }
+    }
+
+
+
+
+
+
+
+    /** Obtiene y expone el Student del userId dado */
+    fun fetchStudentByUserId(token: String, userId: Int) {
+        viewModelScope.launch {
+            _studentState.value = StudentState.Loading
+            repository.findStudentByUserId(token, userId)
+                .onSuccess { student ->
+                    _selectedStudent.value = student
+                    _studentState.value = StudentState.Success(student)
+                    Log.d("StudentVM", "✅ Estudiante obtenido: $student")
+                }
+                .onFailure { ex ->
+                    _studentState.value = StudentState.Error(ex.message ?: "Error al obtener estudiante")
+                    Log.e("StudentVM", "❌ Error al obtener estudiante userId=$userId", ex)
                 }
         }
     }

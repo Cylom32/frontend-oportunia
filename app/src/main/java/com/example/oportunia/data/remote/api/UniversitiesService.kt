@@ -1,5 +1,3 @@
-// src/main/kotlin/com/example/oportunia/data/remote/api/UniversitiesService.kt
-
 package com.example.oportunia.data.remote.api
 
 import com.example.oportunia.data.remote.dto.UniversityDTO

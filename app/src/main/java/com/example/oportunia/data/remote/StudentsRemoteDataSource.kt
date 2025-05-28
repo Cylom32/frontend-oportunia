@@ -48,6 +48,6 @@ class StudentsRemoteDataSource @Inject constructor(
         safeApiCall { service.updateStudent(id, dto) }
 
     /** GET /v1/students/user/{userId} */
-    suspend fun getStudentByUserId(userId: Int): Result<StudentDTO> =
-        safeApiCall { service.getStudentByUserId(userId) }
+    suspend fun getStudentByUserId(token: String, userId: Int): Result<StudentDTO> =
+        safeApiCall { service.getStudentByUserId(token, userId) }
 }
