@@ -1,4 +1,3 @@
-
 package com.example.oportunia.presentation.ui.screens
 
 
@@ -33,9 +32,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
+import com.example.oportunia.data.remote.dto.UniversityDTO
+import com.example.oportunia.domain.model.University
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.components.texAndLable
@@ -44,14 +46,41 @@ import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.theme.lilGray
 import com.example.oportunia.presentation.ui.theme.walterWhite
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
-var idSelectedU = 0
+
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.runtime.*
+import androidx.compose.ui.unit.dp
+
+/** Guardad aquí el ID seleccionado */
+var idSelectedU: Int = 0
+
+
+
 
 @Composable
-fun RegisterOptionScreenF(navController: NavHostController) {
+fun RegisterOptionScreenF(
+    navController: NavHostController,
+    usersViewModel: UsersViewModel
+) {
+
+    var nombre by remember { mutableStateOf("") }
+    var primerApellido by remember { mutableStateOf("") }
+    var segundoApellido by remember { mutableStateOf("") }
+
+    var selectedUniversityName by remember { mutableStateOf("") }
+    var selectedUniversityId   by remember { mutableStateOf(0) }
 
 
 
+
+    // 3) Estados locales para la selección y alerta
+    var selectedUniversity by remember { mutableStateOf("") }
     var showAlert by remember { mutableStateOf(false) }
 
     Surface(
@@ -65,135 +94,130 @@ fun RegisterOptionScreenF(navController: NavHostController) {
                 .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
-            // Encabezado
+            // -- Encabezado --
             Box(
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth()
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
-                        clip = false
-                    )
-                    .gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
-                    contentAlignment = Alignment.Center
+                    .shadow(8.dp, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                    .gradientBackgroundBlue(gradientColors = gradientColorsBlue,
+                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(R.string.app_name),
                     fontSize = 64.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
+                    color = Color.White
                 )
             }
 
-            // Título
-            Text(
-                text = stringResource(R.string.screenTitleInfo),
-                fontSize = 32.sp,
-                color = blackPanter,
-                modifier = Modifier.padding(top = 32.dp)
-            )
+            Spacer(Modifier.height(32.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Campos de texto
+            // -- Campos de texto de ejemplo --
             Column(
-                horizontalAlignment = Alignment.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.Start
             ) {
-//                val nombre by studentViewModel.nombre.collectAsState()
-//                val apellido1 by studentViewModel.apellido1.collectAsState()
-//                val apellido2 by studentViewModel.apellido2.collectAsState()
+
+
 
                 texAndLable(
                     titulo = stringResource(R.string.nameTitle),
-                    placeholder = "",
-                    valor = "asd",
-                    alCambiarValor = { }
+                    placeholder = "Nombre",
+                    valor = nombre,
+                    alCambiarValor = { nombre = it }
                 )
-
-
+                Spacer(Modifier.height(8.dp))
                 texAndLable(
                     titulo = stringResource(R.string.FirstSurnameTitle),
-                    placeholder = "",
-                    valor = "apellido1",
-                    alCambiarValor = {  }
+                    placeholder = "Primer apellido",
+                    valor = primerApellido,
+                    alCambiarValor = { primerApellido = it }
                 )
-
-
+                Spacer(Modifier.height(8.dp))
                 texAndLable(
                     titulo = stringResource(R.string.SecondSurnameTitle),
-                    placeholder = "",
-                    valor = "apellido2",
-                    alCambiarValor = {  }
+                    placeholder = "Segundo apellido",
+                    valor = segundoApellido,
+                    alCambiarValor = { segundoApellido = it }
                 )
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(Modifier.height(24.dp))
 
 
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 48.dp),
-                contentAlignment = Alignment.CenterStart
-            ) {
-                var selectedUniversity by remember { mutableStateOf("    ") }
 
+            val uni by usersViewModel.universities.collectAsState()
 
-//                UniversityDropdown(
-//                    selectedUniversity = selectedUniversity,
-//                    onUniversitySelected = { selectedUniversity = it },
-//                    studentViewModel
-//                )
-            }
+            var selectedUniversityName by remember { mutableStateOf("") }
+            var selectedUniversityId   by remember { mutableStateOf(0) }
 
-            Spacer(modifier = Modifier.height(120.dp))
+            Column {
+                UniversityDropdown(
+                    selectedUniversity   = selectedUniversityName,
+                    selectedUniversityId = selectedUniversityId,
+                    onUniversitySelected = { name, id ->
+                        selectedUniversityName = name
+                        selectedUniversityId   = id
+                    },
+                    options              = uni
+                )
 
+                Spacer(Modifier.height(16.dp))
+
+//                // Aquí ya puedes usar selectedUniversityId
+//                Text("ID seleccionado: $selectedUniversityId",
+//                    color = Color.Black,
+//                    modifier = Modifier.padding(horizontal = 48.dp))
+//            }
+}
+
+            Spacer(Modifier.height(120.dp))
 
 
             Box(
                 modifier = Modifier
                     .width(350.dp)
-                    .padding(horizontal = 60.dp, vertical = 0.dp)
-                    .shadow(
-                        elevation = 10.dp,
-                        shape = RoundedCornerShape(24.dp),
-                        clip = false
-                    )
-                    .gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(10.dp))
-                    .clickable {
+                    .shadow(10.dp, RoundedCornerShape(24.dp))
+                    .gradientBackgroundBlue(
+                        gradientColors = gradientColorsBlue,
+                        shape = RoundedCornerShape(24.dp)
+                    ).clickable {
+                        if (
+                            nombre.isNotBlank() &&
+                            primerApellido.isNotBlank() &&
+                            segundoApellido.isNotBlank() &&
+                            selectedUniversityName.isNotBlank() &&
+                            selectedUniversityId != 0
+                        ) {
 
-//                        val nombre = studentViewModel.nombre.value.trim()
-//                        val apellido1 = studentViewModel.apellido1.value.trim()
-//                        val apellido2 = studentViewModel.apellido2.value.trim()
-//                        val universidadId = idSelectedU
+                            usersViewModel.saveAndLogRegistration(
+                                nombre,
+                                primerApellido,
+                                segundoApellido,
+                                selectedUniversityName,
+                                selectedUniversityId
+                            )
 
-                        //studentViewModel.setIdUniversidad(universidadId)
+                            navController.navigate(NavRoutes.RegisterInformationPAndE.ROUTE)
 
-//                        if (nombre.isNotEmpty() && apellido1.isNotEmpty() && apellido2.isNotEmpty() && universidadId != 0) {
-//                            navController.navigate(NavRoutes.RegisterInformationPAndE.ROUTE)
-//                        } else {
-//                            showAlert = true
-//                        }
-                    }
-                ,
+                        } else {
+                            showAlert = true
+                        }
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = stringResource(R.string.texBoton),
                     fontSize = 25.sp,
-                    color = com.example.oportunia.presentation.ui.theme.walterWhite,
-                    textAlign = TextAlign.Center,
+                    color = Color.White,
                     modifier = Modifier.padding(vertical = 12.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 
@@ -206,84 +230,70 @@ fun RegisterOptionScreenF(navController: NavHostController) {
                 }
             },
             title = { Text(stringResource(R.string.studentInfoAlertTittle)) },
-            text = { Text(stringResource(R.string.studentInfoAlertText)) }
+            text  = { Text(stringResource(R.string.studentInfoAlertText)) }
         )
     }
-
 }
 
+
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UniversityDropdown(
     selectedUniversity: String,
-    onUniversitySelected: (String) -> Unit,
-    studentViewModel: StudentViewModel
+    selectedUniversityId: Int,
+    onUniversitySelected: (String, Int) -> Unit,
+    options: List<University>
 ) {
-
-    LaunchedEffect(Unit) {
-        studentViewModel.loadUniversityOptions()
-    }
-
-    val options by studentViewModel.universityOptions.collectAsState()
     var expanded by remember { mutableStateOf(false) }
 
-    Box(modifier = Modifier.width(150.dp)) {
+    ExposedDropdownMenuBox(
+        expanded         = expanded,
+        onExpandedChange = { expanded = !expanded },
+        modifier         = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 48.dp)
+    ) {
+        // 1) El TextField normal, con texto negro
         OutlinedTextField(
-            value = selectedUniversity,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text(stringResource(R.string.UniversityTitle), color = Color.Black) },
-            trailingIcon = {
-                IconButton(onClick = { expanded = !expanded }) {
-                    Icon(
-                        imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                        contentDescription = null,
-                        tint = Color.Black
-                    )
-                }
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Black,
-                unfocusedBorderColor = Color.Black,
-                disabledBorderColor = Color.Black,
-                focusedTrailingIconColor = Color.Black,
-                unfocusedTrailingIconColor = Color.Black,
-                focusedLabelColor = Color.Black,
-                unfocusedLabelColor = Color.Black,
-                cursorColor = Color.Black,
-                disabledLabelColor = Color.Black,
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-                disabledTextColor = Color.Black
-            ),
-            modifier = Modifier
+            value          = selectedUniversity,
+            onValueChange  = { /* readOnly */ },
+            readOnly       = true,
+            textStyle      = LocalTextStyle.current.copy(color = Color.Black),
+            label          = { Text(stringResource(R.string.UniversityTitle), color = Color.Black) },
+            trailingIcon   = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+            modifier       = Modifier
+                .menuAnchor()
                 .fillMaxWidth()
                 .clickable { expanded = !expanded }
         )
 
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.background(Color.White)
-        ) {
-            options.forEach { university ->
-                DropdownMenuItem(
-                    text = { Text(university.name, color = Color.Black) },
-                    onClick = {
-
-                        Log.d(
-                            "UniversityDropdown",
-                            "Seleccionado: ${university.name} (ID: ${university.id})"
-                        )
-                        // formatearUniversidad(university.id)
-                        idSelectedU = university.id
-                        onUniversitySelected(university.name)
-                        expanded = false
-                    }
+        // 2) Al expandir, envolvemos el menú en un mini-Theme que ponga fondo oscuro y texto blanco
+        if (expanded) {
+            MaterialTheme(
+                colorScheme = MaterialTheme.colorScheme.copy(
+                    surface   = Color.DarkGray,  // fondo del popup
+                    onSurface = Color.White      // texto de los items
                 )
+            ) {
+                ExposedDropdownMenu(
+                    expanded        = true,
+                    onDismissRequest= { expanded = false },
+                    modifier        = Modifier.fillMaxWidth(0.8f)
+
+                ) {
+                    options.forEach { uni ->
+                        DropdownMenuItem(
+                            text    = { Text(uni.universityName) },
+                            onClick = {
+                                expanded = false
+                                onUniversitySelected(uni.universityName,
+                                    uni.idUniversity ?: 0)
+                            }
+                        )
+                    }
+                }
             }
         }
     }
-
 }
-
-

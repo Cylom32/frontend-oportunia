@@ -16,6 +16,7 @@ import com.example.oportunia.presentation.navigation.NavGraph
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.screens.BottomNavigationBar
 import com.example.oportunia.presentation.ui.theme.OportunIATheme
+import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,19 +24,21 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val usersViewModel: UsersViewModel by viewModels()
+    private val studentViewModel: StudentViewModel by viewModels()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             OportunIATheme {
-                MainScreen(usersViewModel)
+                MainScreen(usersViewModel,studentViewModel)
             }
         }
     }
 }
 
 @Composable
-fun MainScreen(usersViewModel: UsersViewModel) {
+fun MainScreen(usersViewModel: UsersViewModel, studentViewModel: StudentViewModel) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: NavRoutes.Log.ROUTE
@@ -67,8 +70,8 @@ fun MainScreen(usersViewModel: UsersViewModel) {
         NavGraph(
             navController = navController,
             paddingValues = paddingValues,
-            usersViewModel = usersViewModel
-           // studentViewModel = studentViewModel
+            usersViewModel = usersViewModel,
+            studentViewModel = studentViewModel
         )
     }
 }

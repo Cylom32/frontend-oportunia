@@ -43,8 +43,13 @@ object NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
 
+
+
     @Provides
     @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService =
         retrofit.create(AuthService::class.java)
+
+
+
 }

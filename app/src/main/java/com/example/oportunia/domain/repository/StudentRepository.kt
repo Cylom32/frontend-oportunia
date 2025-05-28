@@ -1,5 +1,6 @@
 package com.example.oportunia.domain.repository
 
+import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
 import com.example.oportunia.domain.model.Student
 
 /**
@@ -11,4 +12,6 @@ interface StudentRepository {
     suspend fun findStudentByIdUser(idUser: Int): Result<Student>
     suspend fun insertStudent(student: Student): Result<Unit>
     suspend fun updateStudent(student: Student): Result<Unit>
+    suspend fun saveStudentNoId(dto: StudentWihtoutIdDTO): Result<Student>
+
 }

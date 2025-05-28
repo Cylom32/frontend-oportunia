@@ -1,11 +1,14 @@
 package com.example.oportunia.data.remote.api
 
 
+import com.example.oportunia.data.remote.dto.UserEmailResponse
+import com.example.oportunia.data.remote.dto.UserResponseDTO
 import com.example.oportunia.data.remote.dto.UsersDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -40,8 +43,9 @@ interface UsersService {
      * @param user The [UsersDTO] object containing the user data to create
      * @return [Response] containing the created [UsersDTO] with server-assigned ID if successful
      */
-    @POST("users/")
-    suspend fun createUser(@Body user: UsersDTO): Response<UsersDTO>
+    @POST("v1/users")
+    suspend fun createUser(@Body user: UsersDTO): Response<UserResponseDTO>
+
 
     /**
      * Updates an existing user in the remote API.
@@ -72,5 +76,10 @@ interface UsersService {
         @Query("password") password: String
     ): Response<List<UsersDTO>>
 
+
+    @GET("v1/users/email/{email}")
+    suspend fun getUserByEmail(
+        @Path("email") email: String
+    ): Response<UserEmailResponse>
 
 }

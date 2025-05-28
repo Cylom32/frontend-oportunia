@@ -44,8 +44,8 @@ fun EditUCVScreen(
     val studentState by studentViewModel.studentState.collectAsState()
 
     LaunchedEffect(Unit) {
-        studentViewModel.loadCvsBySelectedStudent()
-        studentViewModel.printStudentAndCvs()
+        //studentViewModel.loadCvsBySelectedStudent()
+       // studentViewModel.printStudentAndCvs()
     }
 
     val pdfPickerLauncher = rememberLauncherForActivityResult(
@@ -66,8 +66,8 @@ fun EditUCVScreen(
                     val localPath = file.absolutePath
                     Log.d("PDF_COPY", "Archivo copiado a: $localPath")
 
-                    studentViewModel.insertCv(localPath)
-                    studentViewModel.loadCvsBySelectedStudent()
+//                    studentViewModel.insertCv(localPath)
+//                    studentViewModel.loadCvsBySelectedStudent()
                 } catch (e: Exception) {
                     Log.e("PDF_COPY", "Error al copiar PDF: ${e.message}", e)
                 }
@@ -188,10 +188,10 @@ fun EditUCVScreen(
                         filePath = cv.file,
                         status = cv.status,
                         onDelete = {
-                            studentViewModel.deleteCv(cv)
+                            //studentViewModel.deleteCv(cv)
                         },
                         onStatusChange = {
-                            studentViewModel.setCvAsActive(cv.id)
+                            //studentViewModel.setCvAsActive(cv.id)
                         }
                     )
                 }

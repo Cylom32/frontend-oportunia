@@ -1,6 +1,8 @@
 package com.example.oportunia.data.remote
 
 import com.example.oportunia.data.remote.api.UsersService
+import com.example.oportunia.data.remote.dto.UserEmailResponse
+import com.example.oportunia.data.remote.dto.UserResponseDTO
 
 
 import com.example.oportunia.data.remote.dto.UsersDTO
@@ -20,7 +22,7 @@ class UsersRemoteDataSource @Inject constructor(
      * Retrieves all users from the remote API.
      */
     suspend fun getAllUsers(): Result<List<UsersDTO>> = safeApiCall {
-        println("🟢 Llamando a la API desde getAllUsers()")
+       //println("🟢 Llamando a la API desde getAllUsers()")
         usersService.getAllUsers()
     }
 
@@ -35,7 +37,7 @@ class UsersRemoteDataSource @Inject constructor(
     /**
      * Creates a new user.
      */
-    suspend fun createUser(userDto: UsersDTO): Result<UsersDTO> = safeApiCall {
+    suspend fun createUser(userDto: UsersDTO): Result<UserResponseDTO> = safeApiCall {
         usersService.createUser(userDto)
     }
 
@@ -85,6 +87,13 @@ class UsersRemoteDataSource @Inject constructor(
                 throw Exception("Credenciales inválidas.")
             }
         }
+    }
+
+
+    suspend fun getUserByEmail(
+        email: String
+    ): Result<UserEmailResponse> = safeApiCall {
+        usersService.getUserByEmail(email)
     }
 
 

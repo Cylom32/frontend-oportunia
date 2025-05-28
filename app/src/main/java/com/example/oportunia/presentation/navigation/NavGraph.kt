@@ -22,7 +22,7 @@ import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenF
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenPAndE
 import com.example.oportunia.presentation.ui.screens.SentRequestScreen
 import com.example.oportunia.presentation.ui.screens.SettingScreen
-import com.example.oportunia.presentation.ui.screens.StudentInformationSettings2
+//import com.example.oportunia.presentation.ui.screens.StudentInformationSettings2
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
@@ -31,7 +31,8 @@ import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 fun NavGraph(
     navController: NavHostController,
     paddingValues: PaddingValues,
-    usersViewModel: UsersViewModel
+    usersViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel
     //studentViewModel: StudentViewModel
 ) {
     NavHost(
@@ -92,7 +93,7 @@ fun NavGraph(
 
 
         composable(NavRoutes.RegisterOption.ROUTE) {
-            RegisterOptionScreen(navController)
+            RegisterOptionScreen(usersViewModel,navController)
         }
 
         composable(NavRoutes.SentRequestScreen.ROUTE) {
@@ -108,11 +109,11 @@ fun NavGraph(
 //        }
 
         composable(NavRoutes.RegisterInformationF.ROUTE) {
-            RegisterOptionScreenF(navController)
+            RegisterOptionScreenF(navController,usersViewModel)
         }
 
         composable(NavRoutes.RegisterInformationPAndE.ROUTE) {
-            RegisterOptionScreenPAndE(usersViewModel, navController)
+            RegisterOptionScreenPAndE(usersViewModel,studentViewModel , navController)
         }
 //
 //        composable(NavRoutes.StudentInformationSettings2 .ROUTE) {

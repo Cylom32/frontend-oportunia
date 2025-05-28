@@ -1,77 +1,54 @@
 package com.example.oportunia.data.remote.serializer
 
-
 import com.example.oportunia.data.remote.dto.UsersDTO
 import com.google.gson.*
 import java.lang.reflect.Type
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
 
 /**
- * Custom JSON deserializer for [UsersDTO] objects.
- *
- * Handles special cases like:
- * - Mixed id formats (string or numeric)
- * - Nullable fields
- * - Date parsing for creationDate
+ * Custom Gson deserializer for [UsersDTO], manejando:
+ * - idUser tanto numérico como string
+ * - creationDate como String "YYYY-MM-DD"
+ * - img nullable
+ * - idRole tanto numérico como string
  */
 class UsersDeserializer : JsonDeserializer<UsersDTO> {
 
-    /**
-     * Deserializes JSON data into a [UsersDTO] object.
-     *
-     * @param json The JSON element to deserialize
-     * @param typeOfT The type of the object to deserialize
-     * @param context The deserialization context
-     * @return A fully populated [UsersDTO] object
-     * @throws JsonParseException if there's an error during parsing
-     */
     override fun deserialize(
         json: JsonElement,
         typeOfT: Type,
         context: JsonDeserializationContext
     ): UsersDTO {
-        val jsonObject = json.asJsonObject
+        val obj = json.asJsonObject
 
-        // Extract the id, handling both integer and string formats
-        val idUser = try {
-            jsonObject.get("idUser")?.asInt
-        } catch (e: Exception) {
-            jsonObject.get("idUser")?.asString?.toIntOrNull()
-        }
+        // idUser: Int o String
+        val idUser = runCatching { obj.get("idUser")?.asInt }
+            .getOrElse { obj.get("idUser")?.asString?.toIntOrNull() }
 
-        val email = jsonObject.get("email")?.asString
-            ?: throw JsonParseException("Missing required field: email")
+        // email y password obligatorios
+        val email = obj.get("email")?.asString
+            ?: throw JsonParseException("Missing field 'email'")
+        val password = obj.get("password")?.asString
+            ?: throw JsonParseException("Missing field 'password'")
 
-        val password = jsonObject.get("password")?.asString
-            ?: throw JsonParseException("Missing required field: password")
+        // img opcional
+        val img = obj.get("img")?.takeIf { !it.isJsonNull }?.asString
 
-        val img = jsonObject.get("img")?.let {
-            if (it.isJsonNull) null else it.asString
-        }
+        // creationDate como String, o fecha de hoy si falta
+        val creationDate = obj.get("creationDate")?.asString
+            ?: java.time.LocalDate.now().toString()
 
-        val creationDate = jsonObject.get("creationDate")?.asString?.let {
-            try {
-                LocalDate.parse(it, DateTimeFormatter.ISO_DATE)
-            } catch (e: Exception) {
-                LocalDate.now()
-            }
-        } ?: LocalDate.now()
-
-        val idRole = try {
-            jsonObject.get("idRole")?.asInt
-        } catch (e: Exception) {
-            jsonObject.get("idRole")?.asString?.toIntOrNull()
-        }
+        // idRole: Int o String
+        val idRole = runCatching { obj.get("idRole")?.asInt }
+            .getOrElse { obj.get("idRole")?.asString?.toIntOrNull() }
+            ?: throw JsonParseException("Missing field 'idRole'")
 
         return UsersDTO(
-            idUser = idUser,
-            email = email,
-            password = password,
-            img = img,
-            creationDate = creationDate,
-            idRole = idRole
+            idUser       = idUser,
+            email        = email,
+            password     = password,
+            img          = img,
+            creationDate = creationDate,  // ya es String
+            idRole       = idRole
         )
     }
 }

@@ -40,8 +40,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
-              //studentViewModel: StudentViewModel
-    ) {
+    //studentViewModel: StudentViewModel
+) {
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -197,9 +197,10 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
                                 .clickable {
 
 
-                                  //  usersViewModel.findAllUsers()
 
-                                  //  usersViewModel.loginTest()
+                                    //  usersViewModel.findAllUsers()
+
+                                    //  usersViewModel.loginTest()
 
 
                                     //   usersViewModel.probarConexionConMockApi()
@@ -208,18 +209,24 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
                                         if (email.isNotEmpty() && password.isNotEmpty()) {
                                             usersViewModel.login(email, password) { isValid ->
                                                 if (isValid) {
-                                                    // 1) Navega a Home
-                                                    navController.navigate("home")
+                                                    // llamamos aquí a fetchUserByEmail y manejamos el id en el lambda
+//                                                    usersViewModel.fetchUserByEmail("1") { idUser ->
+//                                                        if (idUser != null) {
+//                                                            Log.d("LoginDebug", "Usuario autenticado con ID: $idUser")
+//                                                            // 1) Navega a Home
+                                                            navController.navigate("home")
+//                                                            // 2) Selecciona usuario
+//                                                            usersViewModel.selectUserById(idUser)
+//                                                            usersViewModel.printIdUser()
+//                                                            usersViewModel.fetchUniversities()
+//                                                            // (y luego studentViewModel.loadStudentByUserId(idUser), si hace falta)
+//                                                        } else {
+//                                                            Log.d("LoginDebug", "No se obtuvo id_user")
+//                                                            showAlert = true
+//                                                        }
+//                                                    }
 
-                                                    // 2) Obtén el ID como Int?
-                                                    val userId = usersViewModel.getUserId()
-                                                    Log.d("LoginDebug", "Usuario autenticado con ID: $userId")
-
-                                                    // 3) Si existe, selecciónalo
-                                                    userId?.let {
-                                                        usersViewModel.selectUserById(it)
-                                                        // studentViewModel.loadStudentByUserId(it)
-                                                    }
+                                                        usersViewModel.fetchUniversities()
                                                 } else {
                                                     Log.d("LoginDebug", "Credenciales inválidas para $email")
                                                     showAlert = true
@@ -230,6 +237,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel
                                             showAlert = true
                                         }
                                     }
+
 
 
                                 },

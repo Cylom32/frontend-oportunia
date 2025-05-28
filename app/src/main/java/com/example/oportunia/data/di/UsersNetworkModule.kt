@@ -6,6 +6,7 @@ import com.example.oportunia.data.remote.interceptor.ResponseInterceptor
 import com.example.oportunia.data.remote.serializer.UsersDeserializer
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +15,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
@@ -21,7 +23,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object UsersNetworkModule {
-    private const val BASE_URL = "https://67e9d753bdcaa2b7f5ba4752.mockapi.io/api/v1/"
+    private const val BASE_URL = "https://oportunia-zulu-app-v01-b4594a4da5e3.herokuapp.com/"
 
 
     private const val DATE_FORMAT = "yyyy-MM-dd"
@@ -63,6 +65,18 @@ object UsersNetworkModule {
         .writeTimeout(30, TimeUnit.SECONDS)
         .build()
 
+
+    /////////////////////////////////////////
+
+
+
+
+
+
+/////////////////////////////////////////////////
+
+
+
     /**
      * Provides a configured Retrofit instance for Users.
      */
@@ -86,3 +100,10 @@ object UsersNetworkModule {
     fun provideUsersService(@Named("Users") retrofit: Retrofit): UsersService =
         retrofit.create(UsersService::class.java)
 }
+
+
+
+
+
+
+

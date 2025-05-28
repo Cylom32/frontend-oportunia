@@ -4,7 +4,18 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt.android)
 
-    id("org.jetbrains.kotlin.kapt")
+   // id("org.jetbrains.kotlin.kapt")
+
+
+
+
+    kotlin("kapt")
+
+    ///////////////////////////
+
+
+
+
 }
 
 android {
@@ -102,6 +113,23 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     implementation("io.coil-kt:coil-compose:2.4.0")
+
+
+    ///////////////////////////////////
+
+    /////-----------------------------         lo nuevo por aquello                ---------------------------------/////////////
+
+
+    implementation ("org.mindrot:jbcrypt:0.4")
+
+
+//    implementation("com.squareup.moshi:moshi:1.15.0")
+//    // Moshi para Kotlin (reflect), opcional si no usas code-gen en todos
+//    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
+//    // Code-gen de Moshi
+//    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+
+    ///////////////////////////////////
 
 }
 

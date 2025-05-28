@@ -9,30 +9,31 @@ import javax.inject.Inject
 
 /**
  * Interceptor to log and optionally modify HTTP responses.
- */
-class ResponseInterceptor @Inject constructor() : Interceptor {
+ */class ResponseInterceptor @Inject constructor() : Interceptor {
 
-    /**
-     * Intercepts the HTTP response to log and optionally modify it.
-     *
-     * @param chain The interceptor chain.
-     * @return The intercepted and potentially modified response.
-     * @throws IOException If an I/O error occurs during the interception.
-     */
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {
-        // Proceed with the request
-        val response = chain.proceed(chain.request())
+        // 1) Toma la petición original
+        val originalRequest = chain.request()
+        val path = originalRequest.url.encodedPath  // p.ej. "/v1/users/email/1"
 
-        // Convert the response body to a string
-        val responseBodyString = response.body?.string()
+        // 2) Si es el endpoint de email, quítale cualquier Authorization
+        val request = if (path.startsWith("/v1/users/email/")) {
+            originalRequest.newBuilder()
+                .removeHeader("Authorization")
+                .build()
+        } else {
+            // en caso contrario, la dejas igual (o aquí podrías inyectar token)
+            originalRequest
+        }
 
-        // Log the raw response
-       // println("Raw Response: $responseBodyString")
+        // 3) Procede con la petición limpia
+        val response = chain.proceed(request)
 
-        // Return the response by re-creating the body with the intercepted content
+        // 4) Reensambla el body para que puedas seguir leyendo
+        val bodyString = response.body?.string().orEmpty()
         return response.newBuilder()
-            .body((responseBodyString ?: "").toResponseBody(response.body?.contentType()))
+            .body(bodyString.toResponseBody(response.body?.contentType()))
             .build()
     }
 }

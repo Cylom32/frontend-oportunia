@@ -29,13 +29,18 @@ import com.example.oportunia.presentation.ui.theme.midnightBlue
 import com.example.oportunia.presentation.ui.theme.royalBlue
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 
 @Composable
 fun RegisterOptionScreenPAndE(
     usersViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel,
     navController: NavHostController
 ) {
+    val scope = rememberCoroutineScope()
+
     var correo by remember { mutableStateOf("") }
     var contra by remember { mutableStateOf("") }
     var contraVali by remember { mutableStateOf("") }
@@ -157,46 +162,87 @@ fun RegisterOptionScreenPAndE(
                                 end = Offset(1000f, 1000f)
                             ),
                             shape = RoundedCornerShape(10.dp)
-                        )
-                        .clickable {
+                        ) .clickable {
                             when {
                                 correo.isBlank() -> {
-                                    alertMessage = context.getString(R.string.error_empty_email)
+                                    alertMessage = "El correo no puede estar vacío"
                                     showAlert = true
                                 }
-
                                 contra.isBlank() -> {
-                                    alertMessage = context.getString(R.string.error_empty_password)
+                                    alertMessage = "La contraseña no puede estar vacía"
                                     showAlert = true
                                 }
-
                                 contra != contraVali -> {
-                                    alertMessage =
-                                        context.getString(R.string.error_password_mismatch)
+                                    alertMessage = "Las contraseñas no coinciden"
                                     showAlert = true
                                 }
-
                                 else -> {
-//                                    studentViewModel.setCorreo(correo)
-//                                    studentViewModel.setContrasenna(contraVali)
+                                    scope.launch {
+                                        usersViewModel.fetchUserByEmail(correo) { idUser ->
+                                            if (idUser == null) {
+                                                usersViewModel.setEmail(correo)
+                                                usersViewModel.setPassword(contraVali)
 
-//                                    Log.d("StudentInfo", "Correo guardado: $correo")
-//                                    Log.d("StudentInfo", "Contraseña guardada: $contraVali")
+                                                Log.d("Registro", "Contraseña a enviar: $contraVali")
 
-                                    val userId = usersViewModel.getNextId()
-                                 //   studentViewModel.saveStudent(userId)
+                                                usersViewModel.createUserWithoutId(
+                                                    rawEmail     = correo,
+                                                    rawPassword  = contraVali
+                                                )
 
-//                                    usersViewModel.saveUser(
-//                                        id = userId,
-//                                        email = studentViewModel.correo.value,
-//                                        password = studentViewModel.contrasenna.value,
-//                                        roleId = 3
-//                                    )
+                                                ////////////////////////////////////////////////////////////////////
 
-                                    navController.navigate(NavRoutes.Log.ROUTE) {
-                                        popUpTo(0) { inclusive = true }
+
+                                                scope.launch {
+                                                    usersViewModel.fetchUserByEmail(correo) { fetchedId ->
+                                                        fetchedId?.let { idUser ->
+                                                            Log.d("Registro", "ID de usuario obtenido: $idUser")
+
+                                                            // Lees los campos del UsersViewModel
+                                                            val nombre = usersViewModel.nombre.value
+                                                            val primerApellido = usersViewModel.primerApellido.value
+                                                            val segundoApellido = usersViewModel.segundoApellido.value
+                                                            val uniId: Int = usersViewModel.selectedUniversityId.value  // Ya es Int
+
+                                                            // Llamas al método del StudentViewModel
+                                                            studentViewModel.createStudentWithoutId(
+                                                                userId        = idUser,
+                                                                rawFirstName  = nombre,
+                                                                rawLastName1  = primerApellido,
+                                                                rawLastName2  = segundoApellido,
+                                                                universityId  = uniId
+                                                            )
+
+
+                                                            // Navegas
+                                                            navController.navigate(NavRoutes.Log.ROUTE) {
+                                                                popUpTo(0) { inclusive = true }
+                                                            }
+                                                        } ?: run {
+                                                            Log.e("Registro", "No se obtuvo ID de usuario; no se crea estudiante")
+                                                        }
+                                                    }
+                                                }
+
+
+
+                                                ////////////////////////////////////////////////////////////////////
+
+
+
+
+
+                                                navController.navigate(NavRoutes.Log.ROUTE) {
+                                                    popUpTo(0) { inclusive = true }
+                                                }
+                                            } else {
+                                                alertMessage = "Ese correo ya está asociado"
+                                                showAlert = true
+                                            }
+                                        }
                                     }
                                 }
+
                             }
                         },
                     contentAlignment = Alignment.Center

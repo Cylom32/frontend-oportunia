@@ -4,6 +4,10 @@ import com.example.oportunia.data.mapper.UsersMapper
 import com.example.oportunia.data.remote.AuthRemoteDataSource
 import com.example.oportunia.data.remote.UsersRemoteDataSource
 import com.example.oportunia.data.remote.dto.AuthResponseDto
+import com.example.oportunia.data.remote.dto.UserEmailResponse
+import com.example.oportunia.data.remote.dto.UserResponseDTO
+import com.example.oportunia.data.remote.dto.UserWhitoutId
+import com.example.oportunia.data.remote.dto.UsersDTO
 import com.example.oportunia.domain.model.AuthResult
 import com.example.oportunia.domain.model.Users
 import com.example.oportunia.domain.repository.UsersRepository
@@ -12,6 +16,8 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 import com.example.oportunia.domain.model.Credentials
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 /**
@@ -49,31 +55,65 @@ class UsersRepositoryImpl @Inject constructor(
     override suspend fun saveUser(user: Users): Result<Unit> {
         return remoteDataSource.createUser(usersMapper.mapToDto(user)).map {}
     }
-
-    override suspend fun findUserByEmail(email: String): Result<Users> {
-        return Result.failure(Exception("Not implemented"))
-    }
-
-//    override suspend fun loginUser(email: String, password: String): Result<Users> {
-//        return try {
-//            remoteDataSource.loginUser(email, password).map { dto ->
-//                usersMapper.mapToDomain(dto)
-//            }
-//        } catch (e: UnknownHostException) {
-//            Result.failure(Exception("Network error: Cannot connect to server. Please check your internet connection."))
-//        } catch (e: Exception) {
-//            Result.failure(Exception("Login failed: ${e.message}"))
-//        }
+//
+//    override suspend fun findUserByEmail(email: String): Result<Users> {
+//        return Result.failure(Exception("Not implemented"))
 //    }
 
+
+
     override suspend fun loginUser(email: String, password: String): Result<AuthResult> {
-        // utiliza tu Domain-model Credentials
+
         val creds = Credentials(username = email, password = password)
-        // delega directamente en el data source
+
         return authRemoteDataSource.login(creds)
     }
-}
 
+    override suspend fun findUserByEmail(email: String): Result<UserEmailResponse> {
+
+        return try {
+            remoteDataSource.getUserByEmail(email)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error buscando usuario: ${e.message}"))
+        }
+    }
+
+    override suspend fun saveUserNoId(user: UserWhitoutId): Result<Users> =
+        runCatching {
+            // 1) Construye tu DTO de petición (sin id)
+            val requestDto = UsersDTO(
+                email        = user.email,
+                password     = user.password,
+                img          = user.img,
+                creationDate = user.creationDate.toString(),
+                idRole       = user.idRole
+            )
+
+            // 2) Lanza la llamada y recibe el DTO de respuesta
+            val resp: UserResponseDTO = remoteDataSource
+                .createUser(requestDto)
+                .getOrThrow()
+
+            // 3) Convierte a tu modelo de dominio y lo devuelves
+            Users(
+                id           = resp.idUser,
+                email        = resp.email,
+                password     = resp.password,
+                img          = resp.img,
+                creationDate = LocalDate.parse(
+                    resp.creationDate.substring(0, 10)
+                ),  // toma solo "YYYY-MM-DD"
+                roleId       = resp.role.idRole
+            )
+        }
+
+
+
+
+
+
+
+}
 
 
 

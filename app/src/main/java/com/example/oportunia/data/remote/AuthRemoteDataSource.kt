@@ -20,70 +20,61 @@ class AuthRemoteDataSource @Inject constructor(
     private val authService: AuthService
 ) {
 
+    /** Guarda el último token obtenido tras el login */
+    var lastAuthToken: String? = null
+        private set
+
     /**
-     * Authenticates a user with provided [credentials].
-     * Returns [AuthResult] on success or an exception on failure.
+     * Hace login con correo y password, extrae y almacena el token del header "Authorization"
+     * y devuelve un AuthResult con token y email.
      */
     suspend fun login(credentials: Credentials): Result<AuthResult> =
         withContext(Dispatchers.IO) {
             try {
-                // Convert credentials and log the request payload
-                val requestDto = AuthMapper.credentialsToDto(credentials)
-                Log.d(
-                    "AuthRemoteDataSource",
-                    "Login request payload: username=${requestDto.email}, password length=${requestDto.password.length}"
-                )
-
-                // Perform the network call
+                // Construir DTO de petición
+                val requestDto: AuthRequestDto = AuthMapper.credentialsToDto(credentials)
+                // Llamada al servicio
                 val response: Response<AuthResponseDto> = authService.login(requestDto)
 
                 if (response.isSuccessful) {
-                    // First try Authorization header
-                    val authHeader = response.headers()["Authorization"]
-                    val body = response.body()
-                    if (!authHeader.isNullOrBlank() && body !=null) {
+                    val authHeader: String? = response.headers()["Authorization"]
+                    val body: AuthResponseDto? = response.body()
+
+                    if (!authHeader.isNullOrBlank() && body != null) {
+                        // Log y almacenamiento del token
                         Log.d(
                             "AuthRemoteDataSource",
                             "Found token in Authorization header: ${authHeader.take(15)}..."
                         )
+                        lastAuthToken = authHeader
+
+                        // Devolver el resultado con token y email
                         return@withContext Result.success(
                             AuthResult(
                                 token = authHeader,
-                                email = body.email // placeholder or parse from header if available
+                                email = body.email
                             )
                         )
+                    } else {
+                        return@withContext Result.failure(
+                            Exception("Authorization header o body nulo")
+                        )
                     }
-
-                    // Fallback to response body  -->Esto no se al rato esta de mas
-                    if (body != null) {
-                        Log.d("AuthRemoteDataSource", "Login successful with body: $body")
-                        return@withContext Result.success(AuthMapper.dtoToAuthResult(body))
-                    }
-
-                    // Fallback to response body
-                    response.body()?.let { dto ->
-                        Log.d("AuthRemoteDataSource", "Login successful with body: $dto")
-                        return@withContext Result.success(AuthMapper.dtoToAuthResult(dto))
-                    }
-                    Log.e("AuthRemoteDataSource", "Login response body was null")
-                    Result.failure(Exception("No token found in response"))
                 } else {
-                    // Handle HTTP error codes
-                    val errorBody = response.errorBody()?.string()
-                    val errorMsg = when (response.code()) {
+                    // Manejo de errores HTTP
+                    val errorBody: String? = response.errorBody()?.string()
+                    val msg = when (response.code()) {
                         401 -> "Unauthorized access"
                         403 -> "Invalid credentials"
                         else -> "API error ${response.code()}: $errorBody"
                     }
-                    Log.e("AuthRemoteDataSource", "Login failed: $errorMsg")
-                    Result.failure(Exception(errorMsg))
+                    return@withContext Result.failure(Exception(msg))
                 }
             } catch (e: Exception) {
-                Log.e("AuthRemoteDataSource", "Login exception: ${e.message}", e)
-                Result.failure(e)
+                // Errores de red u otros
+                return@withContext Result.failure(e)
             }
         }
-
 
     /**
      * Logs out the current user.
