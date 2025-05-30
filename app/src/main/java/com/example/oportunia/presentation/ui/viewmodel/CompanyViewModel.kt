@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
+import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -155,6 +156,32 @@ class CompanyViewModel @Inject constructor(
 
 
 ///////////////////////////////  -------------  para obtener las publicaciones de la compañia segund id   --------  ///////////////////////
+
+
+///////////////////////////////  -------------  para obtener la publicacion segund id   --------  ///////////////////////
+
+
+    private val _publicationDetail = MutableStateFlow<PublicationDetailDTO?>(null)
+    val publicationDetail: StateFlow<PublicationDetailDTO?> = _publicationDetail
+
+    private val _publicationError = MutableStateFlow<String?>(null)
+    val publicationError: StateFlow<String?> = _publicationError
+
+    fun fetchPublicationById(id: Int) = viewModelScope.launch {
+        repository.findPublicationById(id)
+            .onSuccess { detail ->
+                _publicationDetail.value = detail
+                _publicationError.value = null
+                Log.d("CompanyViewModel", "Detalle publicación → $detail")
+            }
+            .onFailure { ex ->
+                _publicationError.value = ex.message
+                Log.e("CompanyViewModel", "Error al obtener publicación id=$id", ex)
+            }
+    }
+
+
+///////////////////////////////  -------------  para obtener la publicacion segund id   --------  ///////////////////////
 
 
 

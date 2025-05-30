@@ -77,8 +77,17 @@ class CompaniesRepositoryImpl @Inject constructor(
             Result.failure(Exception("Error fetching publications by company: ${e.message}"))
         }
 
-    override suspend fun findPublicationById(id: Int): Result<PublicationDetailDTO> =
-        remoteDataSource.findPublicationById(id)
+    override suspend fun findPublicationById(id: Int): Result<PublicationDetailDTO> {
+        return try {
+            remoteDataSource.findPublicationById(id)
+        } catch (e: UnknownHostException) {
+            Result.failure(Exception("Network error: unable to connect to server."))
+        } catch (e: Exception) {
+            Result.failure(Exception("Error fetching publication with id=$id: ${e.message}"))
+        }
+    }
+
+
 
 
 //
