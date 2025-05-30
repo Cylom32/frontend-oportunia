@@ -173,6 +173,7 @@ fun GridPublicationsScreenS(
                             .fillMaxWidth()
                             .aspectRatio(1f)
                             .clickable {
+                                companyViewModel.fetchPublicationById(publication.id)
                                 navController.navigate(NavRoutes.IntershipScreen.ROUTE)
                             }
                     ) {
@@ -185,6 +186,10 @@ fun GridPublicationsScreenS(
                                     .height(100.dp),
                                 contentScale = ContentScale.FillBounds
                             )
+//                            SideEffect {
+//                                Log.d("PublicationCard", "Publication id = ${publication.id}")
+//                            }
+
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = publication.location.name,

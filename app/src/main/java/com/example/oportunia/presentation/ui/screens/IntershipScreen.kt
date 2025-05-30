@@ -117,6 +117,11 @@ fun IntershipScreen(
     usersViewModel: UsersViewModel,
     companyViewModel: CompanyViewModel
 ) {
+    val publication by companyViewModel.publicationDetail.collectAsState()
+    LaunchedEffect(Unit) {
+
+    }
+    val imageUrl = publication?.file.orEmpty()
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -160,8 +165,8 @@ fun IntershipScreen(
                     .weight(1f)
             ) {
                 AsyncImage(
-                    model = "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg",
-                    contentDescription = "Imagen de cabecera",
+                    model = imageUrl,
+                    contentDescription = "Imagen de publicación",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds
                 )

@@ -190,9 +190,9 @@ fun CompanyInfoScreenS(
                                     companyIdParam = id
                                 )
 
-                               // navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
+                               navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
 
-                                companyViewModel.fetchPublicationById(1)
+                              //  companyViewModel.fetchPublicationById(1)
 
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
