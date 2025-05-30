@@ -38,7 +38,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.HomeScreenS.ROUTE
+        startDestination = NavRoutes.Log.ROUTE
     ) {
 
         composable(NavRoutes.GridPublicationsScreenS.ROUTE) {
@@ -77,7 +77,11 @@ fun NavGraph(
         }
 
         composable(NavRoutes.HomeScreenS.ROUTE) {
-            HomeScreenS(companyViewModel)
+            HomeScreenS(
+                companyViewModel,
+                usersViewModel,
+                navController
+            )
         }
 
         composable(NavRoutes.Notifications.ROUTE) {
@@ -102,7 +106,12 @@ fun NavGraph(
         }
 
         composable(NavRoutes.CompanyInfoScreenS.ROUTE) {
-            CompanyInfoScreenS(navController)
+            CompanyInfoScreenS(
+                navController,
+                usersViewModel,
+                studentViewModel,
+                companyViewModel
+            )
         }
 
 //        composable (NavRoutes.LanguageOptionsSC.ROUTE){

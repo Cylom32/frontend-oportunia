@@ -2,7 +2,10 @@
 package com.example.oportunia.data.mapper
 
 import com.example.oportunia.data.remote.dto.CompanyDTO
+import com.example.oportunia.data.remote.dto.CompanyWithNetworksDTO
 import com.example.oportunia.domain.model.Company
+import com.example.oportunia.domain.model.CompanyWithNetworks
+import com.example.oportunia.domain.model.SocialNetwork
 import javax.inject.Inject
 
 class CompanyMapper @Inject constructor() {
@@ -24,6 +27,19 @@ class CompanyMapper @Inject constructor() {
         companyDescription = domain.companyDescription,
         idUser            = userId
     )
+
+    fun mapToDomainWithNetworks(dto: CompanyWithNetworksDTO): CompanyWithNetworks =
+        CompanyWithNetworks(
+            idCompany          = dto.idCompany,
+            companyName        = dto.companyName,
+            companyDescription = dto.companyDescription,
+            socialNetworks     = dto.socialNetworks.map { snDto ->
+                SocialNetwork(
+                    idSocialNetwork = snDto.idSocialNetwork,
+                    link            = snDto.link
+                )
+            }
+        )
 
 
 }

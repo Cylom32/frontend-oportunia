@@ -1,6 +1,8 @@
 package com.example.oportunia.data.remote.api
 
 
+import com.example.oportunia.data.remote.dto.AreaDTO
+import com.example.oportunia.data.remote.dto.LocationDTO
 import com.example.oportunia.data.remote.dto.UserEmailResponse
 import com.example.oportunia.data.remote.dto.UserResponseDTO
 import com.example.oportunia.data.remote.dto.UsersDTO
@@ -47,6 +49,8 @@ interface UsersService {
     suspend fun createUser(@Body user: UsersDTO): Response<UserResponseDTO>
 
 
+
+
     /**
      * Updates an existing user in the remote API.
      *
@@ -81,5 +85,17 @@ interface UsersService {
     suspend fun getUserByEmail(
         @Path("email") email: String
     ): Response<UserEmailResponse>
+
+
+
+
+    @GET("v1/areas")
+    suspend fun getAreas(): Response<List<AreaDTO>>
+
+
+    @GET("v1/locations")
+    suspend fun getAllLocations(): Response<List<LocationDTO>>
+
+
 
 }

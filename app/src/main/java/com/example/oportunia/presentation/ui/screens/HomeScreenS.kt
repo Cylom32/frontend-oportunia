@@ -55,31 +55,43 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.text.font.FontStyle
 import coil.compose.AsyncImage
+import com.example.oportunia.data.remote.dto.PublicationFilterDTO
+import com.example.oportunia.domain.model.Area
+import com.example.oportunia.domain.model.Location
+import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
 
 @Composable
-fun HomeScreenS(companyViewModel: CompanyViewModel) {
+fun HomeScreenS(companyViewModel: CompanyViewModel, usersViewModel: UsersViewModel, navController: NavHostController) {
     BoxWithConstraints {
         val screenHeight = maxHeight
         val screenWidth = maxWidth
 
+        var selectedCompanyId by remember { mutableStateOf<Int?>(null) }
+
         var showMainPopup by remember { mutableStateOf(false) }
-
         var showAreaPopup by remember { mutableStateOf(false) }
-        var selectedAreas by remember { mutableStateOf(listOf<String>()) }
         var showUbicacionPopup by remember { mutableStateOf(false) }
-
-        var selectedProvinces by remember { mutableStateOf(listOf<String>()) }
         var showModalidadPopup by remember { mutableStateOf(false) }
         var showRemuneradoPopup by remember { mutableStateOf(false) }
 
-        var selectedModalidad by remember { mutableStateOf<String?>(null) }
-        var selectedRemunerado by remember { mutableStateOf<String?>(null) }
+        // Estados para filtros
+        var selectedAreaIds by remember { mutableStateOf(listOf<Int>()) }
+        var selectedLocationIds by remember { mutableStateOf(listOf<Int>()) }
+        var selectedRemunerado by remember { mutableStateOf<Boolean?>(null) }
+
+        LaunchedEffect(Unit) {
+            companyViewModel.fetchPublications()
+        }
+
+        val publications by companyViewModel.publications.collectAsState()
 
 
 
@@ -109,23 +121,63 @@ fun HomeScreenS(companyViewModel: CompanyViewModel) {
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    SearchBar(onMenuClick = { showMainPopup = true })
+                    SearchBar(onMenuClick = {
+                        showMainPopup = true
+                        usersViewModel.fetchAreas()
+                        usersViewModel.fetchLocations()    // <– aquí
+                    })
+
                 }
 
 
 
+                val publications by companyViewModel.publications.collectAsState()
+
+                // 3) Imagenes en scroll con pull-to-refresh según filtros
                 ImageScroll(
+                    publications = publications,
+                    onRefresh = {
+                        // pull-to-refresh: vuelve a llamar con los filtros
+                        Log.d("HomeScreenS", "Refresh → filtros: " +
+                                "area=${selectedAreaIds.firstOrNull()}, " +
+                                "loc=${selectedLocationIds.firstOrNull()}, " +
+                                "paid=$selectedRemunerado")
+                        companyViewModel.fetchPublications(
+                            areaId     = selectedAreaIds.firstOrNull(),
+                            locationId = selectedLocationIds.firstOrNull(),
+                            paid       = selectedRemunerado
+                        )
+                    },
+                    onPageChange = { companyId ->
+                        // cada vez que cambias página
+                        Log.d("HomeScreenS", "Página → companyId=$companyId")
+                        selectedCompanyId = companyId
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f) // ocupa todo el espacio restante
-                        .padding(bottom = 80.dp, top = 3.dp)
+                        .weight(1f)
+                        .padding(bottom = 80.dp, top = 3.dp),
+                    companyViewModel,
+                    navController
                 )
+
 
 
                 if (showMainPopup) {
                     FilterPopup(
+                        selectedAreaIds = selectedAreaIds,
+                        selectedLocationIds = selectedLocationIds,
+                        selectedRemunerado = selectedRemunerado,
                         onDismiss = { showMainPopup = false },
-                        onConfirm = { showMainPopup = false },
+                        onConfirm = { areaId, locationId, paid ->
+                            showMainPopup = false
+                            Log.d("HomeScreenS", "Confirm → filtros: area=$areaId, loc=$locationId, paid=$paid")
+                            companyViewModel.fetchPublications(
+                                areaId = areaId,
+                                locationId = locationId,
+                                paid = paid
+                            )
+                        },
                         onAreaClick = {
                             showMainPopup = false
                             showAreaPopup = true
@@ -143,42 +195,39 @@ fun HomeScreenS(companyViewModel: CompanyViewModel) {
                             showRemuneradoPopup = true
                         }
                     )
-
                 }
 
+
                 if (showUbicacionPopup) {
+
+                    val locations by usersViewModel.locations.collectAsState()
+
                     UbicacionPopup(
-                        selectedProvinces = selectedProvinces,
-                        onSelectionChange = { selectedProvinces = it },
-                        onDismiss = {
+                        availableLocations   = locations,
+                        selectedLocationIds  = selectedLocationIds,
+                        onSelectionChange    = { selectedLocationIds = it },
+                        onDismiss            = {
                             showUbicacionPopup = false
-                            showMainPopup = true
+                            showMainPopup      = true
                         }
                     )
                 }
 
 
                 if (showAreaPopup) {
+                    val areas by usersViewModel.areas.collectAsState()
                     AreaPopup(
-                        selectedAreas = selectedAreas,
-                        onSelectionChange = { selectedAreas = it },
-                        onDismiss = {
+                        availableAreas     = areas,
+                        selectedAreaIds    = selectedAreaIds,
+                        onSelectionChange  = { selectedAreaIds = it },
+                        onDismiss          = {
                             showAreaPopup = false
                             showMainPopup = true
                         }
                     )
                 }
 
-                if (showModalidadPopup) {
-                    ModalidadPopup(
-                        selected = selectedModalidad,
-                        onSelectionChange = { selectedModalidad = it },
-                        onDismiss = {
-                            showModalidadPopup = false
-                            showMainPopup = true
-                        }
-                    )
-                }
+
 
                 if (showRemuneradoPopup) {
                     RemuneradoPopup(
@@ -190,6 +239,7 @@ fun HomeScreenS(companyViewModel: CompanyViewModel) {
                         }
                     )
                 }
+
 
             }
         }
@@ -234,8 +284,11 @@ fun SearchBar(onMenuClick: () -> Unit) {
 
 @Composable
 fun FilterPopup(
+    selectedAreaIds: List<Int>,
+    selectedLocationIds: List<Int>,
+    selectedRemunerado: Boolean?,
     onDismiss: () -> Unit,
-    onConfirm: () -> Unit,
+    onConfirm: (areaId: Int?, locationId: Int?, paid: Boolean?) -> Unit,
     onAreaClick: () -> Unit,
     onUbicacionClick: () -> Unit,
     onModalidadClick: () -> Unit,
@@ -248,17 +301,18 @@ fun FilterPopup(
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 Text("Área", modifier = Modifier.clickable { onAreaClick() })
                 Text("Ubicación", modifier = Modifier.clickable { onUbicacionClick() })
-                Text("Modalidad", modifier = Modifier.clickable { onModalidadClick() })
                 Text("Remunerado", modifier = Modifier.clickable { onRemuneradoClick() })
             }
         },
         confirmButton = {
-            TextButton(onClick = onConfirm) {
-                Text("Confirmar")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = {
+                onConfirm(
+                    selectedAreaIds.firstOrNull(),
+                    selectedLocationIds.firstOrNull(),
+                    selectedRemunerado
+                )
+                onDismiss()
+            }) {
                 Text("Cerrar")
             }
         }
@@ -266,48 +320,54 @@ fun FilterPopup(
 }
 
 
+
 @Composable
 fun AreaPopup(
-    selectedAreas: List<String>,
-    onSelectionChange: (List<String>) -> Unit,
+    availableAreas: List<Area>,
+    selectedAreaIds: List<Int>,
+    onSelectionChange: (List<Int>) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val options = listOf("Salud", "Tecnología", "Software")
-    val currentSelection = remember { mutableStateListOf<String>().apply { addAll(selectedAreas) } }
+    val current = remember { mutableStateListOf<Int>().apply { addAll(selectedAreaIds) } }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Seleccionar Área") },
         text = {
-            Column {
-                options.forEach { area ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                if (currentSelection.contains(area)) {
-                                    currentSelection.remove(area)
-                                } else {
-                                    currentSelection.add(area)
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                if (availableAreas.isEmpty()) {
+                    Text("Cargando áreas...")
+                } else {
+                    availableAreas.forEach { area ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    if (current.contains(area.id)) current.remove(area.id)
+                                    else current.add(area.id)
                                 }
-                            }
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Checkbox(
-                            checked = currentSelection.contains(area),
-                            onCheckedChange = {
-                                if (it) currentSelection.add(area) else currentSelection.remove(area)
-                            }
-                        )
-                        Text(area)
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(
+                                checked = current.contains(area.id),
+                                onCheckedChange = { checked ->
+                                    if (checked) current.add(area.id)
+                                    else current.remove(area.id)
+                                }
+                            )
+                            Text(text = area.name)
+                        }
+                    }
+                    if (current.isEmpty()) {
+                        Text("(Ninguna área seleccionada)", fontStyle = FontStyle.Italic)
                     }
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = {
-                onSelectionChange(currentSelection)
+                onSelectionChange(current.toList())
                 onDismiss()
             }) {
                 Text("Aplicar")
@@ -319,49 +379,48 @@ fun AreaPopup(
 
 @Composable
 fun UbicacionPopup(
-    selectedProvinces: List<String>,
-    onSelectionChange: (List<String>) -> Unit,
+    availableLocations: List<Location>,
+    selectedLocationIds: List<Int>,
+    onSelectionChange: (List<Int>) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val provincias = listOf(
-        "San José", "Alajuela", "Cartago",
-        "Heredia", "Guanacaste", "Puntarenas", "Limón"
-    )
-    val currentSelection = remember { mutableStateListOf<String>().apply { addAll(selectedProvinces) } }
+    val current = remember { mutableStateListOf<Int>().apply { addAll(selectedLocationIds) } }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Seleccionar Ubicación") },
         text = {
             Column {
-                provincias.forEach { provincia ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                if (currentSelection.contains(provincia)) {
-                                    currentSelection.remove(provincia)
-                                } else {
-                                    currentSelection.add(provincia)
+                if (availableLocations.isEmpty()) {
+                    Text("Cargando ubicaciones...")
+                } else {
+                    availableLocations.forEach { loc ->
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    if (current.contains(loc.id)) current.remove(loc.id)
+                                    else current.add(loc.id)
                                 }
-                            }
-                            .padding(vertical = 4.dp)
-                    ) {
-                        Checkbox(
-                            checked = currentSelection.contains(provincia),
-                            onCheckedChange = {
-                                if (it) currentSelection.add(provincia) else currentSelection.remove(provincia)
-                            }
-                        )
-                        Text(provincia)
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Checkbox(
+                                checked = current.contains(loc.id),
+                                onCheckedChange = { checked ->
+                                    if (checked) current.add(loc.id)
+                                    else current.remove(loc.id)
+                                }
+                            )
+                            Text(loc.name)
+                        }
                     }
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = {
-                onSelectionChange(currentSelection)
+                onSelectionChange(current.toList())
                 onDismiss()
             }) {
                 Text("Aplicar")
@@ -369,57 +428,14 @@ fun UbicacionPopup(
         }
     )
 }
-
-@Composable
-fun ModalidadPopup(
-    selected: String?,
-    onSelectionChange: (String?) -> Unit,
-    onDismiss: () -> Unit
-) {
-    val opciones = listOf("Mixta", "Presencial", "Remota")
-    var selectedOption by remember { mutableStateOf(selected) }
-
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text("Seleccionar Modalidad") },
-        text = {
-            Column {
-                opciones.forEach { opcion ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { selectedOption = opcion }
-                            .padding(vertical = 4.dp)
-                    ) {
-                        RadioButton(
-                            selected = selectedOption == opcion,
-                            onClick = { selectedOption = opcion }
-                        )
-                        Text(opcion)
-                    }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                onSelectionChange(selectedOption)
-                onDismiss()
-            }) {
-                Text("Aplicar")
-            }
-        }
-    )
-}
-
 
 @Composable
 fun RemuneradoPopup(
-    selected: String?,
-    onSelectionChange: (String?) -> Unit,
+    selected: Boolean?,
+    onSelectionChange: (Boolean?) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val opciones = listOf("Sí", "No")
+    val opciones = listOf("Sí" to true, "No" to false)
     var selectedOption by remember { mutableStateOf(selected) }
 
     AlertDialog(
@@ -427,19 +443,23 @@ fun RemuneradoPopup(
         title = { Text("¿Remunerado?") },
         text = {
             Column {
-                opciones.forEach { opcion ->
+                opciones.forEach { (label, value) ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clickable { selectedOption = opcion }
+                            .clickable {
+                                selectedOption = if (selectedOption == value) null else value
+                            }
                             .padding(vertical = 4.dp)
                     ) {
                         RadioButton(
-                            selected = selectedOption == opcion,
-                            onClick = { selectedOption = opcion }
+                            selected = selectedOption == value,
+                            onClick = {
+                                selectedOption = if (selectedOption == value) null else value
+                            }
                         )
-                        Text(opcion)
+                        Text(label)
                     }
                 }
             }
@@ -455,56 +475,84 @@ fun RemuneradoPopup(
     )
 }
 
-
-
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ImageScroll(modifier: Modifier = Modifier) {
-    val imageUrl = "https://images.unsplash.com/photo-1564754943164-e83c08469116?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8dmVydGljYWx8ZW58MHx8MHx8fDA%3D"
-    val images = List(10) { imageUrl }
-    val logos  = List(10) { imageUrl }
+fun ImageScroll(
+    publications: List<PublicationFilterDTO>,
+    onRefresh: () -> Unit,
+    onPageChange: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    companyViewModel: CompanyViewModel,
+    navController: NavHostController
+) {
+    val images    = publications.map { it.file }
+    val logos     = publications.map { it.company.user.img } // URLs reales
     val pagerState = rememberPagerState(pageCount = { images.size })
+
+    LaunchedEffect(pagerState.currentPage) {
+        publications.getOrNull(pagerState.currentPage)
+            ?.company
+            ?.idCompany
+            ?.let(onPageChange)
+    }
 
     var isRefreshing by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    val pullRefreshState = rememberPullRefreshState(isRefreshing, {
-        isRefreshing = true
-        coroutineScope.launch {
-            delay(1000)
-            isRefreshing = false
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isRefreshing,
+        onRefresh = {
+            isRefreshing = true
+            coroutineScope.launch {
+                onRefresh()
+                delay(1000)
+                isRefreshing = false
+            }
         }
-    })
+    )
 
     Box(
         modifier = modifier
             .pullRefresh(pullRefreshState)
             .fillMaxSize()
     ) {
-        VerticalPager(
-            state = pagerState,
-            modifier = Modifier.fillMaxSize()
-        ) { page ->
-            Box(Modifier.fillMaxSize()) {
-                AsyncImage(
-                    model = imageUrl,
-                    contentDescription = "Imagen full screen",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds
-                )
+        if (images.isEmpty()) {
+            Text(
+                "No hay imágenes",
+                Modifier.align(Alignment.Center),
+                color = Color.Gray
+            )
+        } else {
+            VerticalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize()
+            ) { page ->
+                Box(Modifier.fillMaxSize()) {
+                    AsyncImage(
+                        model = images[page],
+                        contentDescription = "Publicación #${page + 1}",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                    AsyncImage(
+                        model = logos[page],
+                        contentDescription = "Logo empresa",
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(12.dp)
+                            .size(72.dp)
+                            .clip(CircleShape)
+                            .clickable {
+                                val companyId = publications[page].company.idCompany
+                                companyViewModel.setSelectedCompanyId(companyId)
+                                navController.navigate(NavRoutes.CompanyInfoScreenS.ROUTE)
 
 
+                                companyViewModel.fetchCompanyWithNetworks(companyId)
 
-                AsyncImage(
-                    model = logos[page],
-                    contentDescription = "Logo $page",
-                    modifier = Modifier
-                        .size(72.dp)
-                        .padding(12.dp)
-                        .clip(CircleShape)
-                        .clickable { }
-                        .align(Alignment.TopEnd)
-                )
+                                Log.d("ImageScroll", "Logo clicked, companyId=$companyId")
+                            }
+                    )
+                }
             }
         }
         PullRefreshIndicator(
@@ -514,9 +562,4 @@ fun ImageScroll(modifier: Modifier = Modifier) {
         )
     }
 }
-
-
-
-
-
 

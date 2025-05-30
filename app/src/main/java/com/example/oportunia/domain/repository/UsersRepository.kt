@@ -7,7 +7,9 @@ import com.example.oportunia.data.remote.dto.StudentResult
 import com.example.oportunia.data.remote.dto.UserEmailResponse
 import com.example.oportunia.data.remote.dto.UserWhitoutId
 import com.example.oportunia.data.remote.dto.UsersDTO
+import com.example.oportunia.domain.model.Area
 import com.example.oportunia.domain.model.AuthResult
+import com.example.oportunia.domain.model.Location
 
 /**
  * This interface represents the UserRepository.
@@ -21,5 +23,7 @@ interface UsersRepository {
     suspend fun findUserByEmail(email: String): Result<UserEmailResponse>
     suspend fun saveUserNoId(user: UserWhitoutId): Result<Users>
 
+    suspend fun findAllAreas(): Result<List<Area>>
+    suspend fun findAllLocations(): Result<List<Location>>
 
 }

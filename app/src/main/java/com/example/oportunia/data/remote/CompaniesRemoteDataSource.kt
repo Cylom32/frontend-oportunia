@@ -27,4 +27,26 @@ class CompaniesRemoteDataSource @Inject constructor(
     suspend fun findCompanyById(id: Int): Result<CompanyDTO> =
         safeApiCall { service.getCompanyById(id) }
 
+    suspend fun findPublicationsByFilter(
+        areaId: Int? = null,
+        locationId: Int? = null,
+        paid: Boolean? = null
+    ): Result<List<PublicationFilterDTO>> = try {
+        val resp = service.getPublicationsByFilter(areaId, locationId, paid)
+        if (resp.isSuccessful) Result.success(resp.body() ?: emptyList())
+        else Result.failure(Exception("HTTP ${resp.code()}"))
+    } catch (t: Throwable) {
+        Result.failure(Exception("Red: ${t.localizedMessage}"))
+    }
+
+
+    suspend fun findWithNetworks(id: Int): CompanyWithNetworksDTO {
+        val resp = service.getCompanyWithNetworks(id)
+        if (resp.isSuccessful) {
+            return resp.body()!!
+        } else {
+            throw Exception("Error ${resp.code()} al obtener redes de company=$id: ${resp.message()}")
+        }
+    }
+
 }

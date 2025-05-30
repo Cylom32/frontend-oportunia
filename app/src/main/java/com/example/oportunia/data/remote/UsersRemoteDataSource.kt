@@ -1,6 +1,8 @@
 package com.example.oportunia.data.remote
 
 import com.example.oportunia.data.remote.api.UsersService
+import com.example.oportunia.data.remote.dto.AreaDTO
+import com.example.oportunia.data.remote.dto.LocationDTO
 import com.example.oportunia.data.remote.dto.UserEmailResponse
 import com.example.oportunia.data.remote.dto.UserResponseDTO
 
@@ -22,7 +24,7 @@ class UsersRemoteDataSource @Inject constructor(
      * Retrieves all users from the remote API.
      */
     suspend fun getAllUsers(): Result<List<UsersDTO>> = safeApiCall {
-       //println("🟢 Llamando a la API desde getAllUsers()")
+        //println("🟢 Llamando a la API desde getAllUsers()")
         usersService.getAllUsers()
     }
 
@@ -97,5 +99,12 @@ class UsersRemoteDataSource @Inject constructor(
     }
 
 
+    suspend fun getAreas(): Result<List<AreaDTO>> = safeApiCall {
+        usersService.getAreas()
+    }
 
+    suspend fun getAllLocations(): Result<List<LocationDTO>> = safeApiCall {
+        usersService.getAllLocations()
+
+    }
 }

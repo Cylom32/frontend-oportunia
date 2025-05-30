@@ -4,6 +4,7 @@ package com.example.oportunia.data.remote.repository
 import com.example.oportunia.data.mapper.CompanyMapper
 import com.example.oportunia.data.remote.CompaniesRemoteDataSource
 import com.example.oportunia.data.remote.dto.CompanyWithoutIdDTO
+import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.repository.CompanyRepository
@@ -36,6 +37,35 @@ class CompaniesRepositoryImpl @Inject constructor(
             Result.failure(Exception("Error fetching company with id=$id: ${e.message}"))
         }
     }
+
+
+
+
+    override suspend fun findPublicationsByFilter(
+        areaId: Int?,
+        locationId: Int?,
+        paid: Boolean?
+    ): Result<List<PublicationFilterDTO>> =
+        try {
+            remoteDataSource.findPublicationsByFilter(areaId, locationId, paid)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error al obtener publicaciones: ${e.message}"))
+        }
+
+
+
+    override suspend fun findCompanyWithNetworks(id: Int): Result<CompanyWithNetworks> {
+        return try {
+            val dto = remoteDataSource.findWithNetworks(id)
+            val domain = mapper.mapToDomainWithNetworks(dto)
+            Result.success(domain)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error fetching company with networks id=$id: ${e.message}"))
+        }
+    }
+
+
+
 //
 //    override suspend fun saveCompanyNoId(dto: CompanyWithoutIdDTO): Result<Company> {
 //        return try {

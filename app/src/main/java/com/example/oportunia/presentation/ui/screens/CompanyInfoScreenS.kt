@@ -99,11 +99,22 @@ import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.style.TextDecoration
 
 
 import com.example.oportunia.presentation.ui.screens.BottomNavigationBar
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
+
 @Composable
-fun CompanyInfoScreenS(navController: NavHostController) {
+fun CompanyInfoScreenS(
+    navController: NavHostController,
+    usersViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel,
+    companyViewModel: CompanyViewModel
+) {
+
+    val company by companyViewModel.companyWithNetworks.collectAsState()
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -169,61 +180,72 @@ fun CompanyInfoScreenS(navController: NavHostController) {
                     ) {
                         // --- Parte superior ---
                         Column {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.intellogo),
-                                    contentDescription = "Logo empresa",
-                                    modifier = Modifier.size(80.dp)
-                                )
-                                Spacer(modifier = Modifier.width(16.dp))
+                            company?.let {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    // aquii el logo que lo tengo guardado en la variable de comapany view model aasi que quí solo comente
+                                    Image(
+                                        painter = painterResource(id = R.drawable.intellogo),
+                                        contentDescription = "Logo empresa",
+                                        modifier = Modifier.size(80.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(16.dp))
+                                    Text(
+                                        text = it.companyName,
+                                        style = MaterialTheme.typography.titleLarge
+                                    )
+
+                                }
+
+                                Spacer(modifier = Modifier.height(12.dp))
+
+
+
                                 Text(
-                                    text = "Intel Corporation",
-                                    style = MaterialTheme.typography.titleLarge
+                                    text = it.companyDescription ?:"",
+                                    style = MaterialTheme.typography.bodyMedium
                                 )
                             }
 
-                            Spacer(modifier = Modifier.height(12.dp))
 
-                            Text(
-                                text = "Investing in Costa Rica",
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(bottom = 4.dp)
-                            )
+                            val uriHandler = LocalUriHandler.current
 
-                            Text(
-                                text = "Since 1997, Intel’s presence in Costa Rica has supported the growth of the country and catalyzed Foreign Direct Investment. More than 2000 employees design, prototype, test, and validate integrated circuit and software solutions, and provide finance, human resources, procurement, and sales and marketing support.",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
 
-                        // --- Fila de tus 4 íconos al pie ---
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.shakehands1062821),
-                                contentDescription = "Red 1",
-                                modifier = Modifier.size(32.dp)
-                            )
-                            Icon(
-                                painter = painterResource(id = R.drawable.shakehands1062821),
-                                contentDescription = "Red 2",
-                                modifier = Modifier.size(32.dp)
-                            )
-                            Icon(
-                                painter = painterResource(id = R.drawable.shakehands1062821),
-                                contentDescription = "Red 3",
-                                modifier = Modifier.size(32.dp)
-                            )
-                            Icon(
-                                painter = painterResource(id = R.drawable.shakehands1062821),
-                                contentDescription = "Otro",
-                                modifier = Modifier.size(32.dp)
-                            )
+
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 16.dp),
+                                horizontalArrangement = Arrangement.Start
+                            ) {
+                                company?.socialNetworks
+                                    ?.forEach { sn ->
+                                        // Extrae host (“www.facebook.com” → “facebook”)
+                                        val host = Uri.parse(sn.link)
+                                            .host
+                                            .orEmpty()
+                                        val domain = host
+                                            .split('.')
+                                            .let { parts ->
+                                                if (parts.size >= 2) parts[parts.size - 2] else parts.first()
+                                            }
+                                        val label = domain.replaceFirstChar { it.uppercase() }
+
+                                        Text(
+                                            text = label,
+                                            modifier = Modifier
+                                                .padding(end = 12.dp)
+                                                .clickable { uriHandler.openUri(sn.link) },
+                                            style = MaterialTheme.typography.bodyMedium.copy(
+                                                color = MaterialTheme.colorScheme.primary,
+                                                textDecoration = TextDecoration.Underline
+                                            )
+                                        )
+                                    }
+                            }
+
                         }
                     }
                 }

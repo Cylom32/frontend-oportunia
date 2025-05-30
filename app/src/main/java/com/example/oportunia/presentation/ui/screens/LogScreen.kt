@@ -195,8 +195,12 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel,
                                                     usersViewModel.fetchUserByEmail(email) { userId ->
                                                         if (userId != null) {
                                                             val token = usersViewModel.token.value.orEmpty()
+                                                            Log.d("LoginDebug", "llamando a student viewmodel: $token")
                                                             studentViewModel.fetchStudentByUserId(token, userId)
-                                                            navController.navigate("home")
+
+                                                            //// aqui decidimo si hacemos si vamos al scroll para estudiantes o solo a info para empresas
+                                                            Log.d("LoginDebug", "llamando a student viewmodel: $token")
+                                                            navController.navigate(NavRoutes.HomeScreenS.ROUTE)
                                                         } else {
                                                             showAlert = true
                                                         }

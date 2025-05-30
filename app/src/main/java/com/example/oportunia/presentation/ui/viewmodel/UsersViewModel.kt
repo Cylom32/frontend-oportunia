@@ -34,6 +34,8 @@ import com.example.oportunia.data.remote.dto.UserWhitoutId
 import kotlinx.coroutines.launch
 
 import com.example.oportunia.data.remote.dto.UsersDTO
+import com.example.oportunia.domain.model.Area
+import com.example.oportunia.domain.model.Location
 import retrofit2.Response
 
 
@@ -455,6 +457,72 @@ class UsersViewModel @Inject constructor(
 //    }
 //
 //
+
+
+    // 1) Estado para guardar la lista de áreas
+    private val _areas = MutableStateFlow<List<Area>>(emptyList())
+    val areas: StateFlow<List<Area>> = _areas
+
+    // 2) Estado para errores al cargar áreas
+    private val _areaError = MutableStateFlow<String?>(null)
+    val areaError: StateFlow<String?> = _areaError
+
+    // 3) Método para traer, guardar y loggear la lista de áreas
+    fun fetchAreas() = viewModelScope.launch {
+        Log.d("UsersViewModel", "👉 fetchAreas() arrancó")
+        _areaError.value = null
+
+        repository.findAllAreas()
+            .onSuccess { list ->
+                _areas.value   = list
+                Log.d("UsersViewModel", "✅ Áreas recibidas → $list")
+            }
+            .onFailure { ex ->
+                _areaError.value = ex.message
+                Log.e("UsersViewModel", "❌ Error al cargar áreas", ex)
+            }
+    }
+
+    // 4) (Opcional) Método para imprimir cada área individualmente
+    fun printAllAreas() {
+        areas.value.forEach { area ->
+            Log.d("UsersViewModel", "Área id=${area.id}, nombre='${area.name}'")
+        }
+    }
+
+
+    // UsersViewModel.kt
+
+    // 1) Estado para guardar la lista de ubicaciones
+    private val _locations = MutableStateFlow<List<Location>>(emptyList())
+    val locations: StateFlow<List<Location>> = _locations
+
+    // 2) Estado para errores al cargar ubicaciones
+    private val _locationError = MutableStateFlow<String?>(null)
+    val locationError: StateFlow<String?> = _locationError
+
+    // 3) Método para traer, guardar y loggear la lista de ubicaciones
+    fun fetchLocations() = viewModelScope.launch {
+        Log.d("UsersViewModel", "👉 fetchLocations() arrancó")
+        _locationError.value = null
+
+        repository.findAllLocations()
+            .onSuccess { list ->
+                _locations.value = list
+                Log.d("UsersViewModel", "✅ Ubicaciones recibidas → $list")
+            }
+            .onFailure { ex ->
+                _locationError.value = ex.message
+                Log.e("UsersViewModel", "❌ Error al cargar ubicaciones", ex)
+            }
+    }
+
+    // 4) (Opcional) Método para imprimir cada ubicación individualmente
+    fun printAllLocations() {
+        locations.value.forEach { loc ->
+            Log.d("UsersViewModel", "Ubicación id=${loc.id}, nombre='${loc.name}'")
+        }
+    }
 
 
 

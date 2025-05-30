@@ -14,6 +14,21 @@ interface CompaniesService {
         @Path("id") id: Int
     ): Response<CompanyDTO>
 
+    // CompaniesService.kt (dentro de la interfaz CompaniesService, donde está el “/// aquiiiii”)
+    @GET("v1/publications/filters")
+    suspend fun getPublicationsByFilter(
+        @Query("areaId") areaId: Int? = null,
+        @Query("locationId") locationId: Int? = null,
+        @Query("paid") paid: Boolean? = null
+    ): Response<List<PublicationFilterDTO>>
+
+
+    @GET("v1/companies/{id}/social-networks")
+    suspend fun getCompanyWithNetworks(
+        @Path("id") id: Int
+    ): Response<CompanyWithNetworksDTO>
+
+
 //    @POST("v1/companies")
 //    suspend fun createCompany(
 //        @Body dto: CompanyWithoutIdDTO

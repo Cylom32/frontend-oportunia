@@ -1,12 +1,21 @@
 package com.example.oportunia.domain.repository
 
 import com.example.oportunia.data.remote.dto.CompanyWithoutIdDTO
+import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
 import com.example.oportunia.domain.model.CompanyWithNetworks
 
 interface CompanyRepository {
     suspend fun findAllCompanies(): Result<List<Company>>
     suspend fun findCompanyById(id: Int): Result<Company>
+    suspend fun findPublicationsByFilter(
+        areaId: Int? = null,
+        locationId: Int? = null,
+        paid: Boolean? = null
+    ): Result<List<PublicationFilterDTO>>
+
+    suspend fun findCompanyWithNetworks(id: Int): Result<CompanyWithNetworks>
+
 //    suspend fun saveCompanyNoId(dto: CompanyWithoutIdDTO): Result<Company>
 //    suspend fun insertCompany(company: Company): Result<Unit>
 //    suspend fun updateCompany(company: Company): Result<Unit>

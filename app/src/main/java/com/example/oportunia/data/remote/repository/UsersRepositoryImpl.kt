@@ -8,6 +8,7 @@ import com.example.oportunia.data.remote.dto.UserEmailResponse
 import com.example.oportunia.data.remote.dto.UserResponseDTO
 import com.example.oportunia.data.remote.dto.UserWhitoutId
 import com.example.oportunia.data.remote.dto.UsersDTO
+import com.example.oportunia.domain.model.Area
 import com.example.oportunia.domain.model.AuthResult
 import com.example.oportunia.domain.model.Users
 import com.example.oportunia.domain.repository.UsersRepository
@@ -16,6 +17,7 @@ import java.net.UnknownHostException
 import javax.inject.Inject
 
 import com.example.oportunia.domain.model.Credentials
+import com.example.oportunia.domain.model.Location
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -108,9 +110,31 @@ class UsersRepositoryImpl @Inject constructor(
         }
 
 
+    override suspend fun findAllAreas(): Result<List<Area>> {
+        return try {
+            // Llama al data source y convierte DTO → modelo de dominio
+            val dtos = remoteDataSource.getAreas().getOrThrow()
+            val areas = dtos.map { dto ->
+                Area(id = dto.idArea, name = dto.name)
+            }
+            Result.success(areas)
+        } catch (e: Throwable) {
+            Result.failure(Exception("Error al cargar áreas: ${e.message}"))
+        }
+    }
 
 
-
+    override suspend fun findAllLocations(): Result<List<Location>> {
+        return try {
+            remoteDataSource.getAllLocations().map { dtoList ->
+                dtoList.map { dto ->
+                    Location(id = dto.idLocation, name = dto.name)
+                }
+            }
+        } catch (e: Exception) {
+            Result.failure(Exception("Error al obtener ubicaciones: ${e.message}"))
+        }
+    }
 
 
 }
