@@ -108,23 +108,20 @@ import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 
 
-
-
+//@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 
 @Composable
-fun GridPublicationsScreenS(
+fun IntershipScreen(
     navController: NavHostController,
     studentViewModel: StudentViewModel,
     usersViewModel: UsersViewModel,
     companyViewModel: CompanyViewModel
 ) {
-    val publications by companyViewModel.companyPublications.collectAsState(initial = emptyList())
-
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
                 selectedScreen = NavRoutes.GridPublicationsScreenS.ROUTE,
-                onScreenSelected = { /* navController.navigate(it) */ }
+                onScreenSelected = { /* navController.navigate(route) */ }
             )
         }
     ) { innerPadding ->
@@ -133,7 +130,7 @@ fun GridPublicationsScreenS(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Cabecera
+            // Cabecera con nombre de la empresa
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -156,50 +153,31 @@ fun GridPublicationsScreenS(
                 )
             }
 
-            // Grid de publicaciones
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
+            // Imagen deformada para llenar TODO el espacio, con botón "Aplicar" al pie
+            Box(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    .fillMaxWidth()
+                    .weight(1f)
             ) {
-                items(publications) { publication: PublicationByCompanyDTO ->
-                    Card(
-                        shape = RoundedCornerShape(8.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .aspectRatio(1f)
-                            .clickable {
-                                navController.navigate(NavRoutes.IntershipScreen.ROUTE)
-                            }
-                    ) {
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            AsyncImage(
-                                model = publication.file,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp),
-                                contentScale = ContentScale.FillBounds
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = publication.location.name,
-                                fontSize = 12.sp,
-                                modifier = Modifier.padding(horizontal = 8.dp)
-                            )
-                            Text(
-                                text = if (publication.paid) "Pagado" else "No pagado",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(8.dp)
-                            )
-                        }
-                    }
+                AsyncImage(
+                    model = "https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg",
+                    contentDescription = "Imagen de cabecera",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.FillBounds
+                )
+
+                Button(
+                    onClick = { /* TODO: acción de aplicar */ },
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp)
+                        .height(60.dp)
+                        .width(180.dp),
+                    shape = RoundedCornerShape(24.dp)
+                ) {
+                    Text(text = "Aplicar", fontSize = 18.sp, modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp))
                 }
+
             }
         }
     }

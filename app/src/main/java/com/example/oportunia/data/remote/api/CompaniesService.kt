@@ -29,6 +29,18 @@ interface CompaniesService {
     ): Response<CompanyWithNetworksDTO>
 
 
+    @GET("v1/publications/by-company/{companyId}")
+    suspend fun getPublicationsByCompany(
+        @Header("Authorization") token: String,
+        @Path("companyId") companyId: Int
+    ): Response<List<PublicationByCompanyDTO>>
+
+    @GET("v1/publications/{publicationId}")
+    suspend fun getPublicationById(
+        @Path("publicationId") publicationId: Int
+    ): Response<PublicationDetailDTO>
+
+
 //    @POST("v1/companies")
 //    suspend fun createCompany(
 //        @Body dto: CompanyWithoutIdDTO

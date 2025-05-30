@@ -101,6 +101,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextDecoration
+import coil.compose.AsyncImage
 
 
 import com.example.oportunia.presentation.ui.screens.BottomNavigationBar
@@ -113,6 +114,14 @@ fun CompanyInfoScreenS(
     studentViewModel: StudentViewModel,
     companyViewModel: CompanyViewModel
 ) {
+
+
+    val token by usersViewModel
+        .token
+        .collectAsState(initial = null)
+    val companyId by companyViewModel
+        .selectedCompanyId
+        .collectAsState(initial = null)
 
     val company by companyViewModel.companyWithNetworks.collectAsState()
     Scaffold(
@@ -155,16 +164,48 @@ fun CompanyInfoScreenS(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "Empresa X",
-                        color = walterWhite,
-                        fontSize = 39.sp
-                    )
+                    val companyName by companyViewModel.companyName.collectAsState()
+
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(vertical = 8.dp)
+                    ) {
+                        Text(
+                            text = companyName.orEmpty(),
+                            color = walterWhite,
+                            fontSize = 29.sp
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Button(
+                            onClick = {
+
+
+                                val authToken = token ?: return@Button
+                                val id = companyId ?: return@Button
+
+
+                                companyViewModel.fetchPublicationsByCompany(
+                                    authToken = authToken,
+                                    companyIdParam = id
+                                )
+
+                                navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                            shape = RoundedCornerShape(24.dp),
+                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                        ) {
+                            Text(text = "Pasantías", color = Color.Black)
+
+
+                        }
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(25.dp))
 
-                // Card que ocupa todo el espacio restante
+
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
@@ -178,19 +219,33 @@ fun CompanyInfoScreenS(
                             .padding(16.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // --- Parte superior ---
+
                         Column {
                             company?.let {
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    // aquii el logo que lo tengo guardado en la variable de comapany view model aasi que quí solo comente
-                                    Image(
-                                        painter = painterResource(id = R.drawable.intellogo),
-                                        contentDescription = "Logo empresa",
-                                        modifier = Modifier.size(80.dp)
-                                    )
+
+                                    val logoUrl by companyViewModel.companyLogo.collectAsState()
+
+                                    if (!logoUrl.isNullOrEmpty()) {
+                                        AsyncImage(
+                                            model = logoUrl,
+                                            contentDescription = "Logo empresa",
+                                            modifier = Modifier
+                                                .size(80.dp)
+                                                .clip(CircleShape),
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    } else {
+
+                                        Image(
+                                            painter = painterResource(id = R.drawable.shakehands1062821),
+                                            contentDescription = "Logo placeholder",
+                                            modifier = Modifier.size(80.dp)
+                                        )
+                                    }
                                     Spacer(modifier = Modifier.width(16.dp))
                                     Text(
                                         text = it.companyName,

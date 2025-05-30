@@ -49,4 +49,13 @@ class CompaniesRemoteDataSource @Inject constructor(
         }
     }
 
+    suspend fun findPublicationsByCompany(
+        token: String,
+        companyId: Int
+    ): Result<List<PublicationByCompanyDTO>> =
+        safeApiCall { service.getPublicationsByCompany(token, companyId) }
+
+    suspend fun findPublicationById(publicationId: Int): Result<PublicationDetailDTO> =
+        safeApiCall { service.getPublicationById(publicationId) }
+
 }

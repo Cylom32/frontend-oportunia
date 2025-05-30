@@ -3,11 +3,13 @@ package com.example.oportunia.presentation.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.example.oportunia.domain.repository.CompanyRepository
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -71,13 +73,16 @@ class CompanyViewModel @Inject constructor(
     private val _companyWithNetworks = MutableStateFlow<CompanyWithNetworks?>(null)
     val companyWithNetworks: StateFlow<CompanyWithNetworks?> = _companyWithNetworks
 
-
+    private val _companyName = MutableStateFlow<String?>(null)
+    val companyName: StateFlow<String?> = _companyName
     fun fetchCompanyWithNetworks(idCompany: Int) = viewModelScope.launch {
         repository.findCompanyWithNetworks(idCompany)
             .onSuccess { dto ->
                 _companyWithNetworks.value = dto
 
-                // Imprime toda la info en Logcat
+                // guarda el nombre en la variable
+                _companyName.value = dto.companyName
+
                 Log.d("CompanyVM", "CompanyWithNetworks → " +
                         "id=${dto.idCompany}, " +
                         "name='${dto.companyName}', " +
@@ -97,6 +102,60 @@ class CompanyViewModel @Inject constructor(
 
 
 ///////////////////////////////  -------------  info de la compañia y sus social networks   --------  ///////////////////////
+
+
+///////////////////////////////  -------------  logo de la compañia   --------  ///////////////////////
+
+    private val _companyLogo = MutableStateFlow<String?>(null)
+    val companyLogo: StateFlow<String?> = _companyLogo
+
+
+    fun setCompanyLogo(url: String) {
+        _companyLogo.value = url
+    }
+
+
+///////////////////////////////  -------------  logo de la compañia   --------  ///////////////////////
+
+
+///////////////////////////////  -------------  para obtener las publicaciones de la compañia segund id   --------  ///////////////////////
+
+
+    private val _companyPublications = MutableStateFlow<List<PublicationByCompanyDTO>>(emptyList())
+    val companyPublications: StateFlow<List<PublicationByCompanyDTO>> = _companyPublications
+
+    private val _publicationsError = MutableStateFlow<String?>(null)
+    val publicationsError: StateFlow<String?> = _publicationsError
+
+    /**
+     * @param authToken debe incluir el prefijo "Bearer "
+     * @param companyIdParam ID de la compañía
+     */
+
+
+
+    fun fetchPublicationsByCompany(
+        authToken: String,
+        companyIdParam: Int
+    ) = viewModelScope.launch {
+        repository
+            .findPublicationsByCompany(authToken, companyIdParam)
+            .onSuccess { publications ->
+                _companyPublications.value = publications
+                _publicationsError.value = null
+
+
+                val json = Gson().toJson(publications)
+                Log.d("CompanyVM", json)
+            }
+            .onFailure { ex ->
+                _publicationsError.value = ex.message
+            }
+    }
+
+
+///////////////////////////////  -------------  para obtener las publicaciones de la compañia segund id   --------  ///////////////////////
+
 
 
 

@@ -14,6 +14,7 @@ import com.example.oportunia.presentation.ui.screens.EditUCVScreen
 import com.example.oportunia.presentation.ui.screens.GridPublicationsScreenS
 import com.example.oportunia.presentation.ui.screens.HomeScreen
 import com.example.oportunia.presentation.ui.screens.HomeScreenS
+import com.example.oportunia.presentation.ui.screens.IntershipScreen
 import com.example.oportunia.presentation.ui.screens.LanguageOptionsScreenSC
 import com.example.oportunia.presentation.ui.screens.LogScreen
 import com.example.oportunia.presentation.ui.screens.NotificationsScreen
@@ -44,6 +45,9 @@ fun NavGraph(
         composable(NavRoutes.GridPublicationsScreenS.ROUTE) {
             GridPublicationsScreenS(
                 navController = navController,
+                studentViewModel = studentViewModel,
+                usersViewModel = usersViewModel,
+                companyViewModel = companyViewModel
             )
         }
  // pa un commit
@@ -55,6 +59,18 @@ fun NavGraph(
                 studentViewModel
             )
         }
+
+        composable(NavRoutes.IntershipScreen.ROUTE) {
+
+          IntershipScreen(
+              navController = navController,
+              studentViewModel = studentViewModel,
+              usersViewModel = usersViewModel,
+              companyViewModel = companyViewModel
+          )
+
+        }
+
 
         composable(NavRoutes.LanguageOptionsSC.ROUTE) {
             LanguageOptionsScreenSC(

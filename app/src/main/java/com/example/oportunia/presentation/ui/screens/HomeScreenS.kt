@@ -546,6 +546,9 @@ fun ImageScroll(
                                 companyViewModel.setSelectedCompanyId(companyId)
                                 navController.navigate(NavRoutes.CompanyInfoScreenS.ROUTE)
 
+                                val logoUrl   = publications[page].company.user.img
+
+                                companyViewModel.setCompanyLogo(logoUrl)
 
                                 companyViewModel.fetchCompanyWithNetworks(companyId)
 

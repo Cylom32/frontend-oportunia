@@ -4,6 +4,8 @@ package com.example.oportunia.data.remote.repository
 import com.example.oportunia.data.mapper.CompanyMapper
 import com.example.oportunia.data.remote.CompaniesRemoteDataSource
 import com.example.oportunia.data.remote.dto.CompanyWithoutIdDTO
+import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
+import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
 import com.example.oportunia.domain.model.CompanyWithNetworks
@@ -64,6 +66,19 @@ class CompaniesRepositoryImpl @Inject constructor(
         }
     }
 
+
+    override suspend fun findPublicationsByCompany(
+        token: String,
+        companyId: Int
+    ): Result<List<PublicationByCompanyDTO>> =
+        try {
+            remoteDataSource.findPublicationsByCompany(token, companyId)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error fetching publications by company: ${e.message}"))
+        }
+
+    override suspend fun findPublicationById(id: Int): Result<PublicationDetailDTO> =
+        remoteDataSource.findPublicationById(id)
 
 
 //
