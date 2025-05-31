@@ -46,4 +46,25 @@
     <string name="etiqueta_ruta_archivo">File Path:</string>
     <string name="etiqueta_nombre_archivo_cv">Name</string>
 
+    <string name="etiqueta_buscar_home">Search</string>
+    <string name="etiqueta_filtro_busqueda">Search Filters</string>
+    <string name="etiqueta_area">Area</string>
+    <string name="etiqueta_ubicacion">Location</string>
+    <string name="etiqueta_remunerado">Paid</string>
+
+    <string name="etiqueta_seleccionar_area">Select Area</string>
+    <string name="etiqueta_cargando_area">Loading areas...</string>
+    <string name="etiqueta_ninguna_area">No area selected</string>
+
+    <string name="etiqueta_seleccionar_ubicacion">Select Location</string>
+    <string name="etiqueta_cargando_ubicaciones">Loading locations...</string>
+    <string name="etiqueta_remunerado_q">Paid?</string>
+    <string name="respuesta_si">Yes</string>
+    <string name="respuesta_no">No</string>
+    <string name="no_hay_publicaciones">No posts available</string>
+    <string name="etiqueta_pasantias">Internships</string>
+    <string name="estado_pagado">Paid</string>
+    <string name="estado_no_pagado">Unpaid</string>
+
+
 </resources>

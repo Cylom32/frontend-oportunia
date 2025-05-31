@@ -238,7 +238,9 @@ fun GridPublicationsScreenS(
                                 modifier = Modifier.padding(horizontal = 8.dp)
                             )
                             Text(
-                                text = if (publication.paid) "Pagado" else "No pagado",
+                                text = stringResource(
+                                    if (publication.paid) R.string.estado_pagado else R.string.estado_no_pagado
+                                ),
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
                                 modifier = Modifier.padding(8.dp)

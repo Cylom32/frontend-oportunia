@@ -82,6 +82,36 @@
     <string name="etiqueta_detalles_del_cv">Detalles CV</string>
     <string name="etiqueta_ruta_archivo">Ruta de archivo:</string>
     <string name="etiqueta_nombre_archivo_cv">Nombre</string>
-    <!-- SentRequestScreen -->
+
+
+    <!-- HomeScreen -->
+    <string name="etiqueta_buscar_home">Buscar</string>
+    <string name="etiqueta_filtro_busqueda">Filtros de búsqueda</string>
+    <string name="etiqueta_area">Área</string>
+    <string name="etiqueta_ubicacion">Ubicación</string>
+    <string name="etiqueta_remunerado">Remunerado</string>
+
+    <string name="etiqueta_seleccionar_area">Seleccionar Área</string>
+    <string name="etiqueta_cargando_area">Cargando áreas...</string>
+    <string name="etiqueta_ninguna_area">Ninguna área seleccionada</string>
+
+    <string name="etiqueta_seleccionar_ubicacion">Seleccionar Ubicación</string>
+    <string name="etiqueta_cargando_ubicaciones">Cargando ubicaciones...</string>
+
+    <string name="etiqueta_remunerado_q">¿Remunerado?</string>
+    <string name="respuesta_si">Sí</string>
+    <string name="respuesta_no">No</string>
+    <string name="no_hay_publicaciones">No hay publicaciones</string>
+
+
+
+    <!-- Company InfoScreen -->
+    <string name="etiqueta_pasantias">Pasantías</string>
+
+
+    <!-- GridPublicationsScreen -->
+    <string name="estado_pagado">Pagado</string>
+    <string name="estado_no_pagado">No pagado</string>
+
 
 </resources>

@@ -266,7 +266,7 @@ fun SearchBar(onMenuClick: () -> Unit) {
         )
 
         Text(
-            text = "Buscar",
+            text =  stringResource(R.string.etiqueta_buscar_home),
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 12.dp),
@@ -296,12 +296,12 @@ fun FilterPopup(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Filtros de búsqueda") },
+        title = { Text(text = stringResource(R.string.etiqueta_filtro_busqueda)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Área", modifier = Modifier.clickable { onAreaClick() })
-                Text("Ubicación", modifier = Modifier.clickable { onUbicacionClick() })
-                Text("Remunerado", modifier = Modifier.clickable { onRemuneradoClick() })
+                Text( stringResource(R.string.etiqueta_area), modifier = Modifier.clickable { onAreaClick() })
+                Text( stringResource(R.string.etiqueta_ubicacion), modifier = Modifier.clickable { onUbicacionClick() })
+                Text( stringResource(R.string.etiqueta_remunerado), modifier = Modifier.clickable { onRemuneradoClick() })
             }
         },
         confirmButton = {
@@ -313,7 +313,7 @@ fun FilterPopup(
                 )
                 onDismiss()
             }) {
-                Text("Cerrar")
+                Text( stringResource(R.string.boton_cerrar_dialogo))
             }
         }
     )
@@ -332,11 +332,11 @@ fun AreaPopup(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Seleccionar Área") },
+        title = { Text(stringResource(R.string.etiqueta_seleccionar_area))},
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 if (availableAreas.isEmpty()) {
-                    Text("Cargando áreas...")
+                    Text(stringResource(R.string.etiqueta_cargando_area))
                 } else {
                     availableAreas.forEach { area ->
                         Row(
@@ -360,7 +360,7 @@ fun AreaPopup(
                         }
                     }
                     if (current.isEmpty()) {
-                        Text("(Ninguna área seleccionada)", fontStyle = FontStyle.Italic)
+                        Text(stringResource(R.string.etiqueta_ninguna_area), fontStyle = FontStyle.Italic)
                     }
                 }
             }
@@ -370,7 +370,7 @@ fun AreaPopup(
                 onSelectionChange(current.toList())
                 onDismiss()
             }) {
-                Text("Aplicar")
+                Text( stringResource(R.string.ApplyButtonText))
             }
         }
     )
@@ -388,11 +388,11 @@ fun UbicacionPopup(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Seleccionar Ubicación") },
+        title = { Text(text = stringResource(R.string.etiqueta_seleccionar_ubicacion)) },
         text = {
             Column {
                 if (availableLocations.isEmpty()) {
-                    Text("Cargando ubicaciones...")
+                    Text(text=stringResource(R.string.etiqueta_cargando_ubicaciones))
                 } else {
                     availableLocations.forEach { loc ->
                         Row(
@@ -423,7 +423,7 @@ fun UbicacionPopup(
                 onSelectionChange(current.toList())
                 onDismiss()
             }) {
-                Text("Aplicar")
+                Text(stringResource(R.string.ApplyButtonText))
             }
         }
     )
@@ -435,12 +435,16 @@ fun RemuneradoPopup(
     onSelectionChange: (Boolean?) -> Unit,
     onDismiss: () -> Unit
 ) {
-    val opciones = listOf("Sí" to true, "No" to false)
+    val opciones = listOf(
+        stringResource(R.string.respuesta_si) to true,
+        stringResource(R.string.respuesta_no) to false
+    )
+
     var selectedOption by remember { mutableStateOf(selected) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("¿Remunerado?") },
+        title = { Text(text= stringResource(R.string.etiqueta_remunerado_q))},
         text = {
             Column {
                 opciones.forEach { (label, value) ->
@@ -469,7 +473,7 @@ fun RemuneradoPopup(
                 onSelectionChange(selectedOption)
                 onDismiss()
             }) {
-                Text("Aplicar")
+                Text(stringResource(R.string.ApplyButtonText))
             }
         }
     )
@@ -517,7 +521,7 @@ fun ImageScroll(
     ) {
         if (images.isEmpty()) {
             Text(
-                "No hay imágenes",
+                stringResource(R.string.no_hay_publicaciones),
                 Modifier.align(Alignment.Center),
                 color = Color.Gray
             )

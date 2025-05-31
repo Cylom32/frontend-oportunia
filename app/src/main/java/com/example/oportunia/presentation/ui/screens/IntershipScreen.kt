@@ -225,7 +225,7 @@ fun IntershipScreen(
                         .width(180.dp),
                     shape = RoundedCornerShape(24.dp)
                 )  {
-                    Text(text = "Aplicar", fontSize = 18.sp, modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp))
+                    Text(text = stringResource(R.string.ApplyButtonText), fontSize = 18.sp, modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp))
                 }
 
             }

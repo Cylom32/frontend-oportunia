@@ -45,4 +45,28 @@
     <string name="etiqueta_ruta_archivo">Caminho do arquivo:</string>
     <string name="etiqueta_nombre_archivo_cv">Nome</string>
 
+    <string name="etiqueta_buscar_home">Buscar</string>
+    <string name="etiqueta_filtro_busqueda">Filtros de busca</string>
+    <string name="etiqueta_area">Área</string>
+    <string name="etiqueta_ubicacion">Localização</string>
+    <string name="etiqueta_remunerado">Remunerado</string>
+
+
+    <string name="etiqueta_seleccionar_area">Selecionar Área</string>
+    <string name="etiqueta_cargando_area">Carregando áreas...</string>
+    <string name="etiqueta_ninguna_area">Nenhuma área selecionada</string>
+
+    <string name="etiqueta_seleccionar_ubicacion">Selecionar Localização</string>
+    <string name="etiqueta_cargando_ubicaciones">Carregando localizações...</string>
+    <string name="etiqueta_remunerado_q">Remunerado?</string>
+    <string name="respuesta_si">Sim</string>
+    <string name="respuesta_no">Não</string>
+    <string name="no_hay_publicaciones">Nenhuma publicação disponível</string>
+    <string name="etiqueta_pasantias">Estágios</string>
+    <string name="estado_pagado">Pago</string>
+    <string name="estado_no_pagado">Não pago</string>
+
+
+
+
 </resources>

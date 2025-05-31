@@ -206,7 +206,7 @@ fun CompanyInfoScreenS(
                             shape = RoundedCornerShape(24.dp),
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                         ) {
-                            Text(text = "Pasantías", color = Color.Black)
+                            Text(text = stringResource(R.string.etiqueta_pasantias), color = Color.Black)
 
 
                         }

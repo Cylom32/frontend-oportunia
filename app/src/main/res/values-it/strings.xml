@@ -44,4 +44,30 @@
     <string name="etiqueta_detalles_del_cv">Dettagli del CV</string>
     <string name="etiqueta_ruta_archivo">Percorso del file:</string>
     <string name="etiqueta_nombre_archivo_cv">Nome</string>
+
+    <string name="etiqueta_buscar_home">Cerca</string>
+    <string name="etiqueta_filtro_busqueda">Filtri di ricerca</string>
+    <string name="etiqueta_area">Area</string>
+    <string name="etiqueta_ubicacion">Posizione</string>
+    <string name="etiqueta_remunerado">Retribuito</string>
+
+
+    <string name="etiqueta_seleccionar_area">Seleziona Area</string>
+    <string name="etiqueta_cargando_area">Caricamento aree...</string>
+    <string name="etiqueta_ninguna_area">Nessuna area selezionata</string>
+
+    <string name="etiqueta_seleccionar_ubicacion">Seleziona Posizione</string>
+    <string name="etiqueta_cargando_ubicaciones">Caricamento posizioni...</string>
+
+    <string name="etiqueta_remunerado_q">Retribuito?</string>
+    <string name="respuesta_si">Sì</string>
+    <string name="respuesta_no">No</string>
+    <string name="no_hay_publicaciones">Nessuna pubblicazione disponibile</string>
+    <string name="etiqueta_pasantias">Tirocini</string>
+    <string name="estado_pagado">Pagato</string>
+    <string name="estado_no_pagado">Non pagato</string>
+
+
+
+
 </resources>
