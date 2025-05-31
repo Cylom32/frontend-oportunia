@@ -66,6 +66,15 @@
     <string name="etiqueta_pasantias">Tirocini</string>
     <string name="estado_pagado">Pagato</string>
     <string name="estado_no_pagado">Non pagato</string>
+    <string name="etiqueta_archivo_adjunto">File Allegato</string>
+    <string name="etiqueta_mensaje_adicional">Messaggio Aggiuntivo</string>
+    <string name="etiqueta_seleccionar_cv">Seleziona CV</string>
+    <string name="etiqueta_selecciona_cv">Scegli un CV</string>
+    <string name="etiqueta_no_hay_cvs">Nessun CV disponibile</string>
+    <string name="etiqueta_escribe_mensaje">Scrivi il tuo messaggio qui...</string>
+    <string name="etiqueta_exito_mensaje">Successo</string>
+    <string name="etiqueta_enviado_exitosamente">Inviato con successo</string>
+    <string name="etiqueta_ok">OK</string>
 
 
 

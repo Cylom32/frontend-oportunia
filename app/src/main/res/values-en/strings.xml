@@ -65,6 +65,15 @@
     <string name="etiqueta_pasantias">Internships</string>
     <string name="estado_pagado">Paid</string>
     <string name="estado_no_pagado">Unpaid</string>
+    <string name="etiqueta_archivo_adjunto">Attached File</string>
+    <string name="etiqueta_mensaje_adicional">Additional Message</string>
+    <string name="etiqueta_seleccionar_cv">Select CV</string>
+    <string name="etiqueta_selecciona_cv">Choose a CV</string>
+    <string name="etiqueta_no_hay_cvs">No CVs available</string>
+    <string name="etiqueta_escribe_mensaje">Write your message here...</string>
+    <string name="etiqueta_exito_mensaje">Success</string>
+    <string name="etiqueta_enviado_exitosamente">Successfully sent</string>
+    <string name="etiqueta_ok">OK</string>
 
 
 </resources>
