@@ -2,6 +2,7 @@ package com.example.oportunia.data.remote.api
 
 import com.example.oportunia.data.remote.dto.StudentDTO
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
+import com.example.oportunia.domain.model.CVResponseS
 //import com.example.oportunia.data.remote.dto.StudentWithoutIdDTO
 import retrofit2.Response
 import retrofit2.http.Body
@@ -47,6 +48,12 @@ interface StudentsService {
         @Header("Authorization") token: String,
         @Path("userId") userId: Int
     ): Response<StudentDTO>
+
+    @GET("v1/cvs/students/{student_id}")
+    suspend fun getCvListByStudent(
+        @Header("Authorization") token: String,
+        @Path("student_id") studentId: Int
+    ): Response<List<CVResponseS>>
 
 
 }

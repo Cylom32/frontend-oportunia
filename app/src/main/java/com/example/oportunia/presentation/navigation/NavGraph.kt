@@ -81,11 +81,11 @@ fun NavGraph(
         }
 
 
-//        composable(NavRoutes.CV.ROUTE) {
-//            CVScreen(
-//                studentViewModel, navController
-//            )
-//        }
+        composable(NavRoutes.CV.ROUTE) {
+            CVScreen(
+                studentViewModel, navController
+            )
+        }
 
         composable(NavRoutes.Home.ROUTE) {
             HomeScreen(
@@ -157,14 +157,14 @@ fun NavGraph(
         composable(NavRoutes.RegisterInformationPAndE.ROUTE) {
             RegisterOptionScreenPAndE(usersViewModel, studentViewModel, navController)
         }
-//
+
 //        composable(NavRoutes.StudentInformationSettings2 .ROUTE) {
 //            StudentInformationSettings2(studentViewModel, navController)
 //        }
-//
-//        composable(NavRoutes.EditUCVScreen.ROUTE) {
-//            EditUCVScreen(studentViewModel)
-//        }
+
+        composable(NavRoutes.EditUCVScreen.ROUTE) {
+            EditUCVScreen(studentViewModel, usersViewModel)
+        }
 
 
     }

@@ -1,6 +1,7 @@
 package com.example.oportunia.domain.repository
 
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
+import com.example.oportunia.domain.model.CVResponseS
 import com.example.oportunia.domain.model.Student
 
 /**
@@ -14,6 +15,10 @@ interface StudentRepository {
     suspend fun updateStudent(student: Student): Result<Unit>
     suspend fun saveStudentNoId(dto: StudentWihtoutIdDTO): Result<Student>
     suspend fun findStudentByUserId(token: String, userId: Int): Result<Student>
+    suspend fun findCvListByStudent(
+        token: String,
+        studentId: Int
+    ): Result<List<CVResponseS>>
 
 
 }

@@ -2,6 +2,7 @@ package com.example.oportunia.data.remote.api
 
 import com.example.oportunia.data.remote.dto.*
 import com.example.oportunia.domain.model.MessageInput
+import com.example.oportunia.domain.model.MessageResponseS
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -57,6 +58,13 @@ interface CompaniesService {
         @Header("Authorization") token: String,
         @Body input: MessageInput
     ): Response<Unit>
+
+
+    @GET("v1/messages/by-student/{student_id}")
+    suspend fun getMessagesByStudent(
+        @Header("Authorization") token: String,
+        @Path("student_id") studentId: Int
+    ): Response<List<MessageResponseS>>
 
 
 //    @POST("v1/companies")

@@ -41,13 +41,38 @@ import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
+import com.example.oportunia.domain.model.MessageResponseS
 import java.io.File
 import java.io.FileOutputStream
-
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.window.DialogProperties
 
 
 @Composable
-fun SentRequestScreen(navController: NavHostController, userViewModel: UsersViewModel, studentViewModel: StudentViewModel, companyViewModel: CompanyViewModel) {
+fun SentRequestScreen(
+    navController: NavHostController,
+    userViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel,
+    companyViewModel: CompanyViewModel // aunque no lo usemos aquí para mensajes, lo dejamos en la firma
+) {
+    // 1) Recuperar token y studentId desde los ViewModels
+    val token by userViewModel.token.collectAsState()
+    val studentId by studentViewModel.studentIdd.collectAsState()
+
+    // 2) Recuperar la lista de mensajes desde StudentViewModel
+    val messages by studentViewModel.messagesByStudent.collectAsState()
+
+    // 3) Disparar la petición en el ViewModel cuando tengamos token y studentId válidos
+    LaunchedEffect(token, studentId) {
+        if (!token.isNullOrBlank() && studentId != null) {
+            studentViewModel.fetchMessagesByStudent(token!!, studentId!!)
+        }
+    }
+
+    // 4) Estado para el mensaje seleccionado (para mostrar el popup)
+    var selectedMessage by remember { mutableStateOf<MessageResponseS?>(null) }
+    val context = LocalContext.current
+
     BoxWithConstraints {
         val screenHeight = maxHeight
         val screenWidth = maxWidth
@@ -58,7 +83,9 @@ fun SentRequestScreen(navController: NavHostController, userViewModel: UsersView
                 .background(lilGray)
         ) {
             Column(
-                modifier = Modifier.fillMaxSize().background(lilGray),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(lilGray),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Box(
@@ -79,7 +106,7 @@ fun SentRequestScreen(navController: NavHostController, userViewModel: UsersView
                     Text(
                         text = "Solicitudes enviadas",
                         color = walterWhite,
-                        fontSize = (screenWidth.value * 0.07).sp // Tamaño relativo al ancho
+                        fontSize = (screenWidth.value * 0.07).sp
                     )
                 }
 
@@ -90,35 +117,98 @@ fun SentRequestScreen(navController: NavHostController, userViewModel: UsersView
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     contentPadding = PaddingValues(16.dp)
                 ) {
-                    items(10) { index ->
-                        InternshipCard(
-                            companyName = "UNASA",
-                            logoResId = R.drawable.world,
-                            internshipTitle = "Pasantía",
-                            fileName = "CV_$index.pdf",
-                            date = "18/04/2025",
-                            onCheckClick = { /* Acción al hacer check */ }
-                        )
+                    messages?.let { list ->
+                        items(
+                            items = list,
+                            key = { message -> message.idMessage }
+                        ) { message ->
+                            // Mostramos solo detalle parcial y fecha en la tarjeta
+                            InternshipCard(
+                                partialDetail = message.detail
+                                    .take(20)
+                                    .let { if (message.detail.length > 20) "$it…" else it },
+                                date = message.sendDate.substring(0, 10),
+                                logoResId = R.drawable.world,
+                                onCardClick = { selectedMessage = message }
+                            )
+                        }
                     }
                 }
             }
         }
+
+        // Si hay un mensaje seleccionado, mostramos un AlertDialog con sus detalles
+        selectedMessage?.let { msg ->
+            AlertDialog(
+                onDismissRequest = { selectedMessage = null },
+                title = {
+                    Text(text = "Detalles del mensaje", fontWeight = FontWeight.Bold)
+                },
+                text = {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = "• Detalle completo:")
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = msg.detail,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                            fontSize = 14.sp
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(text = "• Nombre de archivo:")
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = msg.file,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp)
+                                .clickable {
+                                    // Abrir en navegador usando la URL real del archivo
+                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(msg.file))
+                                    context.startActivity(intent)
+                                },
+                            fontSize = 14.sp,
+                            color = Color(0xFF1E88E5) // azul para enlace
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(text = "• Fecha de envío:")
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = msg.sendDate.substring(0, 10),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp),
+                            fontSize = 14.sp
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { selectedMessage = null }) {
+                        Text(text = "Cerrar")
+                    }
+                },
+                properties = DialogProperties(usePlatformDefaultWidth = false)
+            )
+        }
     }
 }
 
+
+// InternshipCard.kt
 @Composable
 fun InternshipCard(
-    companyName: String,
-    logoResId: Int,
-    internshipTitle: String,
-    fileName: String,
+    partialDetail: String,
     date: String,
-    onCheckClick: () -> Unit
+    logoResId: Int,
+    onCardClick: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .clickable { onCardClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
@@ -126,59 +216,35 @@ fun InternshipCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(vertical = 16.dp, horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.width(80.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = logoResId),
-                    contentDescription = "Logo",
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = companyName,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Medium,
-                    textAlign = TextAlign.Center
-                )
-            }
+            // Logo a la izquierda
+            Image(
+                painter = painterResource(id = logoResId),
+                contentDescription = "Logo",
+                modifier = Modifier.size(48.dp)
+            )
 
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(horizontal = 8.dp),
-                horizontalAlignment = Alignment.Start
-            ) {
-                Text(
-                    text = internshipTitle,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = fileName,
-                    fontSize = 14.sp
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = date,
-                    fontSize = 12.sp,
-                    color = Color.Gray
-                )
-            }
+            Spacer(modifier = Modifier.width(12.dp))
 
-            Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = "Aprobado",
-                tint = Color(0xFF4CAF50),
+            // Detalle parcial en el centro (uso weight = 1f para que ocupe el espacio restante)
+            Text(
+                text = partialDetail,
                 modifier = Modifier
-                    .size(32.dp)
-                    .clickable { onCheckClick() }
+                    .weight(1f),
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                textAlign = TextAlign.Center
+            )
+
+            Spacer(modifier = Modifier.width(12.dp))
+
+            // Fecha a la derecha
+            Text(
+                text = date,
+                fontSize = 12.sp,
+                color = Color.Gray
             )
         }
     }

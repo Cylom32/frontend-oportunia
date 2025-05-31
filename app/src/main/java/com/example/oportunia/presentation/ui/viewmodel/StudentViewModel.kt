@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.oportunia.data.remote.dto.CVListResponse
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
+import com.example.oportunia.domain.model.CVResponseS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,6 +14,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 import com.example.oportunia.domain.model.Cv
+import com.example.oportunia.domain.model.MessageResponseS
 import com.example.oportunia.domain.model.Student
 import com.example.oportunia.domain.model.UniversityOption
 import com.example.oportunia.domain.repository.CompanyRepository
@@ -155,11 +157,74 @@ class StudentViewModel @Inject constructor(
         }
     }
 
-
-
-
     ////////// --------------------------------------        PARA OBTENER EL la lista de cv del estudiantes por toke y id       -------------------------------------- //////////
 
+
+
+
+
+////////////---------------------      para obtener la lista de mensajes enviados del estudiante ///////////////////////////////////////////////////////////////////
+
+
+    private val _messagesByStudent = MutableStateFlow<List<MessageResponseS>?>(null)
+    val messagesByStudent: StateFlow<List<MessageResponseS>?> = _messagesByStudent
+
+    fun fetchMessagesByStudent(token: String, studentId: Int) = viewModelScope.launch {
+        repositoryCM.findMessagesByStudent(token, studentId)
+            .onSuccess { list ->
+                _messagesByStudent.value = list
+                Log.d("CompanyVM", "Messages for student $studentId → $list")
+            }
+            .onFailure { ex ->
+                Log.e("CompanyVM", "Error fetching messages for student $studentId", ex)
+            }
+    }
+
+
+
+    ////////////---------------------      para obtener la lista de mensajes enviados del estudiante ///////////////////////////////////////////////////////////////////
+
+
+
+    ////////////---------------------      para obtener la lista de cv del estudiante ///////////////////////////////////////////////////////////////////
+
+
+
+    /////////////  ----- PARA CARGAR LA LISTA DE CV DEL ESTUDIANTE  ----- /////////////
+
+
+    private val _cvlistaa = MutableStateFlow<List<CVResponseS>>(emptyList())
+    val cvlistaa: StateFlow<List<CVResponseS>> = _cvlistaa
+
+    // 3) Función para invocar al repositorio y poblar _cvlista
+    fun fetchCvLista(token: String) {
+        val id: Int = studentIdd.value ?: return
+        viewModelScope.launch {
+
+            repository.findCvListByStudent(token, id)
+                .onSuccess { lista ->
+                    _cvlistaa.value = lista
+
+                    // Opcional: loguear cada CV
+                    lista.forEach { cv ->
+                        Log.d(
+                            "StudentVM",
+                            "CV → idCv=${cv.idCv}, name='${cv.name}', file='${cv.file}'"
+                        )
+                    }
+                }
+                .onFailure { ex ->
+                    Log.e("StudentVM", "Error al cargar CVs: ${ex.message}")
+                }
+        }
+    }
+
+
+
+
+    /////////////  ----- PARA CARGAR LA LISTA DE CV DEL ESTUDIANTE  ----- /////////////
+
+    ////////////---------------------      para obtener la lista de cv del estudiante ///////////////////////////////////////////////////////////////////
 
 
 }

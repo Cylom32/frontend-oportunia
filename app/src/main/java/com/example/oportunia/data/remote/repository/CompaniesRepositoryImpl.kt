@@ -13,6 +13,7 @@ import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
+import com.example.oportunia.domain.model.MessageResponseS
 import com.example.oportunia.domain.repository.CompanyRepository
 import java.net.UnknownHostException
 import javax.inject.Inject
@@ -112,6 +113,19 @@ class CompaniesRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(Exception("Error sending message: ${e.message}"))
         }
+
+
+
+    override suspend fun findMessagesByStudent(
+        token: String,
+        studentId: Int
+    ): Result<List<MessageResponseS>> =
+        try {
+            remoteDataSource.findMessagesByStudent(token, studentId)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error fetching messages by student id=$studentId: ${e.message}"))
+        }
+
 }
 
 

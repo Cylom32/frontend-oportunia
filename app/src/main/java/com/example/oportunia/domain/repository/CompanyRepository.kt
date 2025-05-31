@@ -10,6 +10,7 @@ import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
+import com.example.oportunia.domain.model.MessageResponseS
 
 interface CompanyRepository {
     suspend fun findAllCompanies(): Result<List<Company>>
@@ -44,6 +45,11 @@ interface CompanyRepository {
         input: MessageInput
     ): Result<Unit>
 
+
+    suspend fun findMessagesByStudent(
+        token: String,
+        studentId: Int
+    ): Result<List<MessageResponseS>>
 
 //    suspend fun saveCompanyNoId(dto: CompanyWithoutIdDTO): Result<Company>
 //    suspend fun insertCompany(company: Company): Result<Unit>

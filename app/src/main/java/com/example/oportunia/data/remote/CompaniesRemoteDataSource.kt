@@ -3,6 +3,7 @@ package com.example.oportunia.data.remote
 import com.example.oportunia.data.remote.api.CompaniesService
 import com.example.oportunia.data.remote.dto.*
 import com.example.oportunia.domain.model.MessageInput
+import com.example.oportunia.domain.model.MessageResponseS
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -81,5 +82,12 @@ class CompaniesRemoteDataSource @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+
+
+    suspend fun findMessagesByStudent(
+        token: String,
+        studentId: Int
+    ): Result<List<MessageResponseS>> =
+        safeApiCall { service.getMessagesByStudent(token, studentId) }
 
 }

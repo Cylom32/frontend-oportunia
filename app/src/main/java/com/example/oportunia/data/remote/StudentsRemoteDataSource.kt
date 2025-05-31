@@ -3,6 +3,7 @@ package com.example.oportunia.data.remote
 import com.example.oportunia.data.remote.api.StudentsService
 import com.example.oportunia.data.remote.dto.StudentDTO
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
+import com.example.oportunia.domain.model.CVResponseS
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -50,4 +51,11 @@ class StudentsRemoteDataSource @Inject constructor(
     /** GET /v1/students/user/{userId} */
     suspend fun getStudentByUserId(token: String, userId: Int): Result<StudentDTO> =
         safeApiCall { service.getStudentByUserId(token, userId) }
+
+
+    suspend fun findCvListByStudent(
+        token: String,
+        studentId: Int
+    ): Result<List<CVResponseS>> =
+        safeApiCall { service.getCvListByStudent(token, studentId) }
 }

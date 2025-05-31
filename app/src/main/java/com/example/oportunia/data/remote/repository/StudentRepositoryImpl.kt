@@ -3,8 +3,11 @@ package com.example.oportunia.data.remote.repository
 import com.example.oportunia.data.mapper.StudentMapper
 import com.example.oportunia.data.remote.StudentsRemoteDataSource
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
+import com.example.oportunia.domain.model.CVResponseS
 import com.example.oportunia.domain.model.Student
 import com.example.oportunia.domain.repository.StudentRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.net.UnknownHostException
 import javax.inject.Inject
 
@@ -80,6 +83,18 @@ class StudentRepositoryImpl @Inject constructor(
         remoteDataSource
             .getStudentByUserId(token, userId)
             .map { dto -> studentMapper.mapToDomain(dto) }
+
+    override suspend fun findCvListByStudent(
+        token: String,
+        studentId: Int
+    ): Result<List<CVResponseS>> = try {
+        remoteDataSource.findCvListByStudent(token, studentId)
+    } catch (e: Exception) {
+        Result.failure(Exception("Error fetching CV list for student id=$studentId: ${e.message}"))
+    }
+
+
+
 
 
 }
