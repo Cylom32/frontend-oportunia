@@ -190,7 +190,14 @@ fun CompanyInfoScreenS(
                                     companyIdParam = id
                                 )
 
+
+                                /// quitar comentario de arriba y de abajo
+
                                navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
+
+                               // companyViewModel.fetchInboxByCompany(1)
+
+                               // studentViewModel.fetchCvList(authToken, 2 )
 
                               //  companyViewModel.fetchPublicationById(1)
 

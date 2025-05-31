@@ -76,5 +76,9 @@ sealed class NavRoutes {
         const val ROUTE = "intershipScreen"
     }
 
+    data object RequestScreen : NavRoutes() {
+        const val ROUTE = "requestScreen"
+    }
+
 
 }

@@ -3,12 +3,16 @@ package com.example.oportunia.data.remote.repository
 
 import com.example.oportunia.data.mapper.CompanyMapper
 import com.example.oportunia.data.remote.CompaniesRemoteDataSource
+import com.example.oportunia.data.remote.dto.CVListResponse
 import com.example.oportunia.data.remote.dto.CompanyWithoutIdDTO
+import com.example.oportunia.data.remote.dto.InboxInput
+import com.example.oportunia.data.remote.dto.InboxResult
 import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
 import com.example.oportunia.domain.model.CompanyWithNetworks
+import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.repository.CompanyRepository
 import java.net.UnknownHostException
 import javax.inject.Inject
@@ -40,7 +44,8 @@ class CompaniesRepositoryImpl @Inject constructor(
         }
     }
 
-
+    override suspend fun findInboxByCompany(companyId: Int): Result<InboxResult> =
+        remoteDataSource.findInboxByCompany(companyId)
 
 
     override suspend fun findPublicationsByFilter(
@@ -87,6 +92,27 @@ class CompaniesRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun findCvListByStudent(
+        token: String,
+        studentId: Int
+    ): Result<List<CVListResponse>> = try {
+        // delegamos al remoteDataSource
+        remoteDataSource.findCvListByStudent(token, studentId)
+    } catch (e: Exception) {
+        Result.failure(Exception("Error fetching CV list for student id=$studentId: ${e.message}"))
+    }
+
+
+    override suspend fun sendMessage(
+        token: String,
+        input: MessageInput
+    ): Result<Unit> =
+        try {
+            remoteDataSource.sendMessage(token, input)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error sending message: ${e.message}"))
+        }
+}
 
 
 
@@ -137,4 +163,3 @@ class CompaniesRepositoryImpl @Inject constructor(
 //            Result.failure(Exception("Error fetching company with networks id=$id: ${e.message}"))
 //        }
 //    }
-}

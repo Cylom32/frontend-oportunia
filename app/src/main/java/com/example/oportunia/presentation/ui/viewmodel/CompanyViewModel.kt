@@ -3,10 +3,13 @@ package com.example.oportunia.presentation.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.oportunia.data.remote.dto.InboxInput
+import com.example.oportunia.data.remote.dto.InboxResult
 import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.CompanyWithNetworks
+import com.example.oportunia.domain.model.MessageInput
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.example.oportunia.domain.repository.CompanyRepository
@@ -56,6 +59,8 @@ class CompanyViewModel @Inject constructor(
     private val _selectedCompanyId = MutableStateFlow<Int?>(null)
     val selectedCompanyId: StateFlow<Int?> = _selectedCompanyId
 
+
+    // id de la compañiaaaaaa
 
     fun setSelectedCompanyId(id: Int) {
         _selectedCompanyId.value = id
@@ -167,6 +172,8 @@ class CompanyViewModel @Inject constructor(
     private val _publicationError = MutableStateFlow<String?>(null)
     val publicationError: StateFlow<String?> = _publicationError
 
+
+
     fun fetchPublicationById(id: Int) = viewModelScope.launch {
         repository.findPublicationById(id)
             .onSuccess { detail ->
@@ -181,7 +188,86 @@ class CompanyViewModel @Inject constructor(
     }
 
 
+
+    ///******************
+
+
+    private val _selectedPublicationId = MutableStateFlow<Int?>(null)
+    val selectedPublicationId: StateFlow<Int?> = _selectedPublicationId
+
+
+    fun selectPublication(id: Int) {
+        _selectedPublicationId.value = id
+    }
+
+
+    ///******************
+
+
+
+
 ///////////////////////////////  -------------  para obtener la publicacion segund id   --------  ///////////////////////
+
+
+///////////////////////////////  -------------  para obtener la EL IBOX SEGUN ID COMPANY   --------  ///////////////////////
+
+    private val _inboxByCompany = MutableStateFlow<InboxResult?>(null)
+    val inboxByCompany: StateFlow<InboxResult?> = _inboxByCompany
+
+    fun fetchInboxByCompany(companyId: Int) = viewModelScope.launch {
+        repository.findInboxByCompany(companyId)
+            .onSuccess {
+                _inboxByCompany.value = it
+                Log.d("CompanyViewModel", "Inbox for company $companyId: $it")
+            }
+            .onFailure { ex ->
+                Log.e("CompanyViewModel", "Error fetching inbox for company $companyId", ex)
+            }
+    }
+
+///////////////////////////////  -------------  para obtener la EL IBOX SEGUN ID COMPANY   --------  ///////////////////////
+
+
+
+
+///////////////////////////////  -------------  ENVIARRRRR MENSAJEEEEEEEEEEEEEE   --------  ///////////////////////
+private val _sendSuccess = MutableStateFlow<Boolean?>(null)
+    val sendSuccess: StateFlow<Boolean?> = _sendSuccess
+
+    fun sendMessage(
+        rawToken: String,
+        detail: String,
+        file: String,
+        idInbox: Int,
+        idStudent: Int
+    ) {
+        val input = MessageInput(
+            detail = detail,
+            file = file,
+            idInbox = idInbox,
+            idStudent = idStudent
+        )
+
+        viewModelScope.launch {
+            repository.sendMessage(
+                token = rawToken,
+                input = input
+            ).onSuccess {
+                Log.d("CompanyViewModel", "Mensaje enviado correctamente")
+                _sendSuccess.value = true
+            }.onFailure { ex ->
+                Log.e("CompanyViewModel", "Error al enviar mensaje: ${ex.message}", ex)
+                _sendSuccess.value = false
+            }
+        }
+    }
+
+    fun clearSendStatus() {
+        _sendSuccess.value = null
+    }
+
+
+///////////////////////////////  -------------  ENVIARRRRR MENSAJEEEEEEEEEEEEEE   --------  ///////////////////////
 
 
 

@@ -21,6 +21,7 @@ import com.example.oportunia.presentation.ui.screens.NotificationsScreen
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreen
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenF
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenPAndE
+import com.example.oportunia.presentation.ui.screens.RequestScreen
 import com.example.oportunia.presentation.ui.screens.SentRequestScreen
 import com.example.oportunia.presentation.ui.screens.SettingScreen
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
@@ -50,7 +51,7 @@ fun NavGraph(
                 companyViewModel = companyViewModel
             )
         }
- // pa un commit
+        // pa un commit
 
         composable(NavRoutes.Log.ROUTE) {
             LogScreen(
@@ -62,12 +63,12 @@ fun NavGraph(
 
         composable(NavRoutes.IntershipScreen.ROUTE) {
 
-          IntershipScreen(
-              navController = navController,
-              studentViewModel = studentViewModel,
-              usersViewModel = usersViewModel,
-              companyViewModel = companyViewModel
-          )
+            IntershipScreen(
+                navController = navController,
+                studentViewModel = studentViewModel,
+                usersViewModel = usersViewModel,
+                companyViewModel = companyViewModel
+            )
 
         }
 
@@ -75,7 +76,7 @@ fun NavGraph(
         composable(NavRoutes.LanguageOptionsSC.ROUTE) {
             LanguageOptionsScreenSC(
                 navController = navController,
-               // usersViewModel = usersViewModel
+                // usersViewModel = usersViewModel
             )
         }
 
@@ -91,6 +92,16 @@ fun NavGraph(
                 modifier = Modifier.padding(paddingValues)
             )
         }
+
+        composable(NavRoutes.RequestScreen.ROUTE) {
+            RequestScreen(
+                navController = navController,
+                userViewModel = usersViewModel,
+                studentViewModel = studentViewModel,
+                companyViewModel = companyViewModel
+            )
+        }
+
 
         composable(NavRoutes.HomeScreenS.ROUTE) {
             HomeScreenS(
@@ -114,11 +125,16 @@ fun NavGraph(
 
 
         composable(NavRoutes.RegisterOption.ROUTE) {
-            RegisterOptionScreen(usersViewModel,navController)
+            RegisterOptionScreen(usersViewModel, navController)
         }
 
         composable(NavRoutes.SentRequestScreen.ROUTE) {
-            SentRequestScreen()
+            SentRequestScreen(
+                navController = navController,
+                userViewModel = usersViewModel,
+                studentViewModel = studentViewModel,
+                companyViewModel = companyViewModel
+            )
         }
 
         composable(NavRoutes.CompanyInfoScreenS.ROUTE) {
@@ -135,11 +151,11 @@ fun NavGraph(
 //        }
 
         composable(NavRoutes.RegisterInformationF.ROUTE) {
-            RegisterOptionScreenF(navController,usersViewModel)
+            RegisterOptionScreenF(navController, usersViewModel)
         }
 
         composable(NavRoutes.RegisterInformationPAndE.ROUTE) {
-            RegisterOptionScreenPAndE(usersViewModel,studentViewModel , navController)
+            RegisterOptionScreenPAndE(usersViewModel, studentViewModel, navController)
         }
 //
 //        composable(NavRoutes.StudentInformationSettings2 .ROUTE) {

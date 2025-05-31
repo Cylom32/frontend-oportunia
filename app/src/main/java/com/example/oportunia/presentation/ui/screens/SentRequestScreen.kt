@@ -37,15 +37,17 @@ import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.ui.theme.*
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import java.io.File
 import java.io.FileOutputStream
 
 
-@Preview(showBackground = true)
+
 @Composable
-fun SentRequestScreen() {
+fun SentRequestScreen(navController: NavHostController, userViewModel: UsersViewModel, studentViewModel: StudentViewModel, companyViewModel: CompanyViewModel) {
     BoxWithConstraints {
         val screenHeight = maxHeight
         val screenWidth = maxWidth

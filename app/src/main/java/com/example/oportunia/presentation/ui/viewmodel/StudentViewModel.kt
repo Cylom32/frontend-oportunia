@@ -3,6 +3,7 @@ package com.example.oportunia.presentation.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.oportunia.data.remote.dto.CVListResponse
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 import com.example.oportunia.domain.model.Cv
 import com.example.oportunia.domain.model.Student
 import com.example.oportunia.domain.model.UniversityOption
+import com.example.oportunia.domain.repository.CompanyRepository
 import com.example.oportunia.domain.repository.CvRepository
 import com.example.oportunia.domain.repository.StudentRepository
 import com.example.oportunia.domain.repository.UniversityRepository
@@ -28,6 +30,7 @@ sealed class StudentState {
 @HiltViewModel
 class StudentViewModel @Inject constructor(
     private val repository: StudentRepository,
+    private val repositoryCM: CompanyRepository,
     private val universityRepository: UniversityRepository,
    // private val cvRepository: CvRepository
 ) : ViewModel() {
@@ -84,7 +87,14 @@ class StudentViewModel @Inject constructor(
 
 
 
+////////// --------------------------------------        PARA OBTENER EL ID DEL ESTUDIANTE        -------------------------------------- //////////
 
+// ocupo aqúi el id para tener la lista de cv...
+
+    private var studentId: Int? = null
+
+    private val _studentIdd = MutableStateFlow<Int?>(null)
+    val studentIdd: StateFlow<Int?> = _studentIdd
 
 
 
@@ -94,9 +104,20 @@ class StudentViewModel @Inject constructor(
             _studentState.value = StudentState.Loading
             repository.findStudentByUserId(token, userId)
                 .onSuccess { student ->
+                    // 3) Guardar el id en la variable privada
+                    studentId = student.idStudent
+
+                    // 4) Empujar el mismo valor al StateFlow
+                    _studentIdd.value = student.idStudent
+
+                    // Exponer el student completo
                     _selectedStudent.value = student
                     _studentState.value = StudentState.Success(student)
-                    Log.d("StudentVM", "✅ Estudiante obtenido: $student")
+
+                    Log.d(
+                        "StudentVM",
+                        "✅ Estudiante obtenido: $student (idStudent=$studentId)"
+                    )
                 }
                 .onFailure { ex ->
                     _studentState.value = StudentState.Error(ex.message ?: "Error al obtener estudiante")
@@ -104,6 +125,40 @@ class StudentViewModel @Inject constructor(
                 }
         }
     }
+
+    ////////// --------------------------------------        PARA OBTENER EL ID DEL ESTUDIANTE        -------------------------------------- //////////
+
+
+    ////////// --------------------------------------        PARA OBTENER EL la lista de cv del estudiantes por toke y id       -------------------------------------- //////////
+
+
+    // Dentro de tu ViewModel
+    private val _cvlista = MutableStateFlow<List<CVListResponse>>(emptyList())
+    val cvlista: StateFlow<List<CVListResponse>> = _cvlista
+
+    fun fetchCvList(token: String, studentId: Int) {
+        viewModelScope.launch {
+            repositoryCM.findCvListByStudent(token, studentId)
+                .onSuccess { lista ->
+                    _cvlista.value = lista
+
+                    lista.forEach { cv ->
+                        Log.d(
+                            "CvViewModel",
+                            "CV → idCv=${cv.idCv}, name='${cv.name}', file='${cv.file}'"
+                        )
+                    }
+                }
+                .onFailure { ex ->
+                    Log.e("CvViewModel", "Error al cargar CVs: ${ex.message}")
+                }
+        }
+    }
+
+
+
+
+    ////////// --------------------------------------        PARA OBTENER EL la lista de cv del estudiantes por toke y id       -------------------------------------- //////////
 
 
 

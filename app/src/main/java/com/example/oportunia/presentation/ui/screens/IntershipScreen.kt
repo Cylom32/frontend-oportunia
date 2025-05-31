@@ -110,6 +110,17 @@ import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 
 //@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 
+
+
+
+
+
+///////////// PENDIENTE ENVIAR SOLICITUDDDDDDDDDDD
+
+
+
+
+
 @Composable
 fun IntershipScreen(
     navController: NavHostController,
@@ -117,16 +128,33 @@ fun IntershipScreen(
     usersViewModel: UsersViewModel,
     companyViewModel: CompanyViewModel
 ) {
+
+    val selectedId by companyViewModel.selectedPublicationId.collectAsState()
+
+    // 2. Obtenemos el token como String (no String?)
+    //    Si usersViewModel.token fuese StateFlow<String?>, inicializamos con ""
+    val token by usersViewModel.token.collectAsState(initial = "")
+
+    // 3. Obtenemos el studentIdd como Int? (inicialmente null)
+    val studentId by studentViewModel.studentIdd.collectAsState(initial = null)
+
+    // 4. Cada vez que cambie selectedId, traemos el detalle de publicación
+    LaunchedEffect(selectedId) {
+        selectedId?.let { companyViewModel.fetchPublicationById(it) }
+    }
+
     val publication by companyViewModel.publicationDetail.collectAsState()
     LaunchedEffect(Unit) {
 
     }
-    val imageUrl = publication?.file.orEmpty()
+
+    val publicationDetail by companyViewModel.publicationDetail.collectAsState()
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
                 selectedScreen = NavRoutes.GridPublicationsScreenS.ROUTE,
-                onScreenSelected = { /* navController.navigate(route) */ }
+                onScreenSelected = {}
             )
         }
     ) { innerPadding ->
@@ -135,7 +163,7 @@ fun IntershipScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Cabecera con nombre de la empresa
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -158,28 +186,45 @@ fun IntershipScreen(
                 )
             }
 
-            // Imagen deformada para llenar TODO el espacio, con botón "Aplicar" al pie
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
             ) {
                 AsyncImage(
-                    model = imageUrl,
+                    model = publicationDetail?.file,
                     contentDescription = "Imagen de publicación",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds
                 )
 
+
                 Button(
-                    onClick = { /* TODO: acción de aplicar */ },
+                    onClick = {
+                        // -------- CORRECCIÓN DE NULLABILITY --------
+                        // Usamos el “safe let” para desmaterializar token y studentId
+                        token?.let { t ->
+                            studentId?.let { id ->
+                                // Aquí, tanto `t` como `id` ya son no nulos: String y Int
+                                studentViewModel.fetchCvList(t, id)
+                          //      Log.d("IntershipScreen", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                                navController.navigate(NavRoutes.RequestScreen.ROUTE)
+                            }
+                        }
+                        // Si `token` o `studentId` fueran null, el bloque `let` NUNCA se ejecuta.
+                        // Opcionalmente podrías hacer:
+                        //   if (token.isNullOrBlank() || studentId == null) {
+                               Log.e("IntershipScreen", "Falta token o studentId")
+                        //   }
+                    },
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 16.dp)
                         .height(60.dp)
                         .width(180.dp),
                     shape = RoundedCornerShape(24.dp)
-                ) {
+                )  {
                     Text(text = "Aplicar", fontSize = 18.sp, modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp))
                 }
 

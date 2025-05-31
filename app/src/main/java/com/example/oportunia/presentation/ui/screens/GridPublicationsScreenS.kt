@@ -118,7 +118,35 @@ fun GridPublicationsScreenS(
     usersViewModel: UsersViewModel,
     companyViewModel: CompanyViewModel
 ) {
+
+
+    val companyIdNullable by companyViewModel.selectedCompanyId.collectAsState(initial = null)
+
+    // 2. Observar el inbox (InboxResult?) desde tu ViewModel
+    val inboxResult by companyViewModel.inboxByCompany.collectAsState(initial = null)
+
+    // 3. Cuando cambie el companyId, lanzar la petición para llenar el inbox
+    LaunchedEffect(companyIdNullable) {
+        companyIdNullable?.let { companyViewModel.fetchInboxByCompany(it) }
+    }
+
+
+    LaunchedEffect(inboxResult) {
+        inboxResult?.let { Log.d("CompanyScreen", "Inbox for company: $it") }
+    }
+
+
+
+
+
     val publications by companyViewModel.companyPublications.collectAsState(initial = emptyList())
+
+
+
+        LaunchedEffect(companyIdNullable) {
+            companyIdNullable?.let { companyViewModel.fetchInboxByCompany(it) }
+        }
+
 
     Scaffold(
         bottomBar = {
@@ -173,8 +201,25 @@ fun GridPublicationsScreenS(
                             .fillMaxWidth()
                             .aspectRatio(1f)
                             .clickable {
-                                companyViewModel.fetchPublicationById(publication.id)
+                                companyViewModel.selectPublication(publication.id)
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+///////////////////////////////
+                                companyIdNullable?.let {
+                                    companyViewModel.fetchInboxByCompany(it)
+
+                                }
+
+
                                 navController.navigate(NavRoutes.IntershipScreen.ROUTE)
+
                             }
                     ) {
                         Column(modifier = Modifier.fillMaxSize()) {
@@ -186,10 +231,6 @@ fun GridPublicationsScreenS(
                                     .height(100.dp),
                                 contentScale = ContentScale.FillBounds
                             )
-//                            SideEffect {
-//                                Log.d("PublicationCard", "Publication id = ${publication.id}")
-//                            }
-
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
                                 text = publication.location.name,
