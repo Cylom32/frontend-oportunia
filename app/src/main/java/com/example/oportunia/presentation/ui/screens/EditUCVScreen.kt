@@ -41,56 +41,42 @@ import java.io.FileOutputStream
 @Composable
 fun EditUCVScreen(
     studentViewModel: StudentViewModel,
-    usersViewModel: UsersViewModel    // <-- Mantener nombre usersViewModel
+    usersViewModel: UsersViewModel
 ) {
     val context = LocalContext.current
 
     // 1) Token y studentId
-    val token by usersViewModel.token.collectAsState()                   // <-- usersViewModel.token
-    val studentId by studentViewModel.studentIdd.collectAsState()        // <-- studentIdd
+    val token by usersViewModel.token.collectAsState()
+    val studentId by studentViewModel.studentIdd.collectAsState()
 
-    // 2) Estado de Student y lista de CVs (ahora cvlistaa)
+    // 2) Estado de Student y lista de CVs (cvlistaa)
     val studentState by studentViewModel.studentState.collectAsState()
-    val cvs by studentViewModel.cvlistaa.collectAsState()                // <-- cvlistaa
+    val cvs by studentViewModel.cvlistaa.collectAsState()
+    val deleteResult by studentViewModel.deleteResult.collectAsState()
 
-    // 3) Estados para manejar el popup
+    // 3) Estados para mostrar el dialog de “Agregar CV”
+    var showAddDialog by remember { mutableStateOf(false) }
+    var newCvName by remember { mutableStateOf("") }
+    var newCvLink by remember { mutableStateOf("") }
+
+    // 4) Estados para manejar el popup de detalles (igual que antes)
     var selectedCv by remember { mutableStateOf<CVResponseS?>(null) }
-    var showDialog by remember { mutableStateOf(false) }
+    var showDetailsDialog by remember { mutableStateOf(false) }
 
-    // 4) Al iniciar la pantalla, si tenemos token y studentId, cargar CVs
+    // 5) Cargar lista al iniciar la pantalla
     LaunchedEffect(token, studentId) {
         if (!token.isNullOrBlank() && studentId != null) {
             studentViewModel.fetchCvLista(token!!)
         }
     }
 
-    // 5) Selector de PDF (se mantiene igual)
-    val pdfPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument(),
-        onResult = { uri ->
-            uri?.let {
-                try {
-                    val fileName = getFileNameFromUri(context, it)
-                        ?: "cv_${System.currentTimeMillis()}.pdf"
-                    val file = File(context.filesDir, fileName)
-
-                    val inputStream = context.contentResolver.openInputStream(it)
-                    val outputStream = FileOutputStream(file)
-                    inputStream?.copyTo(outputStream)
-                    inputStream?.close()
-                    outputStream.close()
-
-                    val localPath = file.absolutePath
-                    Log.d("PDF_COPY", "Archivo copiado a: $localPath")
-
-                    // studentViewModel.insertCv(localPath)
-                    // studentViewModel.loadCvsBySelectedStudent()
-                } catch (e: Exception) {
-                    Log.e("PDF_COPY", "Error al copiar PDF: ${e.message}", e)
-                }
-            }
+    // 6) Cuando deleteResult == true, recargar lista y resetear
+    LaunchedEffect(deleteResult) {
+        if (deleteResult == true && !token.isNullOrBlank()) {
+            studentViewModel.fetchCvLista(token!!)
+            studentViewModel.resetDeleteResult()
         }
-    )
+    }
 
     Surface(
         modifier = Modifier
@@ -125,7 +111,7 @@ fun EditUCVScreen(
                 when (studentState) {
                     is StudentState.Loading -> {
                         Text(
-                            text = "Cargando...",
+                            text = "Cargando…",
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
@@ -182,11 +168,9 @@ fun EditUCVScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // ——— BOTÓN PARA AGREGAR UN CV ———
+                // ——— BOTÓN PARA ABRIR EL DIALOG “AGREGAR CV” ———
                 Button(
-                    onClick = {
-                        pdfPickerLauncher.launch(arrayOf("application/pdf"))
-                    },
+                    onClick = { showAddDialog = true },
                     colors = ButtonDefaults.buttonColors(containerColor = Color.White),
                     shape = RoundedCornerShape(10.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
@@ -194,7 +178,11 @@ fun EditUCVScreen(
                         .height(50.dp)
                         .width(200.dp)
                 ) {
-                    Text(stringResource(R.string.boton_agregar_cv), color = Color.Black, fontSize = 18.sp)
+                    Text(
+                        text = stringResource(R.string.boton_agregar_cv),
+                        color = Color.Black,
+                        fontSize = 18.sp
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         imageVector = Icons.Default.Edit,
@@ -203,42 +191,103 @@ fun EditUCVScreen(
                     )
                 }
 
-                // ——— LISTA DE CVs: cada tarjeta es clickeable para abrir popup ———
+                // ——— LISTA DE CVs: cada tarjeta es clickeable para abrir popup de detalles ———
                 cvs.forEach { cv ->
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
                                 selectedCv = cv
-                                showDialog = true
+                                showDetailsDialog = true
                             }
                     ) {
                         CVCard(
                             fileName = cv.name,
                             filePath = cv.file,
-                            status = true,          // <-- Asignar un valor fijo (true) ya que CVResponseS no tiene "status"
+                            status = true,
                             onDelete = {
-                                // studentViewModel.deleteCv(cv)
+                                token?.let { t ->
+                                    studentViewModel.deleteCv(t, cv.idCv)
+                                }
                             },
-                            onStatusChange = {
-                                // studentViewModel.setCvAsActive(cv.idCv)
-                            }
+                            onStatusChange = { /* … */ }
                         )
                     }
                 }
             }
         }
 
-        // ——— ALERTDIALOG: muestra toda la info del CV seleccionado ———
-        if (showDialog && selectedCv != null) {
+        // ——— DIALOG “AGREGAR CV” ———
+        if (showAddDialog) {
             AlertDialog(
                 onDismissRequest = {
-                    showDialog = false
+                    showAddDialog = false
+                    newCvName = ""
+                    newCvLink = ""
+                },
+                title = {
+                    Text(text = stringResource(R.string.boton_agregar_cv))
+                },
+                text = {
+                    Column {
+                        OutlinedTextField(
+                            value = newCvName,
+                            onValueChange = { newCvName = it },
+                            label = { Text(text = "Nombre del archivo") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        )
+                        OutlinedTextField(
+                            value = newCvLink,
+                            onValueChange = { newCvLink = it },
+                            label = { Text(text = "Link del archivo") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        // Llamar al ViewModel para crear/registrar el CV con nombre y link
+                        if (!newCvName.isBlank() && !newCvLink.isBlank() && !token.isNullOrBlank()) {
+                            // Suponiendo que StudentViewModel tenga un método createCv(token, studentId, name, link)
+                            studentId?.let { idEst ->
+                              //  studentViewModel.createCv(token!!, idEst, newCvName, newCvLink)
+                                // Después de crear, recargar lista
+                                studentViewModel.fetchCvLista(token!!)
+                            }
+                        }
+                        showAddDialog = false
+                        newCvName = ""
+                        newCvLink = ""
+                    }) {
+                        Text(text = "Guardar")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showAddDialog = false
+                        newCvName = ""
+                        newCvLink = ""
+                    }) {
+                        Text(text = "Cancelar")
+                    }
+                }
+            )
+        }
+
+        // ——— DIALOG DETALLES DEL CV SELECCIONADO ———
+        if (showDetailsDialog && selectedCv != null) {
+            AlertDialog(
+                onDismissRequest = {
+                    showDetailsDialog = false
                     selectedCv = null
                 },
                 confirmButton = {
                     TextButton(onClick = {
-                        showDialog = false
+                        showDetailsDialog = false
                         selectedCv = null
                     }) {
                         Text(text = stringResource(R.string.boton_cerrar_dialogo))
@@ -249,9 +298,14 @@ fun EditUCVScreen(
                 },
                 text = {
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Text(text = stringResource(R.string.etiqueta_id_cv)+" ${selectedCv!!.idCv}", fontWeight = FontWeight.Bold)
+                        Text(
+                            text = stringResource(R.string.etiqueta_id_cv) + " ${selectedCv!!.idCv}",
+                            fontWeight = FontWeight.Bold
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = stringResource(R.string.etiqueta_nombre_archivo_cv)+": ${selectedCv!!.name}")
+                        Text(
+                            text = stringResource(R.string.etiqueta_nombre_archivo_cv) + ": ${selectedCv!!.name}"
+                        )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = stringResource(R.string.etiqueta_ruta_archivo))
                         Text(
@@ -266,7 +320,7 @@ fun EditUCVScreen(
     }
 }
 
-// Helper: obtiene nombre de archivo desde URI, se mantiene igual
+// Helper para extraer nombre de un URI; se mantiene igual
 private fun getFileNameFromUri(context: Context, uri: Uri): String? {
     var name: String? = null
     val cursor = context.contentResolver.query(uri, null, null, null, null)
@@ -348,14 +402,7 @@ fun CVCard(
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = if (status) "Activo" else "Inactivo",
-                    color = if (status) Color(0xFF4CAF50) else Color.Red,
-                    fontSize = 14.sp,
-                    modifier = Modifier.clickable {
-                        onStatusChange()
-                    }
-                )
+//
             }
 
             Icon(

@@ -227,6 +227,36 @@ class StudentViewModel @Inject constructor(
     ////////////---------------------      para obtener la lista de cv del estudiante ///////////////////////////////////////////////////////////////////
 
 
+
+
+
+
+
+    ////////////---------------------      PARA ELIMINAR EL CV SELECCIONADO ///////////////////////////////////////////////////////////////////
+
+    private val _deleteResult = MutableStateFlow<Boolean?>(null)
+    val deleteResult: StateFlow<Boolean?> = _deleteResult
+
+    fun deleteCv(token: String, cvId: Int) = viewModelScope.launch {
+        repository.deleteCvById(token, cvId)
+            .onSuccess {
+                _deleteResult.value = true
+            }
+            .onFailure {
+                _deleteResult.value = false
+                Log.e("StudentViewModel", "Error al eliminar CV id=$cvId", it)
+            }
+    }
+
+    fun resetDeleteResult() {
+        _deleteResult.value = null
+    }
+
+
+
+    ////////////---------------------      PARA ELIMINAR EL CV SELECCIONADO ///////////////////////////////////////////////////////////////////
+
+
 }
 
 

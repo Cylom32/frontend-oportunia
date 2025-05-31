@@ -55,5 +55,12 @@ interface StudentsService {
         @Path("student_id") studentId: Int
     ): Response<List<CVResponseS>>
 
+    @DELETE("v1/cvs/{cv_id}")
+    suspend fun deleteCvById(
+        @Header("Authorization") token: String,
+        @Path("cv_id") cvId: Int
+    ): Response<Unit>
+
+
 
 }

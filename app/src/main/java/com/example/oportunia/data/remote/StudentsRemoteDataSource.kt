@@ -58,4 +58,7 @@ class StudentsRemoteDataSource @Inject constructor(
         studentId: Int
     ): Result<List<CVResponseS>> =
         safeApiCall { service.getCvListByStudent(token, studentId) }
+
+    suspend fun deleteCvById(token: String, cvId: Int): Result<Unit> =
+        safeApiCall { service.deleteCvById(token, cvId) }
 }
