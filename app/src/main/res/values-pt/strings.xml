@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OportunIA</string>
+    <string name="emailL">E-mail</string>
+    <string name="passworL">Senha</string>
+    <string name="passworC">"Confirmar Senha "</string>
+    <string name="craeteAccount">Criar Conta</string>
+    <string name="forgotPassword">Esqueceu sua senha?</string>
+    <string name="userTypeEst">Estudante</string>
+    <string name="userTypeCom">Empresa</string>
+    <string name="userTypTitle">Tipo de Usuário</string>
+    <string name="nameTitle">Nome</string>
+    <string name="FirstSurnameTitle">Primeiro Sobrenome</string>
+    <string name="SecondSurnameTitle">Segundo Sobrenome</string>
+    <string name="texBoton">Próximo</string>
+    <string name="UniversityTitle">Universidade</string>
+    <string name="screenTitleInfo">Informação</string>
+    <string name="titleCV">Currículo</string>
+    <string name="titleSettings">Configurações</string>
+    <string name="acceptText">Aceitar</string>
+    <string name="logPopUpText">Por favor, verifique seu e-mail e senha.</string>
+    <string name="studentInfoAlertTittle">Campos Incompletos</string>
+    <string name="studentInfoAlertText">Por favor, complete todos os campos e selecione uma universidade válida.</string>
+    <string name="bTextConfirmar">Confirmar</string>
+    <string name="error_empty_email">O e-mail não pode estar vazio.</string>
+    <string name="error_empty_password">A senha não pode estar vazia.</string>
+    <string name="error_password_mismatch">As senhas não coincidem.</string>
+    <string name="LanguageSettingTitle">Idioma</string>
+    <string name="LanguageOptiongTitle">Idioma</string>
+    <string name="ApplyButtonText">Aplicar</string>
+    <string name="account_text">Conta</string>
+    <string name="language_text">Idioma</string>
+    <string name="logout_text">Sair</string>
+    <string name="titulo_solicitudes_enviadas">Solicitações enviadas</string>
+    <string name="titulo_detalles_del_mensaje">Detalhes da mensagem</string>
+    <string name="etiqueta_detalle_completo">• Detalhe completo:</string>
+    <string name="etiqueta_nombre_archivo">• Nome do arquivo:</string>
+    <string name="etiqueta_fecha_envio">• Data de envio:</string>
+    <string name="boton_cerrar_dialogo">Fechar</string>
+    <string name="boton_editar_cv">Editar currículo</string>
+    <string name="titulo_edit_cv">Edição de currículo</string>
+    <string name="boton_agregar_cv">Adicionar currículo</string>
+    <string name="etiqueta_id_cv">ID do currículo:</string>
+    <string name="etiqueta_detalles_del_cv">Detalhes do currículo</string>
+    <string name="etiqueta_ruta_archivo">Caminho do arquivo:</string>
+    <string name="etiqueta_nombre_archivo_cv">Nome</string>
+
+</resources>

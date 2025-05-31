@@ -29,7 +29,7 @@
 
     <string name="screenTitleInfo">Información</string>
 
-    <string name="emailExample">ejemplo@algo.com</string>
+    <string name="emailExample" translatable="false">ejemplo@algo.com</string>
 
     <string name="titleCV">Curriculum Vitae</string>
 
@@ -59,9 +59,29 @@
 
     <string name="ApplyButtonText">Aplicar</string>
 
+    <!-- SettingsScreen-->
+    <string name="account_text">Cuenta</string>
+    <string name="language_text">Idioma</string>
+    <string name="logout_text">Logout</string>
 
+    <!-- SentRequestScreen -->
+    <string name="titulo_solicitudes_enviadas">Solicitudes enviadas</string>
+    <string name="titulo_detalles_del_mensaje">Detalles del mensaje</string>
+    <string name="etiqueta_detalle_completo">• Detalle completo:</string>
+    <string name="etiqueta_nombre_archivo">• Nombre de archivo:</string>
+    <string name="etiqueta_fecha_envio">• Fecha de envío:</string>
+    <string name="boton_cerrar_dialogo">Cerrar</string>
 
+    <!-- CvScreen -->
+    <string name="boton_editar_cv">Editar CV</string>
 
-
+    <!-- EditCvScreen -->
+    <string name="titulo_edit_cv">Edición de CV</string>
+    <string name="boton_agregar_cv">Agregar CV</string>
+    <string name="etiqueta_id_cv">ID CV:</string>
+    <string name="etiqueta_detalles_del_cv">Detalles CV</string>
+    <string name="etiqueta_ruta_archivo">Ruta de archivo:</string>
+    <string name="etiqueta_nombre_archivo_cv">Nombre</string>
+    <!-- SentRequestScreen -->
 
 </resources>

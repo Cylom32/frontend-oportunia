@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OportunIA</string>
+    <string name="emailL">Email</string>
+    <string name="passworL">Password</string>
+    <string name="passworC">Confirm Password</string>
+    <string name="craeteAccount">Create Account</string>
+    <string name="acceptText">Accept</string>
+    <string name="logPopUpText">Please, check your email and your password.</string>
+    <string name="forgotPassword">Forgot your password?</string>
+    <string name="userTypeEst">Student</string>
+    <string name="userTypeCom">Company</string>
+    <string name="userTypTitle">User Type</string>
+    <string name="nameTitle">Name</string>
+    <string name="FirstSurnameTitle">First Last Name</string>
+    <string name="SecondSurnameTitle">Second Last Name</string>
+    <string name="texBoton">Next</string>
+    <string name="UniversityTitle">University</string>
+    <string name="screenTitleInfo">Information</string>
+    <string name="titleCV">Resume</string>
+    <string name="titleSettings">Settings</string>
+    <string name="studentInfoAlertTittle">Incomplete Fields</string>
+    <string name="studentInfoAlertText">Please complete all fields and select a valid university.</string>
+    <string name="bTextConfirmar">Confirm</string>
+    <string name="error_empty_email">Email cannot be empty.</string>
+    <string name="error_empty_password">Password cannot be empty.</string>
+    <string name="error_password_mismatch">Passwords do not match.</string>
+    <string name="LanguageSettingTitle">Language</string>
+    <string name="ApplyButtonText">Apply</string>
+    <string name="LanguageOptiongTitle">Language</string>
+    <string name="account_text">Account</string>
+    <string name="language_text">Language</string>
+    <string name="logout_text">Logout</string>
+    <string name="titulo_solicitudes_enviadas">Sent requests</string>
+    <string name="titulo_detalles_del_mensaje">Message details</string>
+    <string name="etiqueta_detalle_completo">• Full detail:</string>
+    <string name="etiqueta_nombre_archivo">• File name:</string>
+    <string name="etiqueta_fecha_envio">• Sent date:</string>
+    <string name="boton_cerrar_dialogo">Close</string>
+    <string name="boton_editar_cv">Edit CV</string>
+
+    <string name="titulo_edit_cv">CV Editing</string>
+    <string name="boton_agregar_cv">Add CV</string>
+    <string name="etiqueta_id_cv">CV ID:</string>
+    <string name="etiqueta_detalles_del_cv">CV Details</string>
+    <string name="etiqueta_ruta_archivo">File Path:</string>
+    <string name="etiqueta_nombre_archivo_cv">Name</string>
+
+</resources>

@@ -122,7 +122,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 tint = Color.Black
             )
             Spacer(modifier = Modifier.width(20.dp))
-            Text(text = "Cuenta", fontSize = 22.sp, color = Color.Black)
+            Text(text = stringResource(R.string.account_text), fontSize = 22.sp, color = Color.Black)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -146,7 +146,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.width(34.dp))
-            Text(text = "Idioma", fontSize = 22.sp)
+            Text(text = stringResource(R.string.language_text), fontSize = 22.sp)
         }
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -180,7 +180,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Logout",
+                text = stringResource(R.string.logout_text),
                 fontSize = 22.sp,
                 color = Color.Black // Aseguramos que el texto sea negro
             )

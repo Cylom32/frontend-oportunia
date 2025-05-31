@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -166,7 +167,7 @@ fun EditUCVScreen(
             }
 
             Text(
-                text = "Edición de CV",
+                text = stringResource(R.string.titulo_edit_cv),
                 fontSize = 32.sp,
                 color = blackPanter,
                 modifier = Modifier.padding(top = 20.dp)
@@ -193,7 +194,7 @@ fun EditUCVScreen(
                         .height(50.dp)
                         .width(200.dp)
                 ) {
-                    Text("Agregar CV", color = Color.Black, fontSize = 18.sp)
+                    Text(stringResource(R.string.boton_agregar_cv), color = Color.Black, fontSize = 18.sp)
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         imageVector = Icons.Default.Edit,
@@ -240,19 +241,19 @@ fun EditUCVScreen(
                         showDialog = false
                         selectedCv = null
                     }) {
-                        Text(text = "Cerrar")
+                        Text(text = stringResource(R.string.boton_cerrar_dialogo))
                     }
                 },
                 title = {
-                    Text(text = "Detalles del CV")
+                    Text(text = stringResource(R.string.etiqueta_detalles_del_cv))
                 },
                 text = {
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        Text(text = "ID CV: ${selectedCv!!.idCv}", fontWeight = FontWeight.Bold)
+                        Text(text = stringResource(R.string.etiqueta_id_cv)+" ${selectedCv!!.idCv}", fontWeight = FontWeight.Bold)
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = "Nombre: ${selectedCv!!.name}")
+                        Text(text = stringResource(R.string.etiqueta_nombre_archivo_cv)+": ${selectedCv!!.name}")
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = "Ruta de archivo:")
+                        Text(text = stringResource(R.string.etiqueta_ruta_archivo))
                         Text(
                             text = selectedCv!!.file,
                             fontSize = 12.sp,

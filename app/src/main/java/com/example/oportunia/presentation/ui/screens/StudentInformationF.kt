@@ -125,21 +125,21 @@ fun RegisterOptionScreenF(
 
                 texAndLable(
                     titulo = stringResource(R.string.nameTitle),
-                    placeholder = "Nombre",
+                    placeholder = stringResource(R.string.nameTitle),
                     valor = nombre,
                     alCambiarValor = { nombre = it }
                 )
                 Spacer(Modifier.height(8.dp))
                 texAndLable(
                     titulo = stringResource(R.string.FirstSurnameTitle),
-                    placeholder = "Primer apellido",
+                    placeholder = stringResource(R.string.FirstSurnameTitle),
                     valor = primerApellido,
                     alCambiarValor = { primerApellido = it }
                 )
                 Spacer(Modifier.height(8.dp))
                 texAndLable(
                     titulo = stringResource(R.string.SecondSurnameTitle),
-                    placeholder = "Segundo apellido",
+                    placeholder = stringResource(R.string.SecondSurnameTitle),
                     valor = segundoApellido,
                     alCambiarValor = { segundoApellido = it }
                 )

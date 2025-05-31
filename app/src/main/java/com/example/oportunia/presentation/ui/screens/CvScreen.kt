@@ -197,7 +197,7 @@ fun ButtonSection(navController: NavHostController) {
 
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Editar CV",
+                text = stringResource(R.string.boton_editar_cv),
                 fontSize = 22.sp,
                 color = Color.Black
             )

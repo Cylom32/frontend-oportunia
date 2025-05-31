@@ -104,7 +104,7 @@ fun SentRequestScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Solicitudes enviadas",
+                        text = stringResource(R.string.titulo_solicitudes_enviadas),
                         color = walterWhite,
                         fontSize = (screenWidth.value * 0.07).sp
                     )
@@ -142,12 +142,12 @@ fun SentRequestScreen(
             AlertDialog(
                 onDismissRequest = { selectedMessage = null },
                 title = {
-                    Text(text = "Detalles del mensaje", fontWeight = FontWeight.Bold)
+                    Text(text = stringResource(R.string.titulo_detalles_del_mensaje), fontWeight = FontWeight.Bold)
                 },
                 text = {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(text = "• Detalle completo:")
+                        Text(text = stringResource(R.string.etiqueta_detalle_completo))
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = msg.detail,
@@ -157,7 +157,7 @@ fun SentRequestScreen(
                             fontSize = 14.sp
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-                        Text(text = "• Nombre de archivo:")
+                        Text(text = stringResource(R.string.etiqueta_nombre_archivo))
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = msg.file,
@@ -173,7 +173,7 @@ fun SentRequestScreen(
                             color = Color(0xFF1E88E5) // azul para enlace
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-                        Text(text = "• Fecha de envío:")
+                        Text(text =  stringResource(R.string.etiqueta_fecha_envio))
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = msg.sendDate.substring(0, 10),
@@ -186,7 +186,7 @@ fun SentRequestScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = { selectedMessage = null }) {
-                        Text(text = "Cerrar")
+                        Text(text = stringResource(R.string.boton_cerrar_dialogo))
                     }
                 },
                 properties = DialogProperties(usePlatformDefaultWidth = false)
