@@ -95,6 +95,11 @@ class StudentRepositoryImpl @Inject constructor(
 
 
 
+    override suspend fun deleteCvById(token: String, cvId: Int): Result<Unit> =
+        remoteDataSource.deleteCvById(token, cvId)
+
+
+
 
 
 }

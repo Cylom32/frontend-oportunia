@@ -21,4 +21,8 @@ interface StudentRepository {
     ): Result<List<CVResponseS>>
 
 
+    suspend fun deleteCvById(token: String, cvId: Int): Result<Unit>
+
+
+
 }
