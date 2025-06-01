@@ -3,6 +3,7 @@ package com.example.oportunia.data.remote.repository
 import com.example.oportunia.data.mapper.StudentMapper
 import com.example.oportunia.data.remote.StudentsRemoteDataSource
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
+import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
 import com.example.oportunia.domain.model.Student
 import com.example.oportunia.domain.repository.StudentRepository
@@ -97,6 +98,13 @@ class StudentRepositoryImpl @Inject constructor(
 
     override suspend fun deleteCvById(token: String, cvId: Int): Result<Unit> =
         remoteDataSource.deleteCvById(token, cvId)
+
+
+    override suspend fun createCv(token: String, cvInput: CVInput): Result<Unit> = try {
+        remoteDataSource.createCv(token, cvInput)
+    } catch (e: Exception) {
+        Result.failure(Exception("Error uploading CV: ${e.message}"))
+    }
 
 
 

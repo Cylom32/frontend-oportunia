@@ -3,6 +3,7 @@ package com.example.oportunia.data.remote
 import com.example.oportunia.data.remote.api.StudentsService
 import com.example.oportunia.data.remote.dto.StudentDTO
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
+import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
 import retrofit2.Response
 import javax.inject.Inject
@@ -61,4 +62,7 @@ class StudentsRemoteDataSource @Inject constructor(
 
     suspend fun deleteCvById(token: String, cvId: Int): Result<Unit> =
         safeApiCall { service.deleteCvById(token, cvId) }
+
+    suspend fun createCv(token: String, cvInput: CVInput): Result<Unit> =
+        safeApiCall { service.createCv(token, cvInput) }
 }

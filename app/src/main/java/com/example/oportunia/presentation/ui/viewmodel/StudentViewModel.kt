@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.oportunia.data.remote.dto.CVListResponse
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
+import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,6 +13,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
+
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 
 import com.example.oportunia.domain.model.Cv
 import com.example.oportunia.domain.model.MessageResponseS
@@ -91,7 +95,7 @@ class StudentViewModel @Inject constructor(
 
 ////////// --------------------------------------        PARA OBTENER EL ID DEL ESTUDIANTE        -------------------------------------- //////////
 
-// ocupo aqúi el id para tener la lista de cv...
+
 
     private var studentId: Int? = null
 
@@ -255,6 +259,46 @@ class StudentViewModel @Inject constructor(
 
 
     ////////////---------------------      PARA ELIMINAR EL CV SELECCIONADO ///////////////////////////////////////////////////////////////////
+
+
+
+
+
+    ////////////---------------------      PARA agregar CV al estudiante ///////////////////////////////////////////////////////////////////
+
+
+    // Dentro de StudentViewModel.kt
+
+    // 1) Añade esta propiedad para exponer el resultado de la carga
+    private val _createCvResult = MutableStateFlow<Boolean?>(null)
+    val createCvResult: StateFlow<Boolean?> = _createCvResult
+
+    // 2) Método para invocar al repositorio y subir el CV
+    fun createCv(token: String, name: String, file: String, studentId: Int) {
+        val cvInput = CVInput(name = name, file = file, idStudent = studentId)
+        viewModelScope.launch {
+            repository.createCv(token, cvInput)
+                .onSuccess {
+                    _createCvResult.value = true
+                    Log.d("StudentVM", "CV enviado correctamente: $cvInput")
+                }
+                .onFailure { ex ->
+                    _createCvResult.value = false
+                    Log.e("StudentVM", "Error al crear CV: ${ex.message}")
+                }
+        }
+    }
+
+
+
+
+
+
+    ////////////---------------------      PARA agregar CV al estudiante ///////////////////////////////////////////////////////////////////
+
+
+
+
 
 
 }

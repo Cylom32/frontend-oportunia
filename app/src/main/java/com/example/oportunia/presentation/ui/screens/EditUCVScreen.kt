@@ -10,6 +10,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -29,14 +31,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
-import com.example.oportunia.R             // <-- Nuevo DTO
+import com.example.oportunia.R
 import com.example.oportunia.domain.model.CVResponseS
 import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
-import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel   // <-- Renombrado a UsersViewModel
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import java.io.File
-import java.io.FileOutputStream
 
 @Composable
 fun EditUCVScreen(
@@ -59,7 +60,7 @@ fun EditUCVScreen(
     var newCvName by remember { mutableStateOf("") }
     var newCvLink by remember { mutableStateOf("") }
 
-    // 4) Estados para manejar el popup de detalles (igual que antes)
+    // 4) Estados para manejar el popup de detalles
     var selectedCv by remember { mutableStateOf<CVResponseS?>(null) }
     var showDetailsDialog by remember { mutableStateOf(false) }
 
@@ -168,10 +169,19 @@ fun EditUCVScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // ——— BOTÓN PARA ABRIR EL DIALOG “AGREGAR CV” ———
+                // Condición: solo mostrar o habilitar el botón si hay ≤ 2 CVs
+                val canAddCv = cvs.size <= 2
+
                 Button(
-                    onClick = { showAddDialog = true },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                    onClick = {
+                        if (canAddCv) {
+                            showAddDialog = true
+                        }
+                    },
+                    enabled = canAddCv,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (canAddCv) Color.White else Color.LightGray
+                    ),
                     shape = RoundedCornerShape(10.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
                     modifier = Modifier
@@ -180,38 +190,53 @@ fun EditUCVScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.boton_agregar_cv),
-                        color = Color.Black,
+                        color = if (canAddCv) Color.Black else Color.DarkGray,
                         fontSize = 18.sp
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Icono Agregar",
-                        tint = mintGreen
+                        tint = if (canAddCv) mintGreen else Color.Gray
                     )
                 }
 
-                // ——— LISTA DE CVs: cada tarjeta es clickeable para abrir popup de detalles ———
-                cvs.forEach { cv ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                selectedCv = cv
-                                showDetailsDialog = true
-                            }
-                    ) {
-                        CVCard(
-                            fileName = cv.name,
-                            filePath = cv.file,
-                            status = true,
-                            onDelete = {
-                                token?.let { t ->
-                                    studentViewModel.deleteCv(t, cv.idCv)
+                if (!canAddCv) {
+                    Text(
+                        text = "Has alcanzado el máximo de CVs (3)",
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
+
+                // ——— LISTA DE CVs SCROLLEABLE ———
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    items(cvs) { cv ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    selectedCv = cv
+                                    showDetailsDialog = true
                                 }
-                            },
-                            onStatusChange = { /* … */ }
-                        )
+                        ) {
+                            CVCard(
+                                fileName = cv.name,
+                                filePath = cv.file,
+                                status = true,
+                                onDelete = {
+                                    token?.let { t ->
+                                        studentViewModel.deleteCv(t, cv.idCv)
+                                    }
+                                },
+                                onStatusChange = { /* … */ }
+                            )
+                        }
                     }
                 }
             }
@@ -250,12 +275,14 @@ fun EditUCVScreen(
                 },
                 confirmButton = {
                     TextButton(onClick = {
-                        // Llamar al ViewModel para crear/registrar el CV con nombre y link
                         if (!newCvName.isBlank() && !newCvLink.isBlank() && !token.isNullOrBlank()) {
-                            // Suponiendo que StudentViewModel tenga un método createCv(token, studentId, name, link)
                             studentId?.let { idEst ->
-                              //  studentViewModel.createCv(token!!, idEst, newCvName, newCvLink)
-                                // Después de crear, recargar lista
+                                studentViewModel.createCv(
+                                    token = token!!,
+                                    name = newCvName,
+                                    file = newCvLink,
+                                    studentId = idEst
+                                )
                                 studentViewModel.fetchCvLista(token!!)
                             }
                         }
@@ -320,22 +347,6 @@ fun EditUCVScreen(
     }
 }
 
-// Helper para extraer nombre de un URI; se mantiene igual
-private fun getFileNameFromUri(context: Context, uri: Uri): String? {
-    var name: String? = null
-    val cursor = context.contentResolver.query(uri, null, null, null, null)
-    cursor?.use {
-        if (it.moveToFirst()) {
-            val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            if (index >= 0) {
-                name = it.getString(index)
-            }
-        }
-    }
-    return name
-}
-
-// CVCard se deja intacto, solo usa los parámetros pasados arriba
 @Composable
 fun CVCard(
     fileName: String,
@@ -371,18 +382,15 @@ fun CVCard(
                             Log.e("CVCard", "Archivo no encontrado: $filePath")
                             return@clickable
                         }
-
                         val uri = FileProvider.getUriForFile(
                             context,
                             "${context.packageName}.fileprovider",
                             file
                         )
-
                         val intent = Intent(Intent.ACTION_VIEW).apply {
                             setDataAndType(uri, "application/pdf")
                             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         }
-
                         try {
                             context.startActivity(intent)
                         } catch (e: Exception) {
@@ -402,7 +410,6 @@ fun CVCard(
                     color = Color.Black
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-//
             }
 
             Icon(

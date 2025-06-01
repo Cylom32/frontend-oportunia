@@ -2,6 +2,7 @@ package com.example.oportunia.data.remote.api
 
 import com.example.oportunia.data.remote.dto.StudentDTO
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
+import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
 //import com.example.oportunia.data.remote.dto.StudentWithoutIdDTO
 import retrofit2.Response
@@ -59,6 +60,12 @@ interface StudentsService {
     suspend fun deleteCvById(
         @Header("Authorization") token: String,
         @Path("cv_id") cvId: Int
+    ): Response<Unit>
+
+    @POST("v1/cvs")
+    suspend fun createCv(
+        @Header("Authorization") token: String,
+        @Body cvInput: CVInput
     ): Response<Unit>
 
 
