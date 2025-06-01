@@ -10,6 +10,7 @@ import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
+import com.example.oportunia.domain.model.SocialNetwork
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.example.oportunia.domain.repository.CompanyRepository
@@ -81,6 +82,7 @@ class CompanyViewModel @Inject constructor(
 
     private val _companyName = MutableStateFlow<String?>(null)
     val companyName: StateFlow<String?> = _companyName
+
     fun fetchCompanyWithNetworks(idCompany: Int) = viewModelScope.launch {
         repository.findCompanyWithNetworks(idCompany)
             .onSuccess { dto ->
@@ -150,14 +152,21 @@ class CompanyViewModel @Inject constructor(
                 _companyPublications.value = publications
                 _publicationsError.value = null
 
+                // Imprimir cada publicación en el log
+                publications.forEach { pub ->
+                    Log.d("CompanyVM", "Publication fetched: $pub")
+                }
 
+                // Imprimir el arreglo completo en JSON
                 val json = Gson().toJson(publications)
-                Log.d("CompanyVM", json)
+                Log.d("CompanyVM", "Publications JSON: $json")
             }
             .onFailure { ex ->
                 _publicationsError.value = ex.message
+                Log.e("CompanyVM", "Error fetching publications: ${ex.message}")
             }
     }
+
 
 
 ///////////////////////////////  -------------  para obtener las publicaciones de la compañia segund id   --------  ///////////////////////
@@ -268,6 +277,163 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
 
 
 ///////////////////////////////  -------------  ENVIARRRRR MENSAJEEEEEEEEEEEEEE   --------  ///////////////////////
+
+
+
+///////////////////////////////  -------------  PARA BUSCAR LOS DATOS DE LA COMPAÑIA POR ID DE USER   --------  ///////////////////////
+
+
+    private val _userIdC = MutableStateFlow<Int?>(null)
+    val userIdC: StateFlow<Int?> = _userIdC
+
+    private val _companyIdC = MutableStateFlow<Int?>(null)
+    val companyIdC: StateFlow<Int?> = _companyIdC
+
+    private val _companyNameC = MutableStateFlow<String?>(null)
+    val companyNameC: StateFlow<String?> = _companyNameC
+
+    private val _companyDescriptionC = MutableStateFlow<String?>(null)
+    val companyDescriptionC: StateFlow<String?> = _companyDescriptionC
+
+    fun fetchCompanyByUserC(userId: Int) = viewModelScope.launch {
+        _userIdC.value = userId
+
+        repository.findCompanyByUser(userId)
+            .onSuccess { resp ->
+                _companyIdC.value = resp.idCompany
+                _companyNameC.value = resp.companyName
+                _companyDescriptionC.value = resp.companyDescription
+                Log.d(
+                    "CompanyViewModel",
+                    "Compañía obtenida correctamente → userIdC=$userId, companyIdC=${resp.idCompany}, companyNameC=${resp.companyName}, companyDescriptionC=${resp.companyDescription}"
+                )
+            }
+            .onFailure { ex ->
+                Log.e("CompanyViewModel", "Error al obtener compañía por usuario: ${ex.message}", ex)
+            }
+    }
+
+
+
+
+
+///////////////////////////////  -------------  PARA BUSCAR LOS DATOS DE LA COMPAÑIA POR ID DE USER   --------  ///////////////////////
+
+
+
+
+
+///////////////////////////////  -------------  OBTENER TODA LA INFO DE LA COMPAÑIA POR ID DE COMPAÑIA   --------  ///////////////////////
+
+
+    private val _companyWithNetworksk = MutableStateFlow<CompanyWithNetworks?>(null)
+    val companyWithNetworksk: StateFlow<CompanyWithNetworks?> = _companyWithNetworksk
+
+    private val _companyNamek = MutableStateFlow<String?>(null)
+    val companyNamek: StateFlow<String?> = _companyNamek
+
+    private val _companyDescriptionk = MutableStateFlow<String?>(null)
+    val companyDescriptionk: StateFlow<String?> = _companyDescriptionk
+
+    private val _socialNetworksk = MutableStateFlow<List<SocialNetwork>>(emptyList())
+    val socialNetworksk: StateFlow<List<SocialNetwork>> = _socialNetworksk
+
+    fun fetchCompanyWithNetworksk(idCompany: Int) = viewModelScope.launch {
+        repository.findCompanyWithNetworks(idCompany)
+            .onSuccess { dto ->
+                _companyWithNetworksk.value = dto
+                _companyNamek.value = dto.companyName
+                _companyDescriptionk.value = dto.companyDescription
+                _socialNetworksk.value = dto.socialNetworks
+
+                Log.d(
+                    "CompanyVM",
+                    "CompanyWithNetworksk → " +
+                            "id=${dto.idCompany}, " +
+                            "name='${dto.companyName}', " +
+                            "description='${dto.companyDescription}'"
+                )
+                dto.socialNetworks.forEach { sn ->
+                    Log.d(
+                        "CompanyVM",
+                        "  • SocialNetworkk → " +
+                                "id=${sn.idSocialNetwork}, " +
+                                "link='${sn.link}'"
+                    )
+                }
+            }
+            .onFailure { ex ->
+                Log.e("CompanyVM", "Error cargando redes socialesk", ex)
+            }
+    }
+
+
+    private val _tokenC = MutableStateFlow<String?>(null)
+    val tokenC: StateFlow<String?> = _tokenC
+
+    fun setTokenC(token: String) {
+        _tokenC.value = token
+    }
+
+
+///////////////////////////////  -------------  OBTENER TODA LA INFO DE LA COMPAÑIA POR ID DE COMPAÑIA   --------  ///////////////////////
+
+
+
+///////////////////////////////  -------------  OBTENER TODAS LAS REDES DE LA COMPAÑIA POR ID DE COMPAÑIA   --------  ///////////////////////
+
+    private val _socialNetworksC = MutableStateFlow<List<SocialNetwork>>(emptyList())
+    val socialNetworksC: StateFlow<List<SocialNetwork>> = _socialNetworksC
+
+    fun fetchCompanySocialNetworksC(idCompany: Int) = viewModelScope.launch {
+        repository.findCompanyWithNetworks(idCompany)
+            .onSuccess { dto ->
+                _socialNetworksC.value = dto.socialNetworks
+            }
+            .onFailure { /* manejar error si es necesario */ }
+    }
+
+
+///////////////////////////////  -------------  OBTENER TODAS LAS REDES DE LA COMPAÑIA POR ID DE COMPAÑIA   --------  ///////////////////////
+
+
+
+///////////////////////////////  -------------  para sacar la imagen y email de usuario company --------  ///////////////////////
+
+
+
+    private val _emailShow = MutableStateFlow<String?>(null)
+    val emailShow: StateFlow<String?> = _emailShow
+
+    private val _imgShow = MutableStateFlow<String?>(null)
+    val imgShow: StateFlow<String?> = _imgShow
+
+    fun fetchUserCompanyById() {
+        val token = _tokenC.value.orEmpty()
+        val userIdCompany = _userIdC.value
+
+        if (!token.isNullOrEmpty() && userIdCompany != null) {
+            viewModelScope.launch {
+                repository.findUserCompanyById(token, userIdCompany)
+                    .onSuccess { userCompany ->
+                        _emailShow.value = userCompany.email
+                        _imgShow.value = userCompany.img
+
+                        Log.d("ViewModel", "✅ Email guardado: ${_emailShow.value}")
+                        Log.d("ViewModel", "✅ Imagen guardada: ${_imgShow.value}")
+                    }
+                    .onFailure { error ->
+                        Log.e("ViewModel", "❌ Error obteniendo datos: ${error.message}")
+                    }
+            }
+        } else {
+            Log.e("ViewModel", "❌ Token o ID de usuario no disponibles.")
+        }
+    }
+
+///////////////////////////////  -------------  para sacar la imagen y email de usuario company --------  ///////////////////////
+
+
 
 
 

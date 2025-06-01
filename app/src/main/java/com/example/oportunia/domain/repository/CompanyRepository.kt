@@ -1,6 +1,7 @@
 package com.example.oportunia.domain.repository
 
 import com.example.oportunia.data.remote.dto.CVListResponse
+import com.example.oportunia.data.remote.dto.CompanyResponseU
 import com.example.oportunia.data.remote.dto.CompanyWithoutIdDTO
 import com.example.oportunia.data.remote.dto.InboxInput
 import com.example.oportunia.data.remote.dto.InboxResult
@@ -11,6 +12,7 @@ import com.example.oportunia.domain.model.Company
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseS
+import com.example.oportunia.domain.model.UserResponseCompany
 
 interface CompanyRepository {
     suspend fun findAllCompanies(): Result<List<Company>>
@@ -50,6 +52,17 @@ interface CompanyRepository {
         token: String,
         studentId: Int
     ): Result<List<MessageResponseS>>
+
+
+    suspend fun findCompanyByUser(userId: Int): Result<CompanyResponseU>
+
+
+    suspend fun findSocialNetworksByCompany(companyId: Int): Result<List<com.example.oportunia.domain.model.SocialNetwork>>
+
+
+    suspend fun findUserCompanyById(token: String, userIdCompany: Int): Result<UserResponseCompany>
+
+
 
 //    suspend fun saveCompanyNoId(dto: CompanyWithoutIdDTO): Result<Company>
 //    suspend fun insertCompany(company: Company): Result<Unit>

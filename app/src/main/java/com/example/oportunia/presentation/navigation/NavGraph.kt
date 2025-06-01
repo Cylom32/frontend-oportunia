@@ -9,8 +9,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.oportunia.presentation.ui.screens.CVScreen
+import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenForCompany
 import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenS
 import com.example.oportunia.presentation.ui.screens.EditUCVScreen
+import com.example.oportunia.presentation.ui.screens.GridPublicationsCompany
 import com.example.oportunia.presentation.ui.screens.GridPublicationsScreenS
 import com.example.oportunia.presentation.ui.screens.HomeScreen
 import com.example.oportunia.presentation.ui.screens.HomeScreenS
@@ -46,7 +48,7 @@ fun NavGraph(
         startDestination = NavRoutes.Log.ROUTE
     ) {
 
-        composable(NavRoutes.Log.ROUTE) {
+        composable(NavRoutes.GridPublicationsScreenS.ROUTE) {
             GridPublicationsScreenS(
                 navController = navController,
                 studentViewModel = studentViewModel,
@@ -58,9 +60,29 @@ fun NavGraph(
 
         composable(NavRoutes.Log.ROUTE) {
             LogScreen(
+                navController,
+                usersViewModel,
+                studentViewModel,
+                companyViewModel
+            )
+        }
+
+        composable(NavRoutes.GridPublicationsCompany.ROUTE) {
+            GridPublicationsCompany(
                 navController = navController,
+                studentViewModel = studentViewModel,
                 usersViewModel = usersViewModel,
-                studentViewModel
+                companyViewModel = companyViewModel
+            )
+        }
+
+        composable(NavRoutes.CompanyInfoScreenForCompany.ROUTE) {
+            CompanyInfoScreenForCompany(
+                navController,
+                usersViewModel,
+                studentViewModel,
+                companyViewModel
+
             )
         }
 

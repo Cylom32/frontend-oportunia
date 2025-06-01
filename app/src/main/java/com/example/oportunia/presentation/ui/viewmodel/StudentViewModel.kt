@@ -106,7 +106,14 @@ class StudentViewModel @Inject constructor(
 
 
     /** Obtiene y expone el Student del userId dado */
-    fun fetchStudentByUserId(token: String, userId: Int) {
+    // StudentViewModel.kt
+
+// 1) Agrega un callback onResult al método
+    fun fetchStudentByUserId(
+        token: String,
+        userId: Int,
+        onResult: (Boolean) -> Unit
+    ) {
         Log.d("StudentVM", "▶️ Iniciando fetchStudentByUserId con token=$token, userId=$userId")
         viewModelScope.launch {
             _studentState.value = StudentState.Loading
@@ -114,25 +121,23 @@ class StudentViewModel @Inject constructor(
             repository.findStudentByUserId(token, userId)
                 .onSuccess { student ->
                     Log.d("StudentVM", "✅ Respuesta recibida: $student")
-                    // 3) Guardar el id en la variable privada
                     studentId = student.idStudent
                     Log.d("StudentVM", "→ studentId privado asignado: $studentId")
-
-                    // 4) Empujar el mismo valor al StateFlow
                     _studentIdd.value = student.idStudent
                     Log.d("StudentVM", "→ _studentIdd emitido: ${_studentIdd.value}")
-
-                    // Exponer el student completo
                     _selectedStudent.value = student
                     _studentState.value = StudentState.Success(student)
                     Log.d("StudentVM", "🎉 Estado: Success con student=$student (idStudent=${student.idStudent})")
+                    onResult(true) // sí encontró al estudiante
                 }
                 .onFailure { ex ->
                     _studentState.value = StudentState.Error(ex.message ?: "Error al obtener estudiante")
                     Log.e("StudentVM", "❌ Error al obtener estudiante userId=$userId → ${ex.message}", ex)
+                    onResult(false) // no encontró al estudiante
                 }
         }
     }
+
 
     ////////// --------------------------------------        PARA OBTENER EL ID DEL ESTUDIANTE        -------------------------------------- //////////
 

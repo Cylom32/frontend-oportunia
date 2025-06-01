@@ -4,6 +4,7 @@ import com.example.oportunia.data.remote.api.CompaniesService
 import com.example.oportunia.data.remote.dto.*
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseS
+import com.example.oportunia.domain.model.UserResponseCompany
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -89,5 +90,19 @@ class CompaniesRemoteDataSource @Inject constructor(
         studentId: Int
     ): Result<List<MessageResponseS>> =
         safeApiCall { service.getMessagesByStudent(token, studentId) }
+
+
+    suspend fun findCompanyByUser(userId: Int): Result<CompanyResponseU> =
+        safeApiCall { service.getCompanyByUser(userId) }
+
+
+    suspend fun findSocialNetworksByCompany(companyId: Int): Result<List<com.example.oportunia.domain.model.SocialNetwork>> =
+        safeApiCall { service.getSocialNetworksByCompany(companyId) }
+
+    suspend fun findUserCompanyById(token: String, userIdCompany: Int): Result<UserResponseCompany> =
+        safeApiCall { service.getUserCompanyById(token, userIdCompany) }
+
+
+
 
 }

@@ -88,5 +88,14 @@ sealed class NavRoutes {
         const val ROUTE = "registerCredentialsScreen"
     }
 
+    data object CompanyInfoScreenForCompany : NavRoutes() {
+        const val ROUTE = "companyInfoScreenForCompany"
+    }
+
+    data object GridPublicationsCompany : NavRoutes() {
+        const val ROUTE = "gridPublicationsCompany"
+
+    }
+
 
 }

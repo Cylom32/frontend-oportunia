@@ -33,14 +33,18 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.PasswordLabel
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel,
-    studentViewModel: StudentViewModel
+fun LogScreen(
+    navController: NavHostController,
+    usersViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel,
+    companyViewModel: CompanyViewModel
 ) {
 
     val token by usersViewModel.token.collectAsState()
@@ -185,28 +189,49 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel,
                                 .clickable {
 
 
-
-
-
                                     coroutineScope.launch {
+                                        // En tu Composable o función donde haces login:
+
                                         if (email.isNotEmpty() && password.isNotEmpty()) {
                                             usersViewModel.login(email, password) { isValid ->
                                                 if (isValid) {
                                                     usersViewModel.fetchUserByEmail(email) { userId ->
                                                         if (userId != null) {
-                                                            val token = usersViewModel.token.value.orEmpty()
-                                                            Log.d("LoginDebug", "llamando a student viewmodel: $token")
-                                                            studentViewModel.fetchStudentByUserId(token, userId)
+                                                            val token =
+                                                                usersViewModel.token.value.orEmpty()
+                                                            Log.d("LoginDebug", "Token actual: $token")
+                                                            Log.d(
+                                                                "LoginDebug",
+                                                                "llamando a student viewmodel: $token"
+                                                            )
+                                                            studentViewModel.fetchStudentByUserId(
+                                                                token,
+                                                                userId
+                                                            ) { found ->
+                                                                if (found) {
+                                                                    // Si sí encontró al estudiante, navega a HomeScreenS
+                                                                    navController.navigate(NavRoutes.HomeScreenS.ROUTE)
+                                                                } else {
 
-                                                            //// aqui decidimo si hacemos si vamos al scroll para estudiantes o solo a info para empresas
-                                                            Log.d("LoginDebug", "llamando a student viewmodel: $token")
-                                                            navController.navigate(NavRoutes.HomeScreenS.ROUTE)
+                                                                    companyViewModel.setTokenC(token)
+                                                                    companyViewModel.fetchCompanyByUserC(
+                                                                        userId
+                                                                    )
+                                                                    companyViewModel.fetchUserCompanyById()
+
+                                                                    navController.navigate(NavRoutes.CompanyInfoScreenForCompany.ROUTE)
+
+                                                                }
+                                                            }
                                                         } else {
                                                             showAlert = true
                                                         }
                                                     }
                                                 } else {
-                                                    Log.d("LoginDebug", "Credenciales inválidas para $email")
+                                                    Log.d(
+                                                        "LoginDebug",
+                                                        "Credenciales inválidas para $email"
+                                                    )
                                                     showAlert = true
                                                 }
                                             }
@@ -215,7 +240,6 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel,
                                             showAlert = true
                                         }
                                     }
-
 
 
                                 },

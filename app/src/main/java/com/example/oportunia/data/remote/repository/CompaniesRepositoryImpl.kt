@@ -4,6 +4,7 @@ package com.example.oportunia.data.remote.repository
 import com.example.oportunia.data.mapper.CompanyMapper
 import com.example.oportunia.data.remote.CompaniesRemoteDataSource
 import com.example.oportunia.data.remote.dto.CVListResponse
+import com.example.oportunia.data.remote.dto.CompanyResponseU
 import com.example.oportunia.data.remote.dto.CompanyWithoutIdDTO
 import com.example.oportunia.data.remote.dto.InboxInput
 import com.example.oportunia.data.remote.dto.InboxResult
@@ -14,6 +15,8 @@ import com.example.oportunia.domain.model.Company
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseS
+import com.example.oportunia.domain.model.SocialNetwork
+import com.example.oportunia.domain.model.UserResponseCompany
 import com.example.oportunia.domain.repository.CompanyRepository
 import java.net.UnknownHostException
 import javax.inject.Inject
@@ -125,6 +128,39 @@ class CompaniesRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(Exception("Error fetching messages by student id=$studentId: ${e.message}"))
         }
+
+
+
+    // CompaniesRepositoryImpl.kt
+    override suspend fun findCompanyByUser(userId: Int): Result<CompanyResponseU> {
+        return try {
+            remoteDataSource.findCompanyByUser(userId)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error fetching company by user id=$userId: ${e.message}"))
+        }
+    }
+
+
+
+    override suspend fun findSocialNetworksByCompany(companyId: Int): Result<List<SocialNetwork>> {
+        return try {
+            remoteDataSource.findSocialNetworksByCompany(companyId)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error fetching social networks for company id=$companyId: ${e.message}"))
+        }
+    }
+
+    override suspend fun findUserCompanyById(token: String, userIdCompany: Int): Result<UserResponseCompany> {
+        return try {
+            remoteDataSource.findUserCompanyById(token, userIdCompany)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error fetching user company id=$userIdCompany: ${e.message}"))
+        }
+    }
+
+
+
+
 
 }
 

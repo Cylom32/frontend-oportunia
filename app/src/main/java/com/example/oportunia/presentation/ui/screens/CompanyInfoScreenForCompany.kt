@@ -107,23 +107,43 @@ import coil.compose.AsyncImage
 import com.example.oportunia.presentation.ui.screens.BottomNavigationBar
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 
+
+
+
+
+
+
+
 @Composable
-fun CompanyInfoScreenS(
+fun CompanyInfoScreenForCompany(
     navController: NavHostController,
     usersViewModel: UsersViewModel,
     studentViewModel: StudentViewModel,
     companyViewModel: CompanyViewModel
 ) {
+    val companyId by companyViewModel.companyIdC.collectAsState()
+    val imgUrl by companyViewModel.imgShow.collectAsState(initial = null)
 
+    // Cuando companyId cambie (por ejemplo, se establezca en la VM), dispara la carga
+    LaunchedEffect(companyId) {
+        companyId?.let { id ->
+            companyViewModel.fetchCompanyWithNetworksk(id)
+        }
+    }
 
-    val token by usersViewModel
-        .token
+    val token by usersViewModel.token.collectAsState(initial = null)
+    val company by companyViewModel.companyWithNetworksk.collectAsState()
+    val companyName: String = companyViewModel.companyNamek
         .collectAsState(initial = null)
-    val companyId by companyViewModel
-        .selectedCompanyId
-        .collectAsState(initial = null)
+        .value
+        ?: ""
 
-    val company by companyViewModel.companyWithNetworks.collectAsState()
+    val companyDescription: String = companyViewModel.companyDescriptionk
+        .collectAsState(initial = null)
+        .value
+        ?: ""
+    val socialNetworks by companyViewModel.socialNetworksk.collectAsState(initial = emptyList())
+
     Scaffold(
         bottomBar = {
             BottomNavigationBar(
@@ -148,7 +168,6 @@ fun CompanyInfoScreenS(
                     .padding(bottom = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Header degradado
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -164,39 +183,20 @@ fun CompanyInfoScreenS(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    val companyName by companyViewModel.companyName.collectAsState()
-
-
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(vertical = 8.dp)
                     ) {
                         Text(
-                            text = companyName.orEmpty(),
+                            text = companyName,
                             color = walterWhite,
                             fontSize = 29.sp
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Button(
                             onClick = {
-
-
                                 val authToken = token ?: return@Button
-                                val id = companyId ?: return@Button
-
-
-                                companyViewModel.fetchPublicationsByCompany(
-                                    authToken = authToken,
-                                    companyIdParam = id
-                                )
-
-
-                               Log.d("antes de viajar",id.toString())
-
-                               navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
-
-                                Log.d("despues de viajar",id.toString())
-
+                                navController.navigate(NavRoutes.GridPublicationsCompany.ROUTE)
 
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),
@@ -204,14 +204,11 @@ fun CompanyInfoScreenS(
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
                         ) {
                             Text(text = stringResource(R.string.etiqueta_pasantias), color = Color.Black)
-
-
                         }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(25.dp))
-
 
                 Card(
                     modifier = Modifier
@@ -224,90 +221,66 @@ fun CompanyInfoScreenS(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(16.dp),
-                        verticalArrangement = Arrangement.SpaceBetween
+                        verticalArrangement = Arrangement.Top
                     ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            AsyncImage(
+                                model = imgUrl ?: "",
+                                contentDescription = "Company logo",
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                            Spacer(modifier = Modifier.width(16.dp))
+                            Text(
+                                text = companyName,
+                                style = MaterialTheme.typography.titleLarge
+                            )
+                        }
 
-                        Column {
-                            company?.let {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
+                        Spacer(modifier = Modifier.height(12.dp))
 
-                                    val logoUrl by companyViewModel.companyLogo.collectAsState()
+                        Text(
+                            text = companyDescription,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
 
-                                    if (!logoUrl.isNullOrEmpty()) {
-                                        AsyncImage(
-                                            model = logoUrl,
-                                            contentDescription = "Logo empresa",
-                                            modifier = Modifier
-                                                .size(80.dp)
-                                                .clip(CircleShape),
-                                            contentScale = ContentScale.Crop
-                                        )
-                                    } else {
+                        Spacer(modifier = Modifier.height(16.dp))
 
-                                        Image(
-                                            painter = painterResource(id = R.drawable.shakehands1062821),
-                                            contentDescription = "Logo placeholder",
-                                            modifier = Modifier.size(80.dp)
-                                        )
+                        val uriHandler = LocalUriHandler.current
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp),
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            socialNetworks.forEach { sn ->
+                                val host = Uri.parse(sn.link)
+                                    .host
+                                    .orEmpty()
+                                val domain = host
+                                    .split('.')
+                                    .let { parts ->
+                                        if (parts.size >= 2) parts[parts.size - 2] else parts.first()
                                     }
-                                    Spacer(modifier = Modifier.width(16.dp))
-                                    Text(
-                                        text = it.companyName,
-                                        style = MaterialTheme.typography.titleLarge
-                                    )
-
-                                }
-
-                                Spacer(modifier = Modifier.height(12.dp))
-
-
+                                val label = domain.replaceFirstChar { it.uppercase() }
 
                                 Text(
-                                    text = it.companyDescription ?:"",
-                                    style = MaterialTheme.typography.bodyMedium
+                                    text = label,
+                                    modifier = Modifier
+                                        .padding(end = 12.dp)
+                                        .clickable { uriHandler.openUri(sn.link) },
+                                    style = MaterialTheme.typography.bodyMedium.copy(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        textDecoration = TextDecoration.Underline
+                                    )
                                 )
                             }
-
-
-                            val uriHandler = LocalUriHandler.current
-
-
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 16.dp),
-                                horizontalArrangement = Arrangement.Start
-                            ) {
-                                company?.socialNetworks
-                                    ?.forEach { sn ->
-                                        // Extrae host (“www.facebook.com” → “facebook”)
-                                        val host = Uri.parse(sn.link)
-                                            .host
-                                            .orEmpty()
-                                        val domain = host
-                                            .split('.')
-                                            .let { parts ->
-                                                if (parts.size >= 2) parts[parts.size - 2] else parts.first()
-                                            }
-                                        val label = domain.replaceFirstChar { it.uppercase() }
-
-                                        Text(
-                                            text = label,
-                                            modifier = Modifier
-                                                .padding(end = 12.dp)
-                                                .clickable { uriHandler.openUri(sn.link) },
-                                            style = MaterialTheme.typography.bodyMedium.copy(
-                                                color = MaterialTheme.colorScheme.primary,
-                                                textDecoration = TextDecoration.Underline
-                                            )
-                                        )
-                                    }
-                            }
-
                         }
                     }
                 }

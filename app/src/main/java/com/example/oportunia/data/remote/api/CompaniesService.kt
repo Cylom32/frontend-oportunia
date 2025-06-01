@@ -3,6 +3,7 @@ package com.example.oportunia.data.remote.api
 import com.example.oportunia.data.remote.dto.*
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseS
+import com.example.oportunia.domain.model.UserResponseCompany
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -66,6 +67,21 @@ interface CompaniesService {
         @Path("student_id") studentId: Int
     ): Response<List<MessageResponseS>>
 
+
+    // CompaniesService.kt
+    @GET("v1/companies/user/{userId}")
+    suspend fun getCompanyByUser(@Path("userId") userId: Int): Response<CompanyResponseU>
+
+    @GET("v1/social_networks/company/{companyId}")
+    suspend fun getSocialNetworksByCompany(
+        @Path("companyId") companyId: Int
+    ): Response<List<com.example.oportunia.domain.model.SocialNetwork>>
+
+    @GET("v1/users/{user_id_company}")
+    suspend fun getUserCompanyById(
+        @Header("Authorization") token: String,
+        @Path("user_id_company") userIdCompany: Int
+    ): Response<UserResponseCompany>
 
 //    @POST("v1/companies")
 //    suspend fun createCompany(
