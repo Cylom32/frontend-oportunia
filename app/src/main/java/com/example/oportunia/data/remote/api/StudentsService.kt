@@ -4,6 +4,7 @@ import com.example.oportunia.data.remote.dto.StudentDTO
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
 import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
+import com.example.oportunia.domain.model.StudentUpdateInput
 //import com.example.oportunia.data.remote.dto.StudentWithoutIdDTO
 import retrofit2.Response
 import retrofit2.http.Body
@@ -66,6 +67,13 @@ interface StudentsService {
     suspend fun createCv(
         @Header("Authorization") token: String,
         @Body cvInput: CVInput
+    ): Response<Unit>
+
+    @PUT("v1/students/{id}")
+    suspend fun updateStudent(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body student: StudentUpdateInput
     ): Response<Unit>
 
 

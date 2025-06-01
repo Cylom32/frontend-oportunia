@@ -79,8 +79,6 @@ import java.io.File
 
 
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StudentInformationSettings(
     navController: NavHostController,
@@ -88,6 +86,11 @@ fun StudentInformationSettings(
     studentViewModel: StudentViewModel,
     companyViewModel: CompanyViewModel
 ) {
+    // 0) Collectar token, userId y studentIdd
+    val token by usersViewModel.token.collectAsState(initial = null)
+    val userId by usersViewModel.userId.collectAsState(initial = null)
+    val studentIdd by studentViewModel.studentIdd.collectAsState(initial = null)
+
     // 1) Estados para los campos de texto
     var firstName by remember { mutableStateOf("") }
     var lastName1 by remember { mutableStateOf("") }
@@ -126,8 +129,10 @@ fun StudentInformationSettings(
                     .height(150.dp)
                     .fillMaxWidth()
                     .shadow(8.dp, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
-                    .gradientBackgroundBlue(
-                        gradientColors = gradientColorsBlue,
+                    .background(
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(Color(0xFF42A5F5), Color(0xFF1976D2))
+                        ),
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                     ),
                 contentAlignment = Alignment.Center
@@ -189,26 +194,24 @@ fun StudentInformationSettings(
                         value = selectedUniversityName,
                         onValueChange = { /* readOnly */ },
                         readOnly = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black),
+                        textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
                         label = { Text(stringResource(R.string.UniversityTitle), color = Color.Black) },
                         trailingIcon = {
-                            IconButton(onClick = {
-                                expanded = !expanded
-                                if (expanded) {
-                                    usersViewModel.fetchUniversities()
-                                }
-                            }) {
-                                if (expanded) {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowDropUp,
-                                        contentDescription = "Cerrar menú"
-                                    )
-                                } else {
-                                    Icon(
-                                        imageVector = Icons.Filled.ArrowDropDown,
-                                        contentDescription = "Abrir menú"
-                                    )
-                                }
+                            if (expanded) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowDropUp,
+                                    contentDescription = "Cerrar menú",
+                                    modifier = Modifier.clickable { expanded = false }
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowDropDown,
+                                    contentDescription = "Abrir menú",
+                                    modifier = Modifier.clickable {
+                                        expanded = true
+                                        usersViewModel.fetchUniversities()
+                                    }
+                                )
                             }
                         },
                         modifier = Modifier
@@ -246,7 +249,7 @@ fun StudentInformationSettings(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 24.dp) // un margen inferior para separarlos del borde
+                        .padding(bottom = 24.dp)
                 ) {
                     // Botón CANCELAR (rojo)
                     Box(
@@ -276,19 +279,35 @@ fun StudentInformationSettings(
                             .shadow(10.dp, RoundedCornerShape(24.dp))
                             .background(Color(0xFFAAF0D1), RoundedCornerShape(24.dp))
                             .clickable {
+
+                                Log.d(
+                                    "StudentInfoSettings",
+                                    "Guardar pulsado con -> firstName: $firstName, lastName1: $lastName1, lastName2: $lastName2, universityId: $idSelectedU, userId: $userId, studentId: $studentIdd, token: $token"
+                                )
+
+
                                 if (
                                     firstName.isNotBlank() &&
                                     lastName1.isNotBlank() &&
                                     lastName2.isNotBlank() &&
                                     selectedUniversityName.isNotBlank() &&
-                                    idSelectedU != 0
+                                    idSelectedU != 0 &&
+                                    !token.isNullOrEmpty() &&
+                                    userId != null &&
+                                    studentIdd != null
                                 ) {
-                                    Log.d(
-                                        "StudentInfoSettings",
-                                        "Datos válidos: $firstName $lastName1 $lastName2, Universidad ID=$idSelectedU"
+                                    // Llamar a updateStudent en StudentViewModel
+                                    studentViewModel.updateStudent(
+                                        token = token!!,
+                                        studentId = studentIdd!!,
+                                        rawFirstName = firstName,
+                                        rawLastName1 = lastName1,
+                                        rawLastName2 = lastName2,
+                                        universityId = idSelectedU,
+                                        userId = userId!!
                                     )
-                                    // Aquí podrías llamar a StudentViewModel.createStudentWithoutId(...)
-                                    // navController.navigate(NavRoutes.NextScreen.ROUTE)
+                                    // Luego, por ejemplo, navegar atrás
+                                    navController.popBackStack()
                                 } else {
                                     showAlert = true
                                 }

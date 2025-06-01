@@ -6,6 +6,7 @@ import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
 import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
 import com.example.oportunia.domain.model.Student
+import com.example.oportunia.domain.model.StudentUpdateInput
 import com.example.oportunia.domain.repository.StudentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -105,6 +106,18 @@ class StudentRepositoryImpl @Inject constructor(
     } catch (e: Exception) {
         Result.failure(Exception("Error uploading CV: ${e.message}"))
     }
+
+    override suspend fun updateStudent(
+        token: String,
+        id: Int,
+        studentUpdate: StudentUpdateInput
+    ): Result<Unit> =
+        try {
+            remoteDataSource.updateStudent(token, id, studentUpdate)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error updating student id=$id: ${e.message}"))
+        }
+
 
 
 

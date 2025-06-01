@@ -4,6 +4,7 @@ import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
 import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
 import com.example.oportunia.domain.model.Student
+import com.example.oportunia.domain.model.StudentUpdateInput
 
 /**
  * This interface represents the StudentRepository.
@@ -25,6 +26,13 @@ interface StudentRepository {
     suspend fun deleteCvById(token: String, cvId: Int): Result<Unit>
 
     suspend fun createCv(token: String, cvInput: CVInput): Result<Unit>
+
+    suspend fun updateStudent(
+        token: String,
+        id: Int,
+        studentUpdate: StudentUpdateInput
+    ): Result<Unit>
+
 
 
 

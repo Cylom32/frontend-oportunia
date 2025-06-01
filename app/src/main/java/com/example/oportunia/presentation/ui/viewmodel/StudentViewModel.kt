@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import com.example.oportunia.domain.model.Cv
 import com.example.oportunia.domain.model.MessageResponseS
 import com.example.oportunia.domain.model.Student
+import com.example.oportunia.domain.model.StudentUpdateInput
 import com.example.oportunia.domain.model.UniversityOption
 import com.example.oportunia.domain.repository.CompanyRepository
 import com.example.oportunia.domain.repository.CvRepository
@@ -106,28 +107,29 @@ class StudentViewModel @Inject constructor(
 
     /** Obtiene y expone el Student del userId dado */
     fun fetchStudentByUserId(token: String, userId: Int) {
+        Log.d("StudentVM", "▶️ Iniciando fetchStudentByUserId con token=$token, userId=$userId")
         viewModelScope.launch {
             _studentState.value = StudentState.Loading
+            Log.d("StudentVM", "⏳ Estado: Loading")
             repository.findStudentByUserId(token, userId)
                 .onSuccess { student ->
+                    Log.d("StudentVM", "✅ Respuesta recibida: $student")
                     // 3) Guardar el id en la variable privada
                     studentId = student.idStudent
+                    Log.d("StudentVM", "→ studentId privado asignado: $studentId")
 
                     // 4) Empujar el mismo valor al StateFlow
                     _studentIdd.value = student.idStudent
+                    Log.d("StudentVM", "→ _studentIdd emitido: ${_studentIdd.value}")
 
                     // Exponer el student completo
                     _selectedStudent.value = student
                     _studentState.value = StudentState.Success(student)
-
-                    Log.d(
-                        "StudentVM",
-                        "✅ Estudiante obtenido: $student (idStudent=$studentId)"
-                    )
+                    Log.d("StudentVM", "🎉 Estado: Success con student=$student (idStudent=${student.idStudent})")
                 }
                 .onFailure { ex ->
                     _studentState.value = StudentState.Error(ex.message ?: "Error al obtener estudiante")
-                    Log.e("StudentVM", "❌ Error al obtener estudiante userId=$userId", ex)
+                    Log.e("StudentVM", "❌ Error al obtener estudiante userId=$userId → ${ex.message}", ex)
                 }
         }
     }
@@ -295,6 +297,52 @@ class StudentViewModel @Inject constructor(
 
 
     ////////////---------------------      PARA agregar CV al estudiante ///////////////////////////////////////////////////////////////////
+
+
+    ////////////---------------------      PARA actualizar la info del studiante ///////////////////////////////////////////////////////////////////
+
+    fun updateStudent(
+        token: String,
+        studentId: Int,
+        rawFirstName: String,
+        rawLastName1: String,
+        rawLastName2: String,
+        universityId: Int,
+        userId: Int
+    ) {
+        viewModelScope.launch {
+            // Imprimir parámetros antes de llamar al repositorio
+            Log.d("StudentVM", "→ updateStudent llamado con:")
+            Log.d("StudentVM", "   token = $token")
+            Log.d("StudentVM", "   studentId = $studentId")
+            Log.d("StudentVM", "   firstName = $rawFirstName")
+            Log.d("StudentVM", "   lastName1 = $rawLastName1")
+            Log.d("StudentVM", "   lastName2 = $rawLastName2")
+            Log.d("StudentVM", "   universityId = $universityId")
+            Log.d("StudentVM", "   userId = $userId")
+
+            val updateDto = StudentUpdateInput(
+                firstName    = rawFirstName,
+                lastName1    = rawLastName1,
+                lastName2    = rawLastName2,
+                idUniversity = universityId,
+                idUser       = userId
+            )
+
+            repository.updateStudent(token, studentId, updateDto)
+                .onSuccess {
+              //      Log.d("StudentVM", "✅ Estudiante actualizado: id=$studentId")
+                }
+                .onFailure { ex ->
+                 //   Log.e("StudentVM", "❌ Error al actualizar estudiante id=$studentId", ex)
+                }
+        }
+    }
+
+
+
+
+    ////////////---------------------      PARA actualizar la info del studiante ///////////////////////////////////////////////////////////////////
 
 
 
