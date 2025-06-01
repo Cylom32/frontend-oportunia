@@ -114,4 +114,16 @@
     <string name="estado_no_pagado">No pagado</string>
 
 
+    <!-- RequestScreen -->
+    <string name="etiqueta_archivo_adjunto">Archivo Adjunto</string>
+    <string name="etiqueta_mensaje_adicional">Mensaje Adicional</string>
+    <string name="etiqueta_seleccionar_cv">Seleccionar CV</string>
+    <string name="etiqueta_selecciona_cv">Selecciona un CV</string>
+    <string name="etiqueta_no_hay_cvs">No hay CVs disponibles</string>
+    <string name="etiqueta_escribe_mensaje">Escribe tu mensaje aquí...</string>
+    <string name="etiqueta_exito_mensaje">Éxito</string>
+    <string name="etiqueta_enviado_exitosamente">Enviado exitosamente</string>
+    <string name="etiqueta_ok">OK</string>
+
+
 </resources>

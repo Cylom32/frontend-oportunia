@@ -105,8 +105,9 @@ fun RequestScreen(
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Text(
-                        text = "Archivo Adjunto",
+                        text = stringResource(R.string.etiqueta_archivo_adjunto),
                         style = MaterialTheme.typography.bodyLarge,
+                        color =  Color.Black,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
@@ -121,7 +122,7 @@ fun RequestScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Text(
-                            text = if (selectedCvFile.isBlank()) "Seleccionar CV" else selectedCvFile,
+                            text = if (selectedCvFile.isBlank()) stringResource(R.string.etiqueta_seleccionar_cv) else selectedCvFile,
                             fontSize = (screenWidth.value * 0.045).sp,
                             color = if (cvList.isEmpty()) Color.Gray else Color.Black
                         )
@@ -131,12 +132,12 @@ fun RequestScreen(
                     if (showDialog) {
                         AlertDialog(
                             onDismissRequest = { showDialog = false },
-                            title = { Text(text = "Selecciona un CV") },
+                            title = { Text(text = stringResource(R.string.etiqueta_selecciona_cv)) },
                             text = {
                                 Column {
                                     if (cvList.isEmpty()) {
                                         Text(
-                                            text = "No hay CVs disponibles.",
+                                            text = stringResource(R.string.etiqueta_no_hay_cvs),
                                             fontSize = (screenWidth.value * 0.04).sp
                                         )
                                     } else {
@@ -181,8 +182,9 @@ fun RequestScreen(
                     // ────────────────────────────────────────────────────────────────────────────────
 
                     Text(
-                        text = "Mensaje Adicional",
+                        text = stringResource(R.string.etiqueta_mensaje_adicional),
                         style = MaterialTheme.typography.bodyLarge,
+                        color= Color.Black,//<-- Lo nuevo
                         modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
                     )
 
@@ -202,7 +204,7 @@ fun RequestScreen(
                         ) {
                             if (mensaje.isEmpty()) {
                                 Text(
-                                    text = "Escribe tu mensaje aquí…",
+                                    text = stringResource(R.string.etiqueta_escribe_mensaje),
                                     fontSize = (screenWidth.value * 0.04).sp,
                                     color = Color.Gray
                                 )
@@ -240,7 +242,7 @@ fun RequestScreen(
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            text = "Aplicar",
+                            text = stringResource(R.string.ApplyButtonText),
                             color = Color.White,
                             fontSize = (screenWidth.value * 0.05).sp
                         )
@@ -255,8 +257,8 @@ fun RequestScreen(
                         companyViewModel.clearSendStatus()
                         navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE) // Ajusta la ruta deseada
                     },
-                    title = { Text(text = "Éxito") },
-                    text = { Text(text = "Enviado exitosamente") },
+                    title = { Text(text = stringResource(R.string.etiqueta_exito_mensaje)) },
+                    text = { Text(text = stringResource(R.string.etiqueta_enviado_exitosamente)) },
                     confirmButton = {
                         TextButton(
                             onClick = {
@@ -264,7 +266,7 @@ fun RequestScreen(
                                 navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
                             }
                         ) {
-                            Text("OK")
+                            Text(stringResource(R.string.etiqueta_ok))
                         }
                     }
                 )

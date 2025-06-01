@@ -65,6 +65,15 @@
     <string name="etiqueta_pasantias">Estágios</string>
     <string name="estado_pagado">Pago</string>
     <string name="estado_no_pagado">Não pago</string>
+    <string name="etiqueta_archivo_adjunto">Arquivo Anexo</string>
+    <string name="etiqueta_mensaje_adicional">Mensagem Adicional</string>
+    <string name="etiqueta_seleccionar_cv">Selecionar CV</string>
+    <string name="etiqueta_selecciona_cv">Escolha um CV</string>
+    <string name="etiqueta_no_hay_cvs">Nenhum CV disponível</string>
+    <string name="etiqueta_escribe_mensaje">Escreva sua mensagem aqui...</string>
+    <string name="etiqueta_exito_mensaje">Sucesso</string>
+    <string name="etiqueta_enviado_exitosamente">Enviado com sucesso</string>
+    <string name="etiqueta_ok">OK</string>
 
 
 
