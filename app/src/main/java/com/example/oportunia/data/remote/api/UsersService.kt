@@ -2,10 +2,16 @@ package com.example.oportunia.data.remote.api
 
 
 import com.example.oportunia.data.remote.dto.AreaDTO
+import com.example.oportunia.data.remote.dto.CreateUserCompanyInput
+import com.example.oportunia.data.remote.dto.CreateUserCompanyResponse
+import com.example.oportunia.data.remote.dto.InboxxInput
+import com.example.oportunia.data.remote.dto.InboxxResponse
 import com.example.oportunia.data.remote.dto.LocationDTO
 import com.example.oportunia.data.remote.dto.UserEmailResponse
 import com.example.oportunia.data.remote.dto.UserResponseDTO
 import com.example.oportunia.data.remote.dto.UsersDTO
+import com.example.oportunia.domain.model.CreateCompanyInput
+import com.example.oportunia.domain.model.CreateCompanyResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -47,6 +53,11 @@ interface UsersService {
      */
     @POST("v1/users")
     suspend fun createUser(@Body user: UsersDTO): Response<UserResponseDTO>
+
+    @POST("v1/users")
+    suspend fun createUserCompany(
+        @Body input: CreateUserCompanyInput
+    ): Response<CreateUserCompanyResponse>
 
 
 
@@ -96,6 +107,15 @@ interface UsersService {
     @GET("v1/locations")
     suspend fun getAllLocations(): Response<List<LocationDTO>>
 
+    @POST("v1/companies")
+    suspend fun createCompany(
+        @Body input: CreateCompanyInput
+    ): Response<CreateCompanyResponse>
+
+    @POST("v1/inboxes")
+    suspend fun createInboxx(
+        @Body input: InboxxInput
+    ): Response<InboxxResponse>
 
 
 }

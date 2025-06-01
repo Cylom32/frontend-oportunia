@@ -52,7 +52,9 @@ fun MainScreen(usersViewModel: UsersViewModel, studentViewModel: StudentViewMode
                 currentRoute != NavRoutes.RegisterOption.ROUTE &&
                 currentRoute != NavRoutes.RegisterInformationF.ROUTE &&
                 currentRoute != NavRoutes.RegisterInformationPAndE.ROUTE &&
-                currentRoute != NavRoutes.StudentInformationSettings2.ROUTE
+                currentRoute != NavRoutes.StudentInformationSettings2.ROUTE &&
+                currentRoute != NavRoutes.RegisterInformationCompanyScreen.ROUTE &&
+                currentRoute != NavRoutes.RegisterCredentialsScreen.ROUTE
             ) {
                 BottomNavigationBar(
                     selectedScreen = currentRoute,

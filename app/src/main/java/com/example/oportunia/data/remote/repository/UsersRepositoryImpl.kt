@@ -4,12 +4,18 @@ import com.example.oportunia.data.mapper.UsersMapper
 import com.example.oportunia.data.remote.AuthRemoteDataSource
 import com.example.oportunia.data.remote.UsersRemoteDataSource
 import com.example.oportunia.data.remote.dto.AuthResponseDto
+import com.example.oportunia.data.remote.dto.CreateUserCompanyInput
+import com.example.oportunia.data.remote.dto.CreateUserCompanyResponse
+import com.example.oportunia.data.remote.dto.InboxxInput
+import com.example.oportunia.data.remote.dto.InboxxResponse
 import com.example.oportunia.data.remote.dto.UserEmailResponse
 import com.example.oportunia.data.remote.dto.UserResponseDTO
 import com.example.oportunia.data.remote.dto.UserWhitoutId
 import com.example.oportunia.data.remote.dto.UsersDTO
 import com.example.oportunia.domain.model.Area
 import com.example.oportunia.domain.model.AuthResult
+import com.example.oportunia.domain.model.CreateCompanyInput
+import com.example.oportunia.domain.model.CreateCompanyResponse
 import com.example.oportunia.domain.model.Users
 import com.example.oportunia.domain.repository.UsersRepository
 import kotlinx.coroutines.flow.first
@@ -135,6 +141,22 @@ class UsersRepositoryImpl @Inject constructor(
             Result.failure(Exception("Error al obtener ubicaciones: ${e.message}"))
         }
     }
+
+
+    override suspend fun createUserCompany(
+        input: CreateUserCompanyInput
+    ): Result<CreateUserCompanyResponse> =
+        remoteDataSource.createUserCompany(input)
+
+
+    override suspend fun createCompany(
+        input: CreateCompanyInput
+    ): Result<CreateCompanyResponse> =
+        remoteDataSource.createCompany(input)
+
+
+    override suspend fun createInboxx(input: InboxxInput): Result<InboxxResponse> =
+        remoteDataSource.createInboxx(input)
 
 
 }

@@ -2,12 +2,18 @@ package com.example.oportunia.data.remote
 
 import com.example.oportunia.data.remote.api.UsersService
 import com.example.oportunia.data.remote.dto.AreaDTO
+import com.example.oportunia.data.remote.dto.CreateUserCompanyInput
+import com.example.oportunia.data.remote.dto.CreateUserCompanyResponse
+import com.example.oportunia.data.remote.dto.InboxxInput
+import com.example.oportunia.data.remote.dto.InboxxResponse
 import com.example.oportunia.data.remote.dto.LocationDTO
 import com.example.oportunia.data.remote.dto.UserEmailResponse
 import com.example.oportunia.data.remote.dto.UserResponseDTO
 
 
 import com.example.oportunia.data.remote.dto.UsersDTO
+import com.example.oportunia.domain.model.CreateCompanyInput
+import com.example.oportunia.domain.model.CreateCompanyResponse
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -42,6 +48,11 @@ class UsersRemoteDataSource @Inject constructor(
     suspend fun createUser(userDto: UsersDTO): Result<UserResponseDTO> = safeApiCall {
         usersService.createUser(userDto)
     }
+
+    suspend fun createUserCompany(
+        input: CreateUserCompanyInput
+    ): Result<CreateUserCompanyResponse> =
+        safeApiCall { usersService.createUserCompany(input) }
 
     /**
      * Updates an existing user.
@@ -107,4 +118,16 @@ class UsersRemoteDataSource @Inject constructor(
         usersService.getAllLocations()
 
     }
+
+    suspend fun createCompany(
+        input: CreateCompanyInput
+    ): Result<CreateCompanyResponse> = safeApiCall {
+        usersService.createCompany(input)
+    }
+
+
+    suspend fun createInboxx(input: InboxxInput): Result<InboxxResponse> =
+        safeApiCall { usersService.createInboxx(input) }
+
+
 }

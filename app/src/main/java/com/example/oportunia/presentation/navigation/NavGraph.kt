@@ -18,6 +18,8 @@ import com.example.oportunia.presentation.ui.screens.IntershipScreen
 import com.example.oportunia.presentation.ui.screens.LanguageOptionsScreenSC
 import com.example.oportunia.presentation.ui.screens.LogScreen
 import com.example.oportunia.presentation.ui.screens.NotificationsScreen
+import com.example.oportunia.presentation.ui.screens.RegisterCredentialsScreen
+import com.example.oportunia.presentation.ui.screens.RegisterInformationCompanyScreen
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreen
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenF
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenPAndE
@@ -44,7 +46,7 @@ fun NavGraph(
         startDestination = NavRoutes.Log.ROUTE
     ) {
 
-        composable(NavRoutes.GridPublicationsScreenS.ROUTE) {
+        composable(NavRoutes.Log.ROUTE) {
             GridPublicationsScreenS(
                 navController = navController,
                 studentViewModel = studentViewModel,
@@ -170,6 +172,21 @@ fun NavGraph(
 
         composable(NavRoutes.EditUCVScreen.ROUTE) {
             EditUCVScreen(studentViewModel, usersViewModel)
+        }
+
+
+        composable(NavRoutes.RegisterInformationCompanyScreen.ROUTE) {
+            RegisterInformationCompanyScreen(
+                navController,
+                usersViewModel
+            )
+        }
+
+        composable(NavRoutes.RegisterCredentialsScreen.ROUTE) {
+            RegisterCredentialsScreen(
+                navController,
+                usersViewModel
+            )
         }
 
 

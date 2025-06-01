@@ -138,7 +138,10 @@ fun RegisterOptionScreen(usersViewModel: UsersViewModel, navController: NavHostC
                         .background(
                             color = com.example.oportunia.presentation.ui.theme.walterWhite,
                             shape = RoundedCornerShape(24.dp)
-                        ),
+                        )
+                        .clickable {
+                            navController.navigate(NavRoutes.RegisterInformationCompanyScreen.ROUTE)
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(

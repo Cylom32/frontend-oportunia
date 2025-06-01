@@ -29,12 +29,15 @@ import org.mindrot.jbcrypt.BCrypt
 
 
 import androidx.lifecycle.viewModelScope
+import com.example.oportunia.data.remote.dto.CreateUserCompanyInput
+import com.example.oportunia.data.remote.dto.InboxxInput
 import com.example.oportunia.data.remote.dto.StudentResult
 import com.example.oportunia.data.remote.dto.UserWhitoutId
 import kotlinx.coroutines.launch
 
 import com.example.oportunia.data.remote.dto.UsersDTO
 import com.example.oportunia.domain.model.Area
+import com.example.oportunia.domain.model.CreateCompanyInput
 import com.example.oportunia.domain.model.Location
 import retrofit2.Response
 
@@ -523,6 +526,258 @@ class UsersViewModel @Inject constructor(
             Log.d("UsersViewModel", "Ubicación id=${loc.id}, nombre='${loc.name}'")
         }
     }
+
+
+    ////////////// ------------------  PARA GUARDAR LA INFO DE LA COMPAÑIA  ---------------------------- /////////////////
+
+
+    private val _companyName = MutableStateFlow<String>("")
+    val companyName: StateFlow<String> = _companyName
+
+    private val _social1 = MutableStateFlow<String>("")
+    val social1: StateFlow<String> = _social1
+
+    private val _social2 = MutableStateFlow<String>("")
+    val social2: StateFlow<String> = _social2
+
+    private val _social3 = MutableStateFlow<String>("")
+    val social3: StateFlow<String> = _social3
+
+    private val _logoLink = MutableStateFlow<String>("")
+    val logoLink: StateFlow<String> = _logoLink
+
+    private val _description = MutableStateFlow<String>("")
+    val description: StateFlow<String> = _description
+
+
+    fun saveCompanyData(
+        companyName: String,
+        social1: String,
+        social2: String,
+        social3: String,
+        logoLink: String,
+        description: String
+    ) {
+        _companyName.value = companyName
+        _social1.value     = social1
+        _social2.value     = social2
+        _social3.value     = social3
+        _logoLink.value    = logoLink
+        _description.value = description
+
+        Log.d(
+            "UsersViewModel",
+            "companyName=$companyName, social1=$social1, social2=$social2, " +
+                    "social3=$social3, logoLink=$logoLink, description=$description"
+        )
+    }
+
+
+
+
+
+
+    private val _emaill = MutableStateFlow<String?>(null)
+    val emaill: StateFlow<String?> = _emaill
+
+    private val _passwordd = MutableStateFlow<String?>(null)
+    val passwordd: StateFlow<String?> = _passwordd
+
+    /**
+     * Guarda el email y la contraseña solo si password y confirmPassword coinciden.
+     *
+     * @param emailInput       campo “email” (por ejemplo, email.text desde RegisterCredentialsScreen)
+     * @param passwordInput    campo “contraseña” (por ejemplo, password.text desde RegisterCredentialsScreen)
+     * @param confirmPasswordInput   campo “confirmar contraseña” (por ejemplo, confirmPassword.text desde RegisterCredentialsScreen)
+     */
+    fun saveCredentials(
+        emailInput: String,
+        passwordInput: String,
+        confirmPasswordInput: String
+    ) {
+        if (passwordInput == confirmPasswordInput) {
+            _emaill.value = emailInput
+            _passwordd.value = passwordInput
+        }
+    }
+
+
+
+    ////////////// ------------------  PARA GUARDAR LA INFO DE LA COMPAÑIA  ---------------------------- /////////////////
+
+
+    ////////////// ------------------  PARA GUARDAR EL USUARIO COMPANY CON LA VARIABLES DE ARRIBA   ---------------------------- /////////////////
+
+
+    fun registerCompanyUser() {
+        // 1) Obtiene valores guardados
+        val email       = emaill.value ?: return
+        val rawPassword = passwordd.value ?: return
+
+        // 2) Encripta la contraseña con coste 12
+        val salt   = BCrypt.gensalt(12)
+        val hashed = BCrypt.hashpw(rawPassword, salt)
+
+        // 3) Resto de datos
+        val img          = logoLink.value
+        val creationDate = java.time.LocalDate.now().toString()
+        val idRole       = 2  // rol “Company”
+
+        // 4) Construye el DTO de entrada usando la contraseña hasheada
+        val input = CreateUserCompanyInput(
+            email = email,
+            password = hashed,
+            img = img,
+            creationDate = creationDate,
+            idRole = idRole
+        )
+
+        // 5) Llama al repositorio para crear el usuario empresa
+        viewModelScope.launch {
+            repository.createUserCompany(input)
+                .onSuccess { response ->
+                    Log.d("UsersViewModel", "Usuario Company creado: $response")
+                }
+                .onFailure { ex ->
+                    Log.e("UsersViewModel", "Error al crear UserCompany: ${ex.message}")
+                }
+        }
+    }
+
+    ////////////// ------------------  PARA GUARDAR EL USUARIO COMPANY CON LA VARIABLES DE ARRIBA   ---------------------------- /////////////////
+
+
+
+    ////////////// ------------------  PARA GUARDAR LAAAAA COMPANY CON LA VARIABLES DE ARRIBA   ---------------------------- /////////////////
+
+
+
+
+
+
+    fun registerCompanyAndSaveCompany() {
+        // 1) Obtiene valores guardados para el usuario
+        val email       = emaill.value ?: return
+        val rawPassword = passwordd.value ?: return
+
+        // 2) Encripta la contraseña con coste 12
+        val salt   = BCrypt.gensalt(12)
+        val hashed = BCrypt.hashpw(rawPassword, salt)
+
+        // 3) Construye el DTO de entrada para crear el usuario
+        val userInput = CreateUserCompanyInput(
+            email = email,
+            password = hashed,
+            img = logoLink.value,
+            creationDate = java.time.LocalDate.now().toString(),
+            idRole = 2
+        )
+
+        viewModelScope.launch {
+            // 4) Llama al repositorio para crear el usuario empresa
+            repository.createUserCompany(userInput)
+                .onSuccess { userResponse ->
+                    val newUserId = userResponse.idUser
+
+                    // 5) Obtiene valores guardados para la compañía
+                    val name        = companyName.value
+                    val description = description.value
+
+                    // 6) Construye el DTO de entrada para crear la compañía
+                    val companyInput = CreateCompanyInput(
+                        companyName = name,
+                        companyDescription = description,
+                        idUser = newUserId
+                    )
+
+                    // 7) Llama al repositorio para guardar la compañía
+                    repository.createCompany(companyInput)
+                        .onSuccess { companyResponse ->
+                            Log.d("UsersViewModel", "Compañía creada: $companyResponse")
+                        }
+                        .onFailure { ex ->
+                            Log.e("UsersViewModel", "Error al crear compañía: ${ex.message}")
+                        }
+                }
+                .onFailure { ex ->
+                    Log.e("UsersViewModel", "Error al crear UserCompany: ${ex.message}")
+                }
+        }
+    }
+
+
+    ////////////// ------------------  PARA GUARDAR LAAAAA COMPANY CON LA VARIABLES DE ARRIBA   ---------------------------- /////////////////
+
+
+
+    fun registerCompanySaveCompanyAndInbox() {
+        // 1) Valores guardados para el usuario
+        val email       = emaill.value ?: return
+        val rawPassword = passwordd.value ?: return
+
+        // 2) Encripta la contraseña con coste 12
+        val salt   = BCrypt.gensalt(12)
+        val hashed = BCrypt.hashpw(rawPassword, salt)
+
+        // 3) Construye el DTO de entrada para crear el usuario
+        val userInput = CreateUserCompanyInput(
+            email = email,
+            password = hashed,
+            img = logoLink.value,
+            creationDate = java.time.LocalDate.now().toString(),
+            idRole = 2
+        )
+
+        viewModelScope.launch {
+            // 4) Crea el usuario Company
+            repository.createUserCompany(userInput)
+                .onSuccess { userResponse ->
+                    val newUserId = userResponse.idUser
+
+                    // 5) Valores guardados para la compañía
+                    val name        = companyName.value
+                    val description = description.value
+
+                    // 6) Construye el DTO de entrada para crear la compañía
+                    val companyInput = CreateCompanyInput(
+                        companyName = name,
+                        companyDescription = description,
+                        idUser = newUserId
+                    )
+
+                    // 7) Crea la compañía
+                    repository.createCompany(companyInput)
+                        .onSuccess { companyResponse ->
+                            val newCompanyId = companyResponse.idCompany
+
+                            // 8) Construye el DTO para crear el inbox usando idCompany
+                            val inboxInput = InboxxInput(
+                                idCompany = newCompanyId
+                            )
+
+                            // 9) Llama a createInboxx
+                            repository.createInboxx(inboxInput)
+                                .onSuccess { inboxResponse ->
+                                    Log.d("UsersViewModel", "Inbox creado: $inboxResponse")
+                                }
+                                .onFailure { ex ->
+                                    Log.e("UsersViewModel", "Error al crear Inbox: ${ex.message}")
+                                }
+                        }
+                        .onFailure { ex ->
+                            Log.e("UsersViewModel", "Error al crear compañía: ${ex.message}")
+                        }
+                }
+                .onFailure { ex ->
+                    Log.e("UsersViewModel", "Error al crear UserCompany: ${ex.message}")
+                }
+        }
+    }
+
+
+
+
+
 
 
 
