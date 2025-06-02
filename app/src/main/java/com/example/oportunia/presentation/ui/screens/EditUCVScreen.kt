@@ -234,7 +234,9 @@ fun EditUCVScreen(
                                         studentViewModel.deleteCv(t, cv.idCv)
                                     }
                                 },
-                                onStatusChange = { /* … */ }
+                                onStatusChange = {
+
+                                }
                             )
                         }
                     }
@@ -347,6 +349,7 @@ fun EditUCVScreen(
     }
 }
 
+
 @Composable
 fun CVCard(
     fileName: String,
@@ -377,25 +380,10 @@ fun CVCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clickable {
-                        val file = File(filePath)
-                        if (!file.exists()) {
-                            Log.e("CVCard", "Archivo no encontrado: $filePath")
-                            return@clickable
-                        }
-                        val uri = FileProvider.getUriForFile(
-                            context,
-                            "${context.packageName}.fileprovider",
-                            file
-                        )
-                        val intent = Intent(Intent.ACTION_VIEW).apply {
-                            setDataAndType(uri, "application/pdf")
-                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        }
-                        try {
-                            context.startActivity(intent)
-                        } catch (e: Exception) {
-                            Log.e("CVCard", "No se pudo abrir el PDF: ${e.message}", e)
-                        }
+                        // Si filePath es una URL, abrir en el navegador
+                        val uri = Uri.parse(filePath)
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        context.startActivity(intent)
                     },
                 tint = Color.Unspecified
             )
@@ -407,7 +395,13 @@ fun CVCard(
                     text = fileName,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.Black
+                    color = Color.Black,
+                    modifier = Modifier.clickable {
+                        // Hacer clic en el nombre del archivo abre la URL
+                        val uri = Uri.parse(filePath)
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        context.startActivity(intent)
+                    }
                 )
                 Spacer(modifier = Modifier.height(4.dp))
             }

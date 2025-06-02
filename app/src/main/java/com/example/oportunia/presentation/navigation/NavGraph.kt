@@ -49,7 +49,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.CvAnalisys.ROUTE
+        startDestination = NavRoutes.Log.ROUTE
     ) {
 
         composable(NavRoutes.GridPublicationsScreenS.ROUTE) {
