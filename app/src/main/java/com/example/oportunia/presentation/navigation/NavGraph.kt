@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import com.example.oportunia.presentation.ui.screens.CVScreen
 import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenForCompany
 import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenS
+import com.example.oportunia.presentation.ui.screens.CompanyMessagesScreen
 import com.example.oportunia.presentation.ui.screens.EditUCVScreen
 import com.example.oportunia.presentation.ui.screens.GridPublicationsCompany
 import com.example.oportunia.presentation.ui.screens.GridPublicationsScreenS
@@ -108,6 +109,13 @@ fun NavGraph(
                 companyViewModel = companyViewModel
             )
 
+        }
+
+        composable(NavRoutes.CompanyMessagesScreen.ROUTE) {
+            CompanyMessagesScreen(
+                navController = navController,
+                companyViewModel = companyViewModel
+            )
         }
 
 

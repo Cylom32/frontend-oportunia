@@ -8,8 +8,10 @@ import com.example.oportunia.data.remote.dto.InboxResult
 import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
+import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
+import com.example.oportunia.domain.model.MessageResponseC
 import com.example.oportunia.domain.model.SocialNetwork
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -457,6 +459,73 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
 
 
 ///////////////////////////////  -------------  PARA ELIMINAR UNA PUBLICACION --------  ///////////////////////
+
+
+
+///////////////////////////////  -------------  PARA crear UNA PUBLICACION --------  ///////////////////////
+
+
+    fun createPublication(
+        file: String,
+        paid: Boolean,
+        idLocation: Int,
+        idArea: Int
+    ) = viewModelScope.launch {
+        val token = tokenC.value ?: return@launch
+        val companyId = companyIdC.value ?: return@launch
+
+        val input = CompanyPublicationInput(
+            file = file,
+            paid = paid,
+            idLocation = idLocation,
+            idArea = idArea,
+            idCompany = companyId
+        )
+
+        // Imprimir valores del body antes de enviar
+        Log.d("CompanyVM", "Creando publicación con body: $input")
+
+        val result = repository.createPublication(token, input)
+        if (result.isSuccess) {
+            Log.d("CompanyVM", "Publicación creada exitosamente.")
+        } else {
+            Log.e(
+                "CompanyVM",
+                "Error al crear publicación: ${result.exceptionOrNull()?.message}"
+            )
+        }
+    }
+
+
+
+///////////////////////////////  -------------  PARA crear UNA PUBLICACION --------  ///////////////////////
+
+
+
+///////////////////////////////  -------------  PARA ver las lista de mensaje de la compañia --------  ///////////////////////
+
+    private val _messagesC = MutableStateFlow<List<MessageResponseC>>(emptyList())
+    val messagesC: StateFlow<List<MessageResponseC>> = _messagesC
+
+    private val _messagesErrorC = MutableStateFlow<String?>(null)
+    val messagesErrorC: StateFlow<String?> = _messagesErrorC
+
+
+    fun fetchMessagesByCompany() = viewModelScope.launch {
+        val compId = companyIdC.value ?: return@launch
+        repository.findMessagesByCompany(compId)
+            .onSuccess { list ->
+                _messagesC.value = list
+                _messagesErrorC.value = null
+                Log.d("CompanyVM", "Messages: $list")
+            }
+            .onFailure { ex ->
+                _messagesErrorC.value = ex.message
+                Log.e("CompanyVM", "Error fetching messages", ex)
+            }
+    }
+
+///////////////////////////////  -------------  PARA ver las lista de mensaje de la compañia --------  ///////////////////////
 
 
 

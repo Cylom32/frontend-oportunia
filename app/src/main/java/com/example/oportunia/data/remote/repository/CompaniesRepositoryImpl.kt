@@ -8,12 +8,15 @@ import com.example.oportunia.data.remote.dto.CompanyResponseU
 import com.example.oportunia.data.remote.dto.CompanyWithoutIdDTO
 import com.example.oportunia.data.remote.dto.InboxInput
 import com.example.oportunia.data.remote.dto.InboxResult
+import com.example.oportunia.data.remote.dto.InboxxResponse
 import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
+import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
+import com.example.oportunia.domain.model.MessageResponseC
 import com.example.oportunia.domain.model.MessageResponseS
 import com.example.oportunia.domain.model.SocialNetwork
 import com.example.oportunia.domain.model.UserResponseCompany
@@ -162,6 +165,47 @@ class CompaniesRepositoryImpl @Inject constructor(
         return remoteDataSource.deletePublicationById(token, publicationId)
     }
 
+
+    override suspend fun createPublication(
+        token: String,
+        input: CompanyPublicationInput
+    ): Result<Unit> {
+        return try {
+            remoteDataSource.createPublication(token, input)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error creating publication: ${e.message}"))
+        }
+    }
+
+    override suspend fun findMessagesByCompany(
+        companyId: Int
+    ): Result<List<MessageResponseC>> =
+        try {
+            // Llamamos al remoteDataSource, que devuelve Result<List<MessageResponseS>>
+            val resultS: Result<List<MessageResponseS>> =
+                remoteDataSource.findMessagesByCompany(companyId)
+
+            resultS.fold(
+                onSuccess = { listS ->
+                    // Mapear cada MessageResponseS a MessageResponseC
+                    val listC = listS.map { s ->
+                        MessageResponseC(
+                            idMessage = s.idMessage,
+                            detail    = s.detail,
+                            file      = s.file,
+                            sendDate  = s.sendDate,
+                            inbox     = InboxxResponse(idInbox = s.inbox.idInbox)
+                        )
+                    }
+                    Result.success(listC)
+                },
+                onFailure = { e ->
+                    Result.failure(e)
+                }
+            )
+        } catch (e: Exception) {
+            Result.failure(Exception("Error fetching messages by company id=$companyId: ${e.message}"))
+        }
 
 
 

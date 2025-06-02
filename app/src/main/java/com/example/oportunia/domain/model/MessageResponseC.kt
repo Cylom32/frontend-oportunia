@@ -1,10 +1,11 @@
 package com.example.oportunia.domain.model
 
-data class MessageResponseS(
+import com.example.oportunia.data.remote.dto.InboxxResponse
+
+data class MessageResponseC(
     val idMessage: Int,
     val detail: String,
     val file: String,
     val sendDate: String,
-    val inbox: MessageInboxResponse
+    val inbox: InboxxResponse
 )
-

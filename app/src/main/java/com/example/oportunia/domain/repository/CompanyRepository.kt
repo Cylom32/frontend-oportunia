@@ -9,8 +9,10 @@ import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
+import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
+import com.example.oportunia.domain.model.MessageResponseC
 import com.example.oportunia.domain.model.MessageResponseS
 import com.example.oportunia.domain.model.UserResponseCompany
 
@@ -64,6 +66,14 @@ interface CompanyRepository {
 
     suspend fun deletePublicationById(token: String, publicationId: Int): Result<Unit>
 
+    suspend fun createPublication(
+        token: String,
+        input: CompanyPublicationInput
+    ): Result<Unit>
+
+    suspend fun findMessagesByCompany(
+        companyId: Int
+    ): Result<List<MessageResponseC>>
 
 
 //    suspend fun saveCompanyNoId(dto: CompanyWithoutIdDTO): Result<Company>

@@ -1,6 +1,7 @@
 package com.example.oportunia.data.remote.api
 
 import com.example.oportunia.data.remote.dto.*
+import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseS
 import com.example.oportunia.domain.model.UserResponseCompany
@@ -89,6 +90,19 @@ interface CompaniesService {
         @Header("Authorization") token: String,
         @Path("publicationId") publicationId: Int
     ): Response<Unit>
+
+    @POST("v1/publications")
+    suspend fun createPublication(
+        @Header("Authorization") token: String,
+        @Body input: CompanyPublicationInput
+    ): Response<Unit>
+
+    @GET("v1/messages/by-company/{companyId}")
+    suspend fun getMessagesByCompany(
+        @Path("companyId") companyId: Int
+    ): Response<List<MessageResponseS>>
+
+
 
 
 //    @POST("v1/companies")

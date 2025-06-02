@@ -101,5 +101,10 @@ sealed class NavRoutes {
         const val ROUTE = "publicationDetailScreen"
     }
 
+    data object CompanyMessagesScreen : NavRoutes() {
+        const val ROUTE = "companyMessagesScreen"
+
+    }
+
 
 }

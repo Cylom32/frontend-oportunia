@@ -2,6 +2,7 @@ package com.example.oportunia.data.remote
 
 import com.example.oportunia.data.remote.api.CompaniesService
 import com.example.oportunia.data.remote.dto.*
+import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseS
 import com.example.oportunia.domain.model.UserResponseCompany
@@ -111,6 +112,17 @@ class CompaniesRemoteDataSource @Inject constructor(
             Result.failure(e)
         }
 
+
+    suspend fun createPublication(
+        token: String,
+        input: CompanyPublicationInput
+    ): Result<Unit> =
+        safeApiCall { service.createPublication(token, input) }
+
+    suspend fun findMessagesByCompany(
+        companyId: Int
+    ): Result<List<MessageResponseS>> =
+        safeApiCall { service.getMessagesByCompany(companyId) }
 
 
 }

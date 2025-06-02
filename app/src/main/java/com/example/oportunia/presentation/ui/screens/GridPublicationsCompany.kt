@@ -108,6 +108,8 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 
 import coil.compose.AsyncImage
 import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
+import com.example.oportunia.domain.model.Area
+import com.example.oportunia.domain.model.Location
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 
 
@@ -124,15 +126,28 @@ fun GridPublicationsCompany(
     val companyName by companyViewModel.companyNameC.collectAsState(initial = null)
     val nameToShow = companyName.orEmpty()
 
+
     val showDialog = remember { mutableStateOf(false) }
 
-    // Estados del formulario emergente
-    val areaOptions = listOf("Ingeniería", "Administración", "Diseño")
-    val locationOptions = listOf("San José", "Heredia", "Cartago")
-    var selectedArea by remember { mutableStateOf(areaOptions.first()) }
-    var selectedLocation by remember { mutableStateOf(locationOptions.first()) }
+
+
+    LaunchedEffect(Unit) {
+        usersViewModel.fetchAreas()
+        usersViewModel.fetchLocations()
+    }
+
+
+
     var isPaid by remember { mutableStateOf(true) }
     var publicationLink by remember { mutableStateOf("") }
+
+
+    val areaOptions = usersViewModel.areas.collectAsState()
+    val locationOptions = usersViewModel.locations.collectAsState()
+
+    var selectedArea by remember { mutableStateOf<Area?>(null) }
+    var selectedLocation by remember { mutableStateOf<Location?>(null) }
+
 
     LaunchedEffect(tokenState, companyIdState) {
         val token = tokenState
@@ -210,10 +225,11 @@ fun GridPublicationsCompany(
                             .fillMaxWidth()
                             .aspectRatio(1f)
                             .clickable {
-                                /// aqui hay que setearlo buscando de verdad no lo de abajo
+
                                 companyViewModel.fetchPublicationById(publication.id)
-                                companyViewModel.selectPublication(publication.id)
                                 navController.navigate(NavRoutes.PublicationDetailScreen.ROUTE)
+
+
                             }
                     ) {
                         Box(modifier = Modifier.fillMaxSize()) {
@@ -272,11 +288,12 @@ fun GridPublicationsCompany(
                         Column(modifier = Modifier.fillMaxWidth()) {
 
                             // Área
+                            // Área
                             var areaExpanded by remember { mutableStateOf(false) }
                             Text("Área")
                             Box {
                                 OutlinedTextField(
-                                    value = selectedArea,
+                                    value = selectedArea?.name ?: "Seleccione área",
                                     onValueChange = {},
                                     readOnly = true,
                                     label = { Text("Seleccione área") },
@@ -296,9 +313,9 @@ fun GridPublicationsCompany(
                                     onDismissRequest = { areaExpanded = false },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    areaOptions.forEach { area ->
+                                    areaOptions.value.forEach { area ->
                                         DropdownMenuItem(
-                                            text = { Text(area) },
+                                            text = { Text(area.name) },
                                             onClick = {
                                                 selectedArea = area
                                                 areaExpanded = false
@@ -308,14 +325,16 @@ fun GridPublicationsCompany(
                                 }
                             }
 
+
                             Spacer(modifier = Modifier.height(12.dp))
 
+                            // Ubicación
                             // Ubicación
                             var locationExpanded by remember { mutableStateOf(false) }
                             Text("Ubicación")
                             Box {
                                 OutlinedTextField(
-                                    value = selectedLocation,
+                                    value = selectedLocation?.name ?: "Seleccione ubicación",
                                     onValueChange = {},
                                     readOnly = true,
                                     label = { Text("Seleccione ubicación") },
@@ -335,9 +354,9 @@ fun GridPublicationsCompany(
                                     onDismissRequest = { locationExpanded = false },
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
-                                    locationOptions.forEach { location ->
+                                    locationOptions.value.forEach { location ->
                                         DropdownMenuItem(
-                                            text = { Text(location) },
+                                            text = { Text(location.name) },
                                             onClick = {
                                                 selectedLocation = location
                                                 locationExpanded = false
@@ -346,6 +365,7 @@ fun GridPublicationsCompany(
                                     }
                                 }
                             }
+
 
                             Spacer(modifier = Modifier.height(12.dp))
 
@@ -373,16 +393,48 @@ fun GridPublicationsCompany(
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                Log.d("NuevaPasantia", "Área: $selectedArea")
-                                Log.d("NuevaPasantia", "Ubicación: $selectedLocation")
-                                Log.d("NuevaPasantia", "Pagada: $isPaid")
-                                Log.d("NuevaPasantia", "Link: $publicationLink")
-                                showDialog.value = false
+                                // Capturar en locales para smart-cast
+                                val areaSeleccionada = selectedArea
+                                val ubicacionSeleccionada = selectedLocation
+
+                                if (
+                                    areaSeleccionada != null &&
+                                    ubicacionSeleccionada != null &&
+                                    publicationLink.isNotBlank()
+                                ) {
+                                    // Crear pasantía
+                                    val currentToken = tokenState
+                                    val currentCompanyId = companyIdState
+
+                                    val job = companyViewModel.createPublication(
+                                        file = publicationLink,
+                                        paid = isPaid,
+                                        idLocation = ubicacionSeleccionada.id,
+                                        idArea = areaSeleccionada.id
+                                    )
+
+                                    job.invokeOnCompletion {
+                                        if (!currentToken.isNullOrEmpty() && currentCompanyId != null) {
+                                            companyViewModel.fetchPublicationsByCompany(currentToken, currentCompanyId)
+                                        }
+                                    }
+
+                                    // Resetear campos del popup (usar las vars del estado, NO las val locales)
+                                    selectedArea = null
+                                    selectedLocation = null
+                                    publicationLink = ""
+                                    isPaid = true
+
+                                    showDialog.value = false
+                                }
                             }
                         ) {
                             Text("Subir")
                         }
-                    },
+                    }
+
+
+                    ,
                     dismissButton = {
                         TextButton(onClick = { showDialog.value = false }) {
                             Text("Cancelar")
