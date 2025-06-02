@@ -77,6 +77,28 @@
     <string name="etiqueta_ok">OK</string>
 
 
+    <string name="etiqueta_nombre_compania">Nome della compagnia</string>
+    <string name="etiqueta_red_social">Social Network</string>
+    <string name="link_logo">Link del logo</string>
+    <string name="Agregar_Descripcion">AGGIUNGI DESCRIZIONE</string>
+    <string name="Descripcion">Descrizione</string>
+    <string name="Cancelar">Annulla</string>
+    <string name="Alerta">Avviso</string>
+    <string name="Guardar">Salva</string>
+
+    <string name="Confirmacion_Guardar">Sei sicuro?</string>
+    <string name="mensaje_guardar">I dati inseriti verranno salvati.</string>
+    <string name="alerta_alerta">Devi compilare Nome, Link del logo, Descrizione e almeno un Social Network</string>
+    <string name="Analisis_cv">Analisi del CV</string>
+
+
+    <string name="Seleccionar_PDF">Seleziona PDF per l analisi</string>
+    <string name="Analizando_PDF">Analisi del PDF in corso...</string>
+    <string name="Analisis_completo">Analisi completata:</string>
+
+    <string name="cargando">Caricamento</string>
+    <string name="sin_datos">Nessun dato dello studente</string>
+    <string name="neuro_cv">Neuro CV</string>
 
 
 </resources>

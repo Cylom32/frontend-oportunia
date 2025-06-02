@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.domain.model.SocialNetwork
-import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.deepSkyBlue
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
@@ -136,7 +135,7 @@ fun EditInformationCompanyScreen(
                     )
 
                     Text(
-                        text = "Nombre de la Compañía",
+                        text = stringResource(R.string.etiqueta_nombre_compania),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -161,7 +160,7 @@ fun EditInformationCompanyScreen(
                     }
 
                     Text(
-                        text = "Red Social 1",
+                        text = stringResource(R.string.etiqueta_red_social),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -186,7 +185,7 @@ fun EditInformationCompanyScreen(
                     }
 
                     Text(
-                        text = "Red Social 2",
+                        text = stringResource(R.string.etiqueta_red_social),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -211,7 +210,7 @@ fun EditInformationCompanyScreen(
                     }
 
                     Text(
-                        text = "Red Social 3",
+                        text = stringResource(R.string.etiqueta_red_social),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -236,7 +235,7 @@ fun EditInformationCompanyScreen(
                     }
 
                     Text(
-                        text = "Link del Logo",
+                        text = stringResource(R.string.link_logo),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -272,7 +271,7 @@ fun EditInformationCompanyScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                     ) {
                         Text(
-                            text = "AGREGAR DESCRIPCIÓN",
+                            text = stringResource(R.string.Agregar_Descripcion),
                             fontSize = 14.sp,
                             color = Color.Black,
                             textAlign = TextAlign.Center,
@@ -305,7 +304,7 @@ fun EditInformationCompanyScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "CANCELAR",
+                                text = stringResource(R.string.Cancelar),
                                 fontSize = 18.sp,
                                 color = Color.Black,
                                 textAlign = TextAlign.Center,
@@ -370,7 +369,7 @@ fun EditInformationCompanyScreen(
             if (showDescriptionDialog) {
                 AlertDialog(
                     onDismissRequest = { showDescriptionDialog = false },
-                    title = { Text(text = "Descripción") },
+                    title = { Text(text = stringResource(R.string.Descripcion)) },
                     text = {
                         Box(
                             modifier = Modifier
@@ -390,12 +389,12 @@ fun EditInformationCompanyScreen(
                     },
                     confirmButton = {
                         TextButton(onClick = { showDescriptionDialog = false }) {
-                            Text(text = "OK")
+                            Text(text = stringResource(R.string.etiqueta_ok))
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { showDescriptionDialog = false }) {
-                            Text(text = "Cancelar")
+                            Text(text = stringResource(R.string.Cancelar))
                         }
                     }
                 )
@@ -404,8 +403,8 @@ fun EditInformationCompanyScreen(
             if (showConfirmDialog) {
                 AlertDialog(
                     onDismissRequest = { showConfirmDialog = false },
-                    title = { Text(text = "¿Está seguro?") },
-                    text = { Text(text = "Se guardarán los datos ingresados.") },
+                    title = { Text(text = stringResource(R.string.Confirmacion_Guardar)) },
+                    text = { Text(text = stringResource(R.string.mensaje_guardar)) },
                     confirmButton = {
                         TextButton(onClick = {
                             // 1) Construir la lista actualizada de redes sociales
@@ -452,12 +451,12 @@ fun EditInformationCompanyScreen(
                             )
                             showConfirmDialog = false
                         }) {
-                            Text(text = "OK")
+                            Text(text = stringResource(R.string.etiqueta_ok))
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { showConfirmDialog = false }) {
-                            Text(text = "Cancelar")
+                            Text(text = stringResource(R.string.Cancelar))
                         }
                     }
                 )
@@ -467,15 +466,15 @@ fun EditInformationCompanyScreen(
             if (showEmptyAlert) {
                 AlertDialog(
                     onDismissRequest = { showEmptyAlert = false },
-                    title = { Text(text = "Alerta") },
+                    title = { Text(text = stringResource(R.string.Alerta)) },
                     text = {
                         Text(
-                            text = "Debe llenar Nombre, Link de Logo, Descripción y al menos una Red Social"
+                            text = stringResource(R.string.alerta_alerta)
                         )
                     },
                     confirmButton = {
                         TextButton(onClick = { showEmptyAlert = false }) {
-                            Text(text = "OK")
+                            Text(text = stringResource(R.string.etiqueta_ok))
                         }
                     }
                 )

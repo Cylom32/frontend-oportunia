@@ -109,7 +109,7 @@ fun RegisterInformationCompanyScreen(
 
                     // Nombre de la Compañía
                     Text(
-                        text = "Nombre de la Compañía",
+                        text = stringResource(R.string.etiqueta_nombre_compania),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -135,7 +135,7 @@ fun RegisterInformationCompanyScreen(
 
                     // Red Social 1
                     Text(
-                        text = "Red Social 1",
+                        text = stringResource(R.string.etiqueta_red_social),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -161,7 +161,7 @@ fun RegisterInformationCompanyScreen(
 
                     // Red Social 2
                     Text(
-                        text = "Red Social 2",
+                        text = stringResource(R.string.etiqueta_red_social),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -187,7 +187,7 @@ fun RegisterInformationCompanyScreen(
 
                     // Red Social 3
                     Text(
-                        text = "Red Social 3",
+                        text = stringResource(R.string.etiqueta_red_social),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -213,7 +213,7 @@ fun RegisterInformationCompanyScreen(
 
                     // Link del Logo
                     Text(
-                        text = "Link del Logo",
+                        text = stringResource(R.string.link_logo),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -250,7 +250,7 @@ fun RegisterInformationCompanyScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = Color.White)
                     ) {
                         Text(
-                            text = "AGREGAR DESCRIPCIÓN",
+                            text = stringResource(R.string.Agregar_Descripcion),
                             fontSize = 14.sp,
                             color = Color.Black,
                             textAlign = TextAlign.Center,
@@ -327,7 +327,7 @@ fun RegisterInformationCompanyScreen(
             if (showDescriptionDialog) {
                 AlertDialog(
                     onDismissRequest = { showDescriptionDialog = false },
-                    title = { Text(text = "Descripción") },
+                    title = { Text(text = stringResource(R.string.Descripcion)) },
                     text = {
                         Box(
                             modifier = Modifier
@@ -347,12 +347,12 @@ fun RegisterInformationCompanyScreen(
                     },
                     confirmButton = {
                         TextButton(onClick = { showDescriptionDialog = false }) {
-                            Text(text = "OK")
+                            Text(text = stringResource(R.string.etiqueta_ok))
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = { showDescriptionDialog = false }) {
-                            Text(text = "Cancelar")
+                            Text(text = stringResource(R.string.Cancelar))
                         }
                     }
                 )
@@ -362,15 +362,15 @@ fun RegisterInformationCompanyScreen(
             if (showEmptyAlert) {
                 AlertDialog(
                     onDismissRequest = { showEmptyAlert = false },
-                    title = { Text(text = "Alerta") },
+                    title = { Text(text = stringResource(R.string.Alerta)) },
                     text = {
                         Text(
-                            text = "Debe llenar Nombre, Link de Logo, Descripción y al menos una Red Social"
+                            text = stringResource(R.string.alerta_alerta)
                         )
                     },
                     confirmButton = {
                         TextButton(onClick = { showEmptyAlert = false }) {
-                            Text(text = "OK")
+                            Text(text = stringResource(R.string.etiqueta_ok))
                         }
                     }
                 )

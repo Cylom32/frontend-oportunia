@@ -23,6 +23,8 @@
 
     <string name="SecondSurnameTitle">Segundo apellido</string>
 
+
+
     <string name="texBoton">Siguiente</string>
 
     <string name="UniversityTitle">Universidad</string>
@@ -125,5 +127,41 @@
     <string name="etiqueta_enviado_exitosamente">Enviado exitosamente</string>
     <string name="etiqueta_ok">OK</string>
 
+
+    <!-- RegsiterInformationCompanyScreen -->
+    <string name="etiqueta_nombre_compania">Nombre de la compañia</string>
+    <string name="etiqueta_red_social">Red Social </string>
+    <string name="link_logo">Link del logo</string>
+    <string name="Agregar_Descripcion">AGREGAR DESCRIPCION</string>
+    <string name="Descripcion">Descripción</string>
+    <string name="Cancelar">Cancelar</string>
+    <string name="Alerta">Alerta</string>
+
+
+    <!-- StudentInformartionSettings -->
+    <string name="Guardar">Guardar</string>
+
+
+    <!-- EditInformationCompanyScreen -->
+    <string name="Confirmacion_Guardar">¿Está seguro?</string>
+    <string name="mensaje_guardar">Se guardarán los datos ingresados.</string>
+
+
+    <!-- StudentInformartionSettings -->
+    <string name="alerta_alerta">Debe llenar Nombre, Link de logo, Descripción y al menos una Red Social </string>
+
+
+
+    <!-- CvAnalisys -->
+    <string name="Analisis_cv">Análisis de CV</string>
+    <string name="Seleccionar_PDF">Seleccionar PDF para Análisis</string>
+    <string name="Analizando_PDF">Analizando PDF...</string>
+    <string name="Analisis_completo">Análisis completo:</string>
+
+
+    <!-- CvScreen -->
+    <string name="cargando">Cargando</string>
+    <string name="sin_datos">Sin datos de estudiante</string>
+    <string name="neuro_cv">Neuro CV</string>
 
 </resources>
