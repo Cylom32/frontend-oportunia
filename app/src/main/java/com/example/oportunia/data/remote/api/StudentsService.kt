@@ -4,15 +4,20 @@ import com.example.oportunia.data.remote.dto.StudentDTO
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
 import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
+import com.example.oportunia.domain.model.CvResponse
 import com.example.oportunia.domain.model.StudentUpdateInput
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 //import com.example.oportunia.data.remote.dto.StudentWithoutIdDTO
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Part
 import retrofit2.http.Path
 
 interface StudentsService {
@@ -75,6 +80,16 @@ interface StudentsService {
         @Path("id") id: Int,
         @Body student: StudentUpdateInput
     ): Response<Unit>
+
+
+    @Multipart
+    @POST("v1/cvs/remote")
+    suspend fun uploadRemoteCv(
+        @Part file: MultipartBody.Part,
+        @Part("name") name: RequestBody,
+        @Part("idStudent") idStudent: RequestBody
+    ): Response<CvResponse>
+
 
 
 

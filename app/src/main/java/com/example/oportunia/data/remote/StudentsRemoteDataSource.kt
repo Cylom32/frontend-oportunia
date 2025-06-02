@@ -5,7 +5,10 @@ import com.example.oportunia.data.remote.dto.StudentDTO
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
 import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
+import com.example.oportunia.domain.model.CvResponse
 import com.example.oportunia.domain.model.StudentUpdateInput
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -73,5 +76,13 @@ class StudentsRemoteDataSource @Inject constructor(
         dto: StudentUpdateInput
     ): Result<Unit> =
         safeApiCall { service.updateStudent(token, id, dto) }
+
+
+        suspend fun uploadRemoteCv(
+            filePart: MultipartBody.Part,
+            namePart: RequestBody,
+            idStudentPart: RequestBody
+        ): Result<CvResponse> =
+            safeApiCall { service.uploadRemoteCv(filePart, namePart, idStudentPart) }
 
 }

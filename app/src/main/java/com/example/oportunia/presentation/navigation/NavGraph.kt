@@ -12,6 +12,7 @@ import com.example.oportunia.presentation.ui.screens.CVScreen
 import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenForCompany
 import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenS
 import com.example.oportunia.presentation.ui.screens.CompanyMessagesScreen
+import com.example.oportunia.presentation.ui.screens.CvAnalisys
 import com.example.oportunia.presentation.ui.screens.EditInformationCompanyScreen
 import com.example.oportunia.presentation.ui.screens.EditUCVScreen
 import com.example.oportunia.presentation.ui.screens.GridPublicationsCompany
@@ -48,7 +49,7 @@ fun NavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = NavRoutes.Log.ROUTE
+        startDestination = NavRoutes.CvAnalisys.ROUTE
     ) {
 
         composable(NavRoutes.GridPublicationsScreenS.ROUTE) {
@@ -132,6 +133,13 @@ fun NavGraph(
             LanguageOptionsScreenSC(
                 navController = navController,
                 // usersViewModel = usersViewModel
+            )
+        }
+
+        composable(NavRoutes.CvAnalisys.ROUTE) {
+            CvAnalisys(
+                studentViewModel = studentViewModel,
+                paddingValues = paddingValues
             )
         }
 

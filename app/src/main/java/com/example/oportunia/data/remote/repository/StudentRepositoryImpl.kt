@@ -5,11 +5,14 @@ import com.example.oportunia.data.remote.StudentsRemoteDataSource
 import com.example.oportunia.data.remote.dto.StudentWihtoutIdDTO
 import com.example.oportunia.domain.model.CVInput
 import com.example.oportunia.domain.model.CVResponseS
+import com.example.oportunia.domain.model.CvResponse
 import com.example.oportunia.domain.model.Student
 import com.example.oportunia.domain.model.StudentUpdateInput
 import com.example.oportunia.domain.repository.StudentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.net.UnknownHostException
 import javax.inject.Inject
 
@@ -118,6 +121,16 @@ class StudentRepositoryImpl @Inject constructor(
             Result.failure(Exception("Error updating student id=$id: ${e.message}"))
         }
 
+    override suspend fun uploadRemoteCv(
+        filePart: MultipartBody.Part,
+        namePart: RequestBody,
+        idStudentPart: RequestBody
+    ): Result<CvResponse> =
+        try {
+            remoteDataSource.uploadRemoteCv(filePart, namePart, idStudentPart)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error uploading CV: ${e.message}"))
+        }
 
 
 
