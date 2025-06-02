@@ -62,6 +62,8 @@ interface CompanyRepository {
 
     suspend fun findUserCompanyById(token: String, userIdCompany: Int): Result<UserResponseCompany>
 
+    suspend fun deletePublicationById(token: String, publicationId: Int): Result<Unit>
+
 
 
 //    suspend fun saveCompanyNoId(dto: CompanyWithoutIdDTO): Result<Company>

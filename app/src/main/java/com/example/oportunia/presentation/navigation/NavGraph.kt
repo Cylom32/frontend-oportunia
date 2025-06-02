@@ -20,6 +20,7 @@ import com.example.oportunia.presentation.ui.screens.IntershipScreen
 import com.example.oportunia.presentation.ui.screens.LanguageOptionsScreenSC
 import com.example.oportunia.presentation.ui.screens.LogScreen
 import com.example.oportunia.presentation.ui.screens.NotificationsScreen
+import com.example.oportunia.presentation.ui.screens.PublicationDetailScreen
 import com.example.oportunia.presentation.ui.screens.RegisterCredentialsScreen
 import com.example.oportunia.presentation.ui.screens.RegisterInformationCompanyScreen
 import com.example.oportunia.presentation.ui.screens.RegisterOptionScreen
@@ -85,6 +86,18 @@ fun NavGraph(
 
             )
         }
+
+
+        composable(NavRoutes.PublicationDetailScreen.ROUTE) {
+            PublicationDetailScreen(
+                navController = navController,
+                studentViewModel = studentViewModel,
+                usersViewModel = usersViewModel,
+                companyViewModel = companyViewModel,
+                paddingValues = paddingValues
+            )
+        }
+
 
         composable(NavRoutes.IntershipScreen.ROUTE) {
 

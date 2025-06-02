@@ -102,6 +102,14 @@ class CompaniesRemoteDataSource @Inject constructor(
     suspend fun findUserCompanyById(token: String, userIdCompany: Int): Result<UserResponseCompany> =
         safeApiCall { service.getUserCompanyById(token, userIdCompany) }
 
+    suspend fun deletePublicationById(token: String, publicationId: Int): Result<Unit> =
+        try {
+            val resp = service.deletePublicationById(token, publicationId)
+            if (resp.isSuccessful) Result.success(Unit)
+            else Result.failure(Exception("Error ${resp.code()} ${resp.message()}"))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
 
 
 

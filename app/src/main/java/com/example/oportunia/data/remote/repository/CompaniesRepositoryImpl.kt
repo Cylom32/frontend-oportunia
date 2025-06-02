@@ -158,6 +158,10 @@ class CompaniesRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deletePublicationById(token: String, publicationId: Int): Result<Unit> {
+        return remoteDataSource.deletePublicationById(token, publicationId)
+    }
+
 
 
 

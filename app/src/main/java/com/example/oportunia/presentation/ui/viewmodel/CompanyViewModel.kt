@@ -437,6 +437,31 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
 
 
 
+///////////////////////////////  -------------  PARA ELIMINAR UNA PUBLICACION --------  ///////////////////////
+
+    fun deletePublicationById(publicationId: Int) = viewModelScope.launch {
+        val token = _tokenC.value.orEmpty()
+        val companyId = _companyIdC.value
+
+        if (token.isNotEmpty() && companyId != null) {
+            repository.deletePublicationById(token, publicationId)
+                .onSuccess {
+                    Log.d("CompanyVM", "✅ Publicación eliminada con éxito")
+                    fetchPublicationsByCompany(token, companyId)
+                }
+                .onFailure { e ->
+                    Log.e("CompanyVM", "❌ Error al eliminar publicación: ${e.message}")
+                }
+        }
+    }
+
+
+///////////////////////////////  -------------  PARA ELIMINAR UNA PUBLICACION --------  ///////////////////////
+
+
+
+
+
 
 
 

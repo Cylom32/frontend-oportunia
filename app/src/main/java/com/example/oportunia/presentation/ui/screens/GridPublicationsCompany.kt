@@ -104,11 +104,11 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.icons.filled.ArrowDropDown
 
 import coil.compose.AsyncImage
 import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
-
 
 
 @Composable
@@ -118,50 +118,43 @@ fun GridPublicationsCompany(
     usersViewModel: UsersViewModel,
     companyViewModel: CompanyViewModel
 ) {
-
     val tokenState by companyViewModel.tokenC.collectAsState()
     val companyIdState by companyViewModel.companyIdC.collectAsState()
+    val publications by companyViewModel.companyPublications.collectAsState(initial = emptyList())
+    val companyName by companyViewModel.companyNameC.collectAsState(initial = null)
+    val nameToShow = companyName.orEmpty()
 
+    val showDialog = remember { mutableStateOf(false) }
+
+    // Estados del formulario emergente
+    val areaOptions = listOf("Ingeniería", "Administración", "Diseño")
+    val locationOptions = listOf("San José", "Heredia", "Cartago")
+    var selectedArea by remember { mutableStateOf(areaOptions.first()) }
+    var selectedLocation by remember { mutableStateOf(locationOptions.first()) }
+    var isPaid by remember { mutableStateOf(true) }
+    var publicationLink by remember { mutableStateOf("") }
 
     LaunchedEffect(tokenState, companyIdState) {
-
         val token = tokenState
         val compId = companyIdState
-
-        Log.d("GridPubDebug", "LaunchedEffect: token='$token', companyId=$compId")
         if (!token.isNullOrEmpty() && compId != null) {
-            Log.d("GridPubDebug", "↪ Disparando fetchPublicationsByCompany")
             companyViewModel.fetchPublicationsByCompany(token, compId)
         }
     }
 
-    // 3) Estado de las publicaciones
-    val publications by companyViewModel.companyPublications.collectAsState(initial = emptyList())
-
-    // 4) Nombre de la compañía desde companyNameC
-    val companyName by companyViewModel.companyNameC.collectAsState(initial = null)
-    val nameToShow = companyName.orEmpty()
-
-    Scaffold(
-        bottomBar = {
-            // Si no necesitas barra inferior, déjalo vacío
-        }
-    ) { innerPadding ->
+    Scaffold { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
                 .background(lilGray)
         ) {
-            // Cabecera con placeholder de logo y nombre
+            // Cabecera
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                    )
+                    .shadow(8.dp, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
                     .gradientBackgroundBlue(
                         gradientColorsBlue,
                         RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
@@ -172,25 +165,32 @@ fun GridPublicationsCompany(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
-                    // Imagen placeholder para logo
-                    Image(
-                        painter = painterResource(id = R.drawable.intellogo),
-                        contentDescription = "Logo placeholder",
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop,
-                        colorFilter = ColorFilter.tint(walterWhite)
-                    )
+//                    Image(
+//                        painter = painterResource(id = R.drawable.intellogo),
+//                        contentDescription = "Logo placeholder",
+//                        modifier = Modifier
+//                            .size(40.dp)
+//                            .clip(CircleShape),
+//                        contentScale = ContentScale.Crop,
+//                        colorFilter = ColorFilter.tint(walterWhite)
+//                    )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
                         text = nameToShow,
                         color = walterWhite,
-                        fontSize = 29.sp,
-                        modifier = Modifier
-                            .padding(end = 16.dp)
+                        fontSize = 29.sp
                     )
                 }
+            }
+
+            // Botón Agregar
+            Button(
+                onClick = { showDialog.value = true },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text("Agregar pasantía")
             }
 
             // Grid de publicaciones
@@ -202,49 +202,196 @@ fun GridPublicationsCompany(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(publications) { publication: PublicationByCompanyDTO ->
+                items(publications) { publication ->
                     Card(
                         shape = RoundedCornerShape(8.dp),
-                        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                        elevation = CardDefaults.cardElevation(4.dp),
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(1f)
                             .clickable {
+                                /// aqui hay que setearlo buscando de verdad no lo de abajo
+                                companyViewModel.fetchPublicationById(publication.id)
                                 companyViewModel.selectPublication(publication.id)
-                                navController.navigate(NavRoutes.IntershipScreen.ROUTE)
+                                navController.navigate(NavRoutes.PublicationDetailScreen.ROUTE)
                             }
                     ) {
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            AsyncImage(
-                                model = publication.file,
-                                contentDescription = null,
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            Column(modifier = Modifier.fillMaxSize()) {
+                                AsyncImage(
+                                    model = publication.file,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    contentScale = ContentScale.FillBounds
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = publication.location.name,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.padding(horizontal = 8.dp)
+                                )
+                                Text(
+                                    text = if (publication.paid) "Pagada" else "No pagada",
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .fillMaxWidth(),
+                                    textAlign = TextAlign.Center
+                                )
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    companyViewModel.deletePublicationById(publication.id)
+                                },
                                 modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(100.dp),
-                                contentScale = ContentScale.FillBounds
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = publication.location.name,
-                                fontSize = 12.sp,
-                                modifier = Modifier.padding(horizontal = 8.dp)
-                            )
-                            Text(
-                                text = stringResource(
-                                    if (publication.paid) R.string.estado_pagado
-                                    else R.string.estado_no_pagado
-                                ),
-                                fontSize = 12.sp,
-                                fontWeight = androidx.compose.ui.text.font.FontWeight.Bold,
-                                modifier = Modifier
-                                    .padding(8.dp)
-                                    .fillMaxWidth(),
-                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                            )
+                                    .align(Alignment.TopEnd)
+                                    .padding(4.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Delete,
+                                    contentDescription = "Eliminar",
+                                    tint = Color.Red
+                                )
+                            }
+
                         }
                     }
                 }
             }
+
+            // Diálogo emergente
+            if (showDialog.value) {
+                AlertDialog(
+                    onDismissRequest = { showDialog.value = false },
+                    title = { Text("Nueva pasantía") },
+                    text = {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+
+                            // Área
+                            var areaExpanded by remember { mutableStateOf(false) }
+                            Text("Área")
+                            Box {
+                                OutlinedTextField(
+                                    value = selectedArea,
+                                    onValueChange = {},
+                                    readOnly = true,
+                                    label = { Text("Seleccione área") },
+                                    trailingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowDropDown,
+                                            contentDescription = "Expand",
+                                            modifier = Modifier.clickable { areaExpanded = true }
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { areaExpanded = true }
+                                )
+                                DropdownMenu(
+                                    expanded = areaExpanded,
+                                    onDismissRequest = { areaExpanded = false },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    areaOptions.forEach { area ->
+                                        DropdownMenuItem(
+                                            text = { Text(area) },
+                                            onClick = {
+                                                selectedArea = area
+                                                areaExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            // Ubicación
+                            var locationExpanded by remember { mutableStateOf(false) }
+                            Text("Ubicación")
+                            Box {
+                                OutlinedTextField(
+                                    value = selectedLocation,
+                                    onValueChange = {},
+                                    readOnly = true,
+                                    label = { Text("Seleccione ubicación") },
+                                    trailingIcon = {
+                                        Icon(
+                                            imageVector = Icons.Default.ArrowDropDown,
+                                            contentDescription = "Expand",
+                                            modifier = Modifier.clickable { locationExpanded = true }
+                                        )
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable { locationExpanded = true }
+                                )
+                                DropdownMenu(
+                                    expanded = locationExpanded,
+                                    onDismissRequest = { locationExpanded = false },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    locationOptions.forEach { location ->
+                                        DropdownMenuItem(
+                                            text = { Text(location) },
+                                            onClick = {
+                                                selectedLocation = location
+                                                locationExpanded = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            // ¿Pagada?
+                            Text("¿Es pagada?")
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                RadioButton(selected = isPaid, onClick = { isPaid = true })
+                                Text("Sí")
+                                Spacer(modifier = Modifier.width(16.dp))
+                                RadioButton(selected = !isPaid, onClick = { isPaid = false })
+                                Text("No")
+                            }
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                            // Link
+                            OutlinedTextField(
+                                value = publicationLink,
+                                onValueChange = { publicationLink = it },
+                                label = { Text("Link de la publicación") },
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                Log.d("NuevaPasantia", "Área: $selectedArea")
+                                Log.d("NuevaPasantia", "Ubicación: $selectedLocation")
+                                Log.d("NuevaPasantia", "Pagada: $isPaid")
+                                Log.d("NuevaPasantia", "Link: $publicationLink")
+                                showDialog.value = false
+                            }
+                        ) {
+                            Text("Subir")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDialog.value = false }) {
+                            Text("Cancelar")
+                        }
+                    }
+                )
+            }
+
+
         }
     }
 }

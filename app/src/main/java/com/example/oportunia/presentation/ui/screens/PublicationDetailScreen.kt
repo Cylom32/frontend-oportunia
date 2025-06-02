@@ -114,115 +114,81 @@ import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 
 
 
-
-
 @Composable
-fun IntershipScreen(
+fun PublicationDetailScreen(
     navController: NavHostController,
     studentViewModel: StudentViewModel,
     usersViewModel: UsersViewModel,
-    companyViewModel: CompanyViewModel
+    companyViewModel: CompanyViewModel,
+    paddingValues: PaddingValues
 ) {
-
-    val selectedId by companyViewModel.selectedPublicationId.collectAsState()
-
-    // 2. Obtenemos el token como String (no String?)
-    //    Si usersViewModel.token fuese StateFlow<String?>, inicializamos con ""
-    val token by usersViewModel.token.collectAsState(initial = "")
-
-    // 3. Obtenemos el studentIdd como Int? (inicialmente null)
-    val studentId by studentViewModel.studentIdd.collectAsState(initial = null)
-
-    // 4. Cada vez que cambie selectedId, traemos el detalle de publicación
-    LaunchedEffect(selectedId) {
-        selectedId?.let { companyViewModel.fetchPublicationById(it) }
-    }
-
-    val publication by companyViewModel.publicationDetail.collectAsState()
-    LaunchedEffect(Unit) {
-
-    }
-
     val publicationDetail by companyViewModel.publicationDetail.collectAsState()
+    val companyName by companyViewModel.companyNameC.collectAsState(initial = null)
 
-    Scaffold(
-        bottomBar = {
-            BottomNavigationBar(
-                selectedScreen = NavRoutes.GridPublicationsScreenS.ROUTE,
-                onScreenSelected = {}
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(lilGray)
+            .padding(paddingValues)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .shadow(
+                    elevation = 8.dp,
+                    shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                )
+                .gradientBackgroundBlue(
+                    gradientColorsBlue,
+                    RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = companyName.orEmpty(),
+                color = walterWhite,
+                fontSize = 29.sp
             )
         }
-    ) { innerPadding ->
-        Column(
+
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
+                .fillMaxWidth()
+                .weight(1f)
         ) {
+            AsyncImage(
+                model = publicationDetail?.file,
+                contentDescription = "Imagen de publicación",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillBounds
+            )
 
-            Box(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                    )
-                    .gradientBackgroundBlue(
-                        gradientColorsBlue,
-                        RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp, bottom = 16.dp + paddingValues.calculateBottomPadding())
+                    .background(Color(0xAAFFFFFF), RoundedCornerShape(12.dp))
+                    .padding(12.dp)
             ) {
-                val companyName by companyViewModel.companyName.collectAsState()
                 Text(
-                    text = companyName.orEmpty(),
-                    color = walterWhite,
-                    fontSize = 29.sp
+                    text = "Área: ${publicationDetail?.area?.name.orEmpty()}",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 )
-            }
-
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                AsyncImage(
-                    model = publicationDetail?.file,
-                    contentDescription = "Imagen de publicación",
-                    modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds
+                Text(
+                    text = "Ubicación: ${publicationDetail?.location?.name.orEmpty()}",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 )
-
-
-                Button(
-                    onClick = {
-                        // -------- CORRECCIÓN DE NULLABILITY --------
-                        // Usamos el “safe let” para desmaterializar token y studentId
-                        token?.let { t ->
-                            studentId?.let { id ->
-                                // Aquí, tanto `t` como `id` ya son no nulos: String y Int
-                                studentViewModel.fetchCvList(t, id)
-                          //      Log.d("IntershipScreen", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-                                navController.navigate(NavRoutes.RequestScreen.ROUTE)
-                            }
-                        }
-                        // Si `token` o `studentId` fueran null, el bloque `let` NUNCA se ejecuta.
-                        // Opcionalmente podrías hacer:
-                        //   if (token.isNullOrBlank() || studentId == null) {
-                               Log.e("IntershipScreen", "Falta token o studentId")
-                        //   }
-                    },
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 16.dp)
-                        .height(60.dp)
-                        .width(180.dp),
-                    shape = RoundedCornerShape(24.dp)
-                )  {
-                    Text(text = stringResource(R.string.ApplyButtonText), fontSize = 18.sp, modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp))
-                }
-
+                Text(
+                    text = if (publicationDetail?.paid == true) "Tipo: Pagada" else "Tipo: No pagada",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
             }
         }
     }

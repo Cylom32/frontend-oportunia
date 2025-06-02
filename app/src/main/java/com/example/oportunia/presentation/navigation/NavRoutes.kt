@@ -41,6 +41,7 @@ sealed class NavRoutes {
     data object RegisterInformationPAndE : NavRoutes() {
         const val ROUTE = "registerInformationPAndE"
     }
+
     data object StudentInformationSettings2 : NavRoutes() {
         const val ROUTE = "studentInformationSettings2"
     }
@@ -94,7 +95,10 @@ sealed class NavRoutes {
 
     data object GridPublicationsCompany : NavRoutes() {
         const val ROUTE = "gridPublicationsCompany"
+    }
 
+    data object PublicationDetailScreen : NavRoutes() {
+        const val ROUTE = "publicationDetailScreen"
     }
 
 

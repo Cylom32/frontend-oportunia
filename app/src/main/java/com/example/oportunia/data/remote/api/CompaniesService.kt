@@ -83,6 +83,14 @@ interface CompaniesService {
         @Path("user_id_company") userIdCompany: Int
     ): Response<UserResponseCompany>
 
+
+    @DELETE("v1/publications/{publicationId}")
+    suspend fun deletePublicationById(
+        @Header("Authorization") token: String,
+        @Path("publicationId") publicationId: Int
+    ): Response<Unit>
+
+
 //    @POST("v1/companies")
 //    suspend fun createCompany(
 //        @Body dto: CompanyWithoutIdDTO
