@@ -209,7 +209,10 @@ fun LogScreen(
                                                                 userId
                                                             ) { found ->
                                                                 if (found) {
-                                                                    // Si sí encontró al estudiante, navega a HomeScreenS
+                                                                    /*
+                                                                        aQUI ENTRA A ESTUDIANTE
+
+                                                                     */
                                                                     navController.navigate(NavRoutes.HomeScreenS.ROUTE)
                                                                 } else {
 
@@ -219,6 +222,12 @@ fun LogScreen(
                                                                     )
                                                                     companyViewModel.fetchUserCompanyById()
                                                                     companyViewModel.fetchCompanyByUserC(userId)
+
+                                                                    /*
+
+                                                                    AQUI ENTRA A EMPRESA
+
+                                                                     */
 
                                                                     navController.navigate(NavRoutes.CompanyInfoScreenForCompany.ROUTE)
 

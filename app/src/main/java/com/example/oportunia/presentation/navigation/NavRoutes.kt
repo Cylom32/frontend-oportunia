@@ -114,5 +114,9 @@ sealed class NavRoutes {
         const val ROUTE = "cvAnalisys"
     }
 
+    data object SettingScreenCompany : NavRoutes() {
+        const val ROUTE = "settingScreenCompany"
+    }
+
 
 }

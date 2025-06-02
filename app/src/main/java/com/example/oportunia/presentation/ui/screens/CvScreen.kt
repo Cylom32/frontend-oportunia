@@ -208,7 +208,12 @@ fun ButtonSection(navController: NavHostController) {
 
 
         Button(
-            onClick = { /* Handle Neuro CV action */ },
+            onClick = {
+                navController.navigate(NavRoutes.CvAnalisys.ROUTE)
+
+
+
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(150.dp),
