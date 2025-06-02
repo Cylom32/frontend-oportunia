@@ -2,7 +2,6 @@ package com.example.oportunia.presentation.ui.screens
 
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.ChatBubbleOutline
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
@@ -21,7 +20,15 @@ fun NavegationBarCompany(
         NavigationBarItem(
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
             selected = selectedScreen == NavRoutes.CompanyInfoScreenForCompany.ROUTE,
-            onClick = { onScreenSelected(NavRoutes.CompanyInfoScreenForCompany.ROUTE) }
+            onClick = {
+                if (selectedScreen != NavRoutes.CompanyInfoScreenForCompany.ROUTE) {
+                    onScreenSelected(NavRoutes.CompanyInfoScreenForCompany.ROUTE)
+                } else {
+
+                    onScreenSelected("${NavRoutes.CompanyInfoScreenForCompany.ROUTE}?refresh=${System.currentTimeMillis()}")
+                }
+            }
+
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.ChatBubbleOutline, contentDescription = "Mensajes") },

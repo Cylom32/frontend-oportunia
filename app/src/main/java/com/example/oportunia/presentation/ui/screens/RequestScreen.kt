@@ -63,22 +63,19 @@ fun RequestScreen(
         val token by userViewModel.token.collectAsState()
         val inboxResult by companyViewModel.inboxByCompany.collectAsState()
         val studentId by studentViewModel.studentIdd.collectAsState()
-        val sendSuccess by companyViewModel.sendSuccess.collectAsState()     // <-- Estado del envío
-
+        val sendSuccess by companyViewModel.sendSuccess.collectAsState()
         val cvList by studentViewModel.cvlista.collectAsState()
 
         var mensaje by remember { mutableStateOf("") }
         var selectedCvFile by remember { mutableStateOf("") }
         var showDialog by remember { mutableStateOf(false) }
 
-        // ② Cuando cvList cambie, precargamos el primer cv.file (si existe)
         LaunchedEffect(cvList) {
             if (cvList.isNotEmpty() && selectedCvFile.isBlank()) {
                 selectedCvFile = cvList.first().file
             }
         }
 
-        // ③ Contexto necesario para lanzar el Intent
         val context = LocalContext.current
 
         Scaffold(
@@ -107,11 +104,10 @@ fun RequestScreen(
                     Text(
                         text = stringResource(R.string.etiqueta_archivo_adjunto),
                         style = MaterialTheme.typography.bodyLarge,
-                        color =  Color.Black,
+                        color = Color.Black,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
-                    // ─── CAJA QUE MUESTRA EL CV SELECCIONADO y abre el popup ──────────────────
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -128,7 +124,6 @@ fun RequestScreen(
                         )
                     }
 
-                    // ─── DIALOGO PARA SELECCIONAR UN CV Y ABRIRLO EN NAVEGADOR ───────────────
                     if (showDialog) {
                         AlertDialog(
                             onDismissRequest = { showDialog = false },
@@ -175,16 +170,15 @@ fun RequestScreen(
                                     }
                                 }
                             },
-                            confirmButton = { /* No hace falta botón extra */ },
-                            dismissButton = { /* Se cierra al tocar fuera */ }
+                            confirmButton = {},
+                            dismissButton = {}
                         )
                     }
-                    // ────────────────────────────────────────────────────────────────────────────────
 
                     Text(
                         text = stringResource(R.string.etiqueta_mensaje_adicional),
                         style = MaterialTheme.typography.bodyLarge,
-                        color= Color.Black,//<-- Lo nuevo
+                        color = Color.Black,
                         modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
                     )
 
@@ -195,37 +189,40 @@ fun RequestScreen(
                             .background(Color.White, shape = RoundedCornerShape(12.dp))
                             .padding(12.dp)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(screenHeight * 0.25f)
-                                .background(Color.White, shape = RoundedCornerShape(12.dp))
-                                .padding(12.dp)
-                        ) {
-                            if (mensaje.isEmpty()) {
-                                Text(
-                                    text = stringResource(R.string.etiqueta_escribe_mensaje),
-                                    fontSize = (screenWidth.value * 0.04).sp,
-                                    color = Color.Gray
-                                )
-                            }
-                            BasicTextField(
-                                value = mensaje,
-                                onValueChange = { mensaje = it },
-                                textStyle = LocalTextStyle.current.copy(
-                                    fontSize = (screenWidth.value * 0.04).sp,
-                                    color = Color.Black
-                                ),
-                                modifier = Modifier.fillMaxSize()
+                        if (mensaje.isEmpty()) {
+                            Text(
+                                text = stringResource(R.string.etiqueta_escribe_mensaje),
+                                fontSize = (screenWidth.value * 0.04).sp,
+                                color = Color.Gray
                             )
                         }
+                        BasicTextField(
+                            value = mensaje,
+                            onValueChange = { mensaje = it },
+                            textStyle = LocalTextStyle.current.copy(
+                                fontSize = (screenWidth.value * 0.04).sp,
+                                color = Color.Black
+                            ),
+                            modifier = Modifier.fillMaxSize()
+                        )
                     }
 
                     Button(
                         onClick = {
-                            val rawToken = token ?: return@Button
-                            val inboxId = inboxResult?.idInbox ?: return@Button
-                            val studId = studentId ?: return@Button
+                            val rawToken = token ?: run {
+                                Log.e("RequestScreen", "❌ Token es null")
+                                return@Button
+                            }
+                            val inboxId = inboxResult?.idInbox ?: run {
+                                Log.e("RequestScreen", "❌ Inbox es null")
+                                return@Button
+                            }
+                            val studId = studentId ?: run {
+                                Log.e("RequestScreen", "❌ Student ID es null")
+                                return@Button
+                            }
+
+                            Log.d("RequestScreen", "🟢 Enviando mensaje con CV=$selectedCvFile y mensaje=$mensaje")
 
                             companyViewModel.sendMessage(
                                 rawToken = rawToken,
@@ -247,15 +244,16 @@ fun RequestScreen(
                             fontSize = (screenWidth.value * 0.05).sp
                         )
                     }
+
                 }
             }
 
-            // ─── ALERTDIALOG DE CONFIRMACIÓN ────────────────────────────────────────────
             if (sendSuccess == true) {
+                Log.d("RequestScreen", "✅ Se muestra el AlertDialog de éxito")
                 AlertDialog(
                     onDismissRequest = {
                         companyViewModel.clearSendStatus()
-                        navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE) // Ajusta la ruta deseada
+                        navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
                     },
                     title = { Text(text = stringResource(R.string.etiqueta_exito_mensaje)) },
                     text = { Text(text = stringResource(R.string.etiqueta_enviado_exitosamente)) },
@@ -271,7 +269,6 @@ fun RequestScreen(
                     }
                 )
             }
-            // ───────────────────────────────────────────────────────────────────────────────
         }
     }
 }

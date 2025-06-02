@@ -60,19 +60,22 @@ fun MainScreen(
                         currentRoute == NavRoutes.StudentInformationSettings2.ROUTE ||
                         currentRoute == NavRoutes.RegisterInformationCompanyScreen.ROUTE ||
                         currentRoute == NavRoutes.RegisterCredentialsScreen.ROUTE ||
-                        currentRoute == NavRoutes.EditInformationCompanyScreen.ROUTE
+                        currentRoute == NavRoutes.EditInformationCompanyScreen.ROUTE ||
+                        currentRoute == NavRoutes.GridPublicationsCompany.ROUTE ||
+                        currentRoute == NavRoutes.PublicationDetailScreen.ROUTE
 
             // Rutas donde se debe mostrar la barra de empresa
             val mostrarBarraCompany =
                 currentRoute == NavRoutes.CompanyInfoScreenForCompany.ROUTE ||
                         currentRoute == NavRoutes.CompanyMessagesScreen.ROUTE ||
-                        currentRoute == NavRoutes.SettingScreenCompany.ROUTE ||
-                        currentRoute == NavRoutes.GridPublicationsCompany.ROUTE
-//** jsjd
+                        currentRoute == NavRoutes.SettingScreenCompany.ROUTE //||
+            //  currentRoute == NavRoutes.GridPublicationsCompany.ROUTE
+
             when {
                 ocultarBarra -> {
-                    /* Sin barra */
+
                 }
+
                 mostrarBarraCompany -> {
                     NavegationBarCompany(
                         selectedScreen = currentRoute,
@@ -85,6 +88,7 @@ fun MainScreen(
                         }
                     )
                 }
+
                 else -> {
                     BottomNavigationBar(
                         selectedScreen = currentRoute,
