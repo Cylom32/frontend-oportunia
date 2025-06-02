@@ -196,8 +196,8 @@ fun CompanyInfoScreenForCompany(
                         Button(
                             onClick = {
                                 val authToken = token ?: return@Button
-                               // navController.navigate(NavRoutes.GridPublicationsCompany.ROUTE)
-                                navController.navigate(NavRoutes.EditInformationCompanyScreen.ROUTE)
+                                navController.navigate(NavRoutes.GridPublicationsCompany.ROUTE)
+                               // navController.navigate(NavRoutes.EditInformationCompanyScreen.ROUTE)
 
 
 

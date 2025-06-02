@@ -65,7 +65,8 @@ fun MainScreen(
             // Rutas donde se debe mostrar la barra de empresa
             val mostrarBarraCompany =
                 currentRoute == NavRoutes.CompanyInfoScreenForCompany.ROUTE ||
-                        currentRoute == NavRoutes.CompanyMessagesScreen.ROUTE
+                        currentRoute == NavRoutes.CompanyMessagesScreen.ROUTE ||
+                        currentRoute == NavRoutes.SettingScreenCompany.ROUTE
 
             when {
                 ocultarBarra -> {

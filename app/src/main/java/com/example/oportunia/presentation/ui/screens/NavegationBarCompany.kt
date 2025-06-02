@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.oportunia.presentation.navigation.NavRoutes
 
@@ -31,8 +30,8 @@ fun NavegationBarCompany(
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
-            selected = selectedScreen == NavRoutes.Settings.ROUTE,
-            onClick = { onScreenSelected(NavRoutes.Settings.ROUTE) }
+            selected = selectedScreen == NavRoutes.SettingScreenCompany.ROUTE,
+            onClick = { onScreenSelected(NavRoutes.SettingScreenCompany.ROUTE) }
         )
     }
 }

@@ -32,6 +32,7 @@ import com.example.oportunia.presentation.ui.screens.RegisterOptionScreenPAndE
 import com.example.oportunia.presentation.ui.screens.RequestScreen
 import com.example.oportunia.presentation.ui.screens.SentRequestScreen
 import com.example.oportunia.presentation.ui.screens.SettingScreen
+import com.example.oportunia.presentation.ui.screens.SettingScreenCompany
 import com.example.oportunia.presentation.ui.screens.StudentInformationSettings
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 //import com.example.oportunia.presentation.ui.screens.StudentInformationSettings2
@@ -68,6 +69,13 @@ fun NavGraph(
                 usersViewModel,
                 studentViewModel,
                 companyViewModel
+            )
+        }
+
+        composable(NavRoutes.SettingScreenCompany.ROUTE) {
+            SettingScreenCompany(
+                navController = navController,
+                usersViewModel = usersViewModel
             )
         }
 
