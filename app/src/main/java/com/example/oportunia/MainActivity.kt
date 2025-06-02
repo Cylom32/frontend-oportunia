@@ -66,7 +66,8 @@ fun MainScreen(
             val mostrarBarraCompany =
                 currentRoute == NavRoutes.CompanyInfoScreenForCompany.ROUTE ||
                         currentRoute == NavRoutes.CompanyMessagesScreen.ROUTE ||
-                        currentRoute == NavRoutes.SettingScreenCompany.ROUTE
+                        currentRoute == NavRoutes.SettingScreenCompany.ROUTE ||
+                        currentRoute == NavRoutes.GridPublicationsCompany.ROUTE
 
             when {
                 ocultarBarra -> {

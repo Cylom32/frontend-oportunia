@@ -20,13 +20,13 @@ fun NavegationBarCompany(
     NavigationBar {
         NavigationBarItem(
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-            selected = selectedScreen == NavRoutes.HomeScreenS.ROUTE,
-            onClick = { onScreenSelected(NavRoutes.HomeScreenS.ROUTE) }
+            selected = selectedScreen == NavRoutes.CompanyInfoScreenForCompany.ROUTE,
+            onClick = { onScreenSelected(NavRoutes.CompanyInfoScreenForCompany.ROUTE) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.ChatBubbleOutline, contentDescription = "Mensajes") },
-            selected = selectedScreen == NavRoutes.Notifications.ROUTE,
-            onClick = { onScreenSelected(NavRoutes.Notifications.ROUTE) }
+            selected = selectedScreen == NavRoutes.CompanyMessagesScreen.ROUTE,
+            onClick = { onScreenSelected(NavRoutes.CompanyMessagesScreen.ROUTE) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
