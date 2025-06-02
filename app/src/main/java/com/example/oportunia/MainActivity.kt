@@ -68,7 +68,7 @@ fun MainScreen(
                         currentRoute == NavRoutes.CompanyMessagesScreen.ROUTE ||
                         currentRoute == NavRoutes.SettingScreenCompany.ROUTE ||
                         currentRoute == NavRoutes.GridPublicationsCompany.ROUTE
-
+//** jsjd
             when {
                 ocultarBarra -> {
                     /* Sin barra */
