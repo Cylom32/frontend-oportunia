@@ -1,9 +1,17 @@
 package com.example.oportunia.data.remote.api
 
 import com.example.oportunia.data.remote.dto.*
+import com.example.oportunia.domain.model.CompanyInputCM
 import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseS
+import com.example.oportunia.domain.model.SocialNetwork
+import com.example.oportunia.domain.model.SocialNetworkInputRS
+import com.example.oportunia.domain.model.SocialNetworkInputSn
+import com.example.oportunia.domain.model.SocialNetworkResponseRS
+import com.example.oportunia.domain.model.SocialNetworkResponseSn
+import com.example.oportunia.domain.model.UserImgInputCM
+import com.example.oportunia.domain.model.UserImgResponseCM
 import com.example.oportunia.domain.model.UserResponseCompany
 import retrofit2.Response
 import retrofit2.http.*
@@ -76,7 +84,7 @@ interface CompaniesService {
     @GET("v1/social_networks/company/{companyId}")
     suspend fun getSocialNetworksByCompany(
         @Path("companyId") companyId: Int
-    ): Response<List<com.example.oportunia.domain.model.SocialNetwork>>
+    ): Response<List<SocialNetwork>>
 
     @GET("v1/users/{user_id_company}")
     suspend fun getUserCompanyById(
@@ -101,6 +109,36 @@ interface CompaniesService {
     suspend fun getMessagesByCompany(
         @Path("companyId") companyId: Int
     ): Response<List<MessageResponseS>>
+
+
+    @POST("v1/social_networks")
+    suspend fun createSocialNetwork(
+        @Body input: SocialNetworkInputSn
+    ): Response<SocialNetworkResponseSn>
+
+
+    @PUT("v1/social_networks/{id}")
+    suspend fun updateSocialNetwork(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body input: SocialNetworkInputRS
+    ): Response<SocialNetworkResponseRS>
+
+    @PUT("v1/users/{user_id_company}/img")
+    suspend fun updateUserImg(
+        @Header("Authorization") token: String,
+        @Path("user_id_company") userId: Int,
+        @Body input: UserImgInputCM
+    ): Response<UserImgResponseCM>
+
+    @PUT("v1/companies/{id}")
+    suspend fun updateCompanyCM(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body input: CompanyInputCM
+    ): Response<Void>
+
+
 
 
 

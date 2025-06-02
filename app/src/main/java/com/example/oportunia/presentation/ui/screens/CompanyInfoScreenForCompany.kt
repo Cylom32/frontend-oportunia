@@ -196,7 +196,38 @@ fun CompanyInfoScreenForCompany(
                         Button(
                             onClick = {
                                 val authToken = token ?: return@Button
-                                navController.navigate(NavRoutes.GridPublicationsCompany.ROUTE)
+                               // navController.navigate(NavRoutes.GridPublicationsCompany.ROUTE)
+                                navController.navigate(NavRoutes.EditInformationCompanyScreen.ROUTE)
+
+
+
+                                /*
+
+
+                                EditInformationCompanyScreen
+
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+                                laksjdalsdnaodsnasdkandksa
+
+
+
+
+
+                                 */
+
+
 
                             },
                             colors = ButtonDefaults.buttonColors(containerColor = Color.White),

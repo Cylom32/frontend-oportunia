@@ -218,6 +218,7 @@ fun LogScreen(
                                                                         userId
                                                                     )
                                                                     companyViewModel.fetchUserCompanyById()
+                                                                    companyViewModel.fetchCompanyByUserC(userId)
 
                                                                     navController.navigate(NavRoutes.CompanyInfoScreenForCompany.ROUTE)
 

@@ -2,9 +2,16 @@ package com.example.oportunia.data.remote
 
 import com.example.oportunia.data.remote.api.CompaniesService
 import com.example.oportunia.data.remote.dto.*
+import com.example.oportunia.domain.model.CompanyInputCM
 import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseS
+import com.example.oportunia.domain.model.SocialNetworkInputRS
+import com.example.oportunia.domain.model.SocialNetworkInputSn
+import com.example.oportunia.domain.model.SocialNetworkResponseRS
+import com.example.oportunia.domain.model.SocialNetworkResponseSn
+import com.example.oportunia.domain.model.UserImgInputCM
+import com.example.oportunia.domain.model.UserImgResponseCM
 import com.example.oportunia.domain.model.UserResponseCompany
 import retrofit2.Response
 import javax.inject.Inject
@@ -123,6 +130,38 @@ class CompaniesRemoteDataSource @Inject constructor(
         companyId: Int
     ): Result<List<MessageResponseS>> =
         safeApiCall { service.getMessagesByCompany(companyId) }
+
+    suspend fun createSocialNetwork(
+        input: SocialNetworkInputSn
+    ): Result<SocialNetworkResponseSn> =
+        safeApiCall { service.createSocialNetwork(input) }
+
+    suspend fun updateSocialNetwork(
+        token: String,
+        id: Int,
+        input: SocialNetworkInputRS
+    ): Result<SocialNetworkResponseRS> =
+        safeApiCall { service.updateSocialNetwork(token, id, input) }
+
+    suspend fun updateUserImg(
+        token: String,
+        userId: Int,
+        input: UserImgInputCM
+    ): Result<UserImgResponseCM> =
+        safeApiCall { service.updateUserImg(token, userId, input) }
+
+
+    suspend fun updateCompany(
+        token: String,
+        id: Int,
+        input: CompanyInputCM
+    ): Result<Void> =
+        safeApiCall {
+            service.updateCompanyCM(token, id, input)
+        }
+
+
+
 
 
 }

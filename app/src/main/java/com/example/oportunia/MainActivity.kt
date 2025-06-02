@@ -33,14 +33,18 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             OportunIATheme {
-                MainScreen(usersViewModel,studentViewModel, companyViewModel)
+                MainScreen(usersViewModel, studentViewModel, companyViewModel)
             }
         }
     }
 }
 
 @Composable
-fun MainScreen(usersViewModel: UsersViewModel, studentViewModel: StudentViewModel, companyViewModel: CompanyViewModel) {
+fun MainScreen(
+    usersViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel,
+    companyViewModel: CompanyViewModel
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: NavRoutes.Log.ROUTE
@@ -54,7 +58,8 @@ fun MainScreen(usersViewModel: UsersViewModel, studentViewModel: StudentViewMode
                 currentRoute != NavRoutes.RegisterInformationPAndE.ROUTE &&
                 currentRoute != NavRoutes.StudentInformationSettings2.ROUTE &&
                 currentRoute != NavRoutes.RegisterInformationCompanyScreen.ROUTE &&
-                currentRoute != NavRoutes.RegisterCredentialsScreen.ROUTE
+                currentRoute != NavRoutes.RegisterCredentialsScreen.ROUTE &&
+                currentRoute != NavRoutes.EditInformationCompanyScreen.ROUTE
             ) {
                 BottomNavigationBar(
                     selectedScreen = currentRoute,

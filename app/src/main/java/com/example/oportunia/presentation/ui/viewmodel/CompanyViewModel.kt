@@ -8,11 +8,15 @@ import com.example.oportunia.data.remote.dto.InboxResult
 import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
+import com.example.oportunia.domain.model.CompanyInputCM
 import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseC
 import com.example.oportunia.domain.model.SocialNetwork
+import com.example.oportunia.domain.model.SocialNetworkInputRS
+import com.example.oportunia.domain.model.SocialNetworkResponseRS
+import com.example.oportunia.domain.model.UserImgInputCM
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.example.oportunia.domain.repository.CompanyRepository
@@ -445,6 +449,9 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
         val token = _tokenC.value.orEmpty()
         val companyId = _companyIdC.value
 
+        Log.d("CompanyVM", "Token usado: $token")
+        Log.d("CompanyVM", "El ID de publicación a eliminar es: $publicationId")
+
         if (token.isNotEmpty() && companyId != null) {
             repository.deletePublicationById(token, publicationId)
                 .onSuccess {
@@ -456,6 +463,7 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
                 }
         }
     }
+
 
 
 ///////////////////////////////  -------------  PARA ELIMINAR UNA PUBLICACION --------  ///////////////////////
@@ -526,6 +534,117 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
     }
 
 ///////////////////////////////  -------------  PARA ver las lista de mensaje de la compañia --------  ///////////////////////
+
+
+///////////////////////////////  -------------  PARA OBTENER LAS REDES DE LA COMPAÑIA --------  ///////////////////////
+
+
+
+
+    // Dentro de tu ViewModel, declara:
+// Nueva variable en el ViewModel:
+    // Nueva variable en el ViewModel:
+    private val _companySocialNetworks = MutableStateFlow<List<SocialNetwork>>(emptyList())
+    val companySocialNetworks: StateFlow<List<SocialNetwork>> = _companySocialNetworks
+
+    fun fetchCompanySocialNetworks() = viewModelScope.launch {
+        val id = companyIdC.value ?: return@launch
+        repository.findSocialNetworksByCompany(id)
+            .onSuccess { list ->
+                _companySocialNetworks.value = list
+                if (list.isNotEmpty()) {
+                    Log.d("CompanyVM", "Redes sociales obtenidas: $list")
+                } else {
+                    Log.d("CompanyVM", "No se encontraron redes sociales para companyId=$id")
+                }
+            }
+            .onFailure { ex ->
+                _companySocialNetworks.value = emptyList()
+                Log.d("CompanyVM", "Error al cargar redes sociales: ${ex.message}")
+            }
+    }
+
+
+
+
+///////////////////////////////  -------------  PARA OBTENER LAS REDES DE LA COMPAÑIA --------  ///////////////////////
+
+
+
+///////////////////////////////  -------------  PARA EDITAR TODOO DE LA COMPAÑIA --------  ///////////////////////
+// Dentro de tu ViewModel (por ejemplo EditCompanyViewModel):
+
+    fun confirmEditCompany(
+        companyNameText: String,
+        companyDescriptionText: String,
+        logoLinkText: String,
+        socialList: List<SocialNetwork>
+    ) = viewModelScope.launch {
+        val token = tokenC.value ?: run {
+            Log.e("EditCompany", "Token nulo")
+            return@launch
+        }
+        val userId = userIdC.value ?: run {
+            Log.e("EditCompany", "userId nulo")
+            return@launch
+        }
+        val companyId = companyIdC.value ?: run {
+            Log.e("EditCompany", "companyId nulo")
+            return@launch
+        }
+
+        // Imprimir todas las redes sociales que se pasan
+        socialList.forEach { sn ->
+            Log.d("EditCompany", "Red social pasada → id=${sn.idSocialNetwork}, link=${sn.link}")
+        }
+
+        // 1) Actualizar Company
+        val companyInput = CompanyInputCM(
+            companyName = companyNameText,
+            companyDescription = companyDescriptionText
+        )
+        val companyResult = repository.updateCompany(token, companyId, companyInput)
+        if (companyResult.isSuccess) {
+            Log.d("EditCompany", "✅ Company (id=$companyId) actualizado correctamente")
+        } else {
+            Log.e(
+                "EditCompany",
+                "❌ Error al actualizar Company: ${companyResult.exceptionOrNull()?.message}"
+            )
+        }
+
+        // 2) Actualizar imagen de usuario
+        val userImgInput = UserImgInputCM(img = logoLinkText)
+        val imgResult = repository.updateUserImg(token, userId, userImgInput)
+        if (imgResult.isSuccess) {
+            Log.d("EditCompany", "✅ Imagen de usuario (userId=$userId) actualizada correctamente")
+        } else {
+            Log.e(
+                "EditCompany",
+                "❌ Error al actualizar imagen: ${imgResult.exceptionOrNull()?.message}"
+            )
+        }
+
+        // 3) Iterar y actualizar cada red social
+        socialList.forEach { sn ->
+            val snInput = SocialNetworkInputRS(link = sn.link)
+            val snResult = repository.updateSocialNetwork(token, sn.idSocialNetwork, snInput)
+            if (snResult.isSuccess) {
+                Log.d(
+                    "EditCompany",
+                    "✅ Red social id=${sn.idSocialNetwork} actualizada correctamente"
+                )
+            } else {
+                Log.e(
+                    "EditCompany",
+                    "❌ Error al actualizar red id=${sn.idSocialNetwork}: ${snResult.exceptionOrNull()?.message}"
+                )
+            }
+        }
+    }
+
+
+///////////////////////////////  -------------  PARA EDITAR TODOO DE LA COMPAÑIA --------  ///////////////////////
 
 
 

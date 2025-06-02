@@ -13,12 +13,19 @@ import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
+import com.example.oportunia.domain.model.CompanyInputCM
 import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseC
 import com.example.oportunia.domain.model.MessageResponseS
 import com.example.oportunia.domain.model.SocialNetwork
+import com.example.oportunia.domain.model.SocialNetworkInputRS
+import com.example.oportunia.domain.model.SocialNetworkInputSn
+import com.example.oportunia.domain.model.SocialNetworkResponseRS
+import com.example.oportunia.domain.model.SocialNetworkResponseSn
+import com.example.oportunia.domain.model.UserImgInputCM
+import com.example.oportunia.domain.model.UserImgResponseCM
 import com.example.oportunia.domain.model.UserResponseCompany
 import com.example.oportunia.domain.repository.CompanyRepository
 import java.net.UnknownHostException
@@ -206,6 +213,48 @@ class CompaniesRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(Exception("Error fetching messages by company id=$companyId: ${e.message}"))
         }
+
+
+    override suspend fun createSocialNetwork(
+        input: SocialNetworkInputSn
+    ): Result<SocialNetworkResponseSn> =
+        try {
+            remoteDataSource.createSocialNetwork(input)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error creando red social: ${e.message}"))
+        }
+
+    override suspend fun updateSocialNetwork(
+        token: String,
+        id: Int,
+        input: SocialNetworkInputRS
+    ): Result<SocialNetworkResponseRS> =
+        try {
+            remoteDataSource.updateSocialNetwork(token, id, input)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error actualizando red social id=$id: ${e.message}"))
+        }
+
+
+    override suspend fun updateUserImg(
+        token: String,
+        userId: Int,
+        input: UserImgInputCM
+    ): Result<UserImgResponseCM> =
+        try {
+            remoteDataSource.updateUserImg(token, userId, input)
+        } catch (e: Exception) {
+            Result.failure(Exception("Error actualizando imagen de usuario id=$userId: ${e.message}"))
+        }
+
+    override suspend fun updateCompany(
+        token: String,
+        id: Int,
+        input: CompanyInputCM
+    ): Result<Unit> =
+        remoteDataSource.updateCompany(token, id, input)
+            .map { _ -> Unit }
+
 
 
 

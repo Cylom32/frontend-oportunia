@@ -39,6 +39,8 @@ import com.example.oportunia.data.remote.dto.UsersDTO
 import com.example.oportunia.domain.model.Area
 import com.example.oportunia.domain.model.CreateCompanyInput
 import com.example.oportunia.domain.model.Location
+import com.example.oportunia.domain.model.SocialNetworkInputSn
+import com.example.oportunia.domain.repository.CompanyRepository
 import retrofit2.Response
 
 
@@ -61,6 +63,7 @@ sealed class AuthState {
 @HiltViewModel
 class UsersViewModel @Inject constructor(
     private val repository: UsersRepository,
+    private val companyRepository: CompanyRepository,
     private val universityRepository: UniversityRepository,
     @ApplicationContext private val appContext: Context
 ) : ViewModel() {
@@ -750,12 +753,33 @@ class UsersViewModel @Inject constructor(
                         .onSuccess { companyResponse ->
                             val newCompanyId = companyResponse.idCompany
 
-                            // 8) Construye el DTO para crear el inbox usando idCompany
+                            // 8) Crea las redes sociales asociadas (solo las no vacías)
+                            val socialLinks = listOf(
+                                social1.value,
+                                social2.value,
+                                social3.value
+                            ).filter { it.isNotBlank() }
+
+                            socialLinks.forEach { link ->
+                                val snInput = SocialNetworkInputSn(
+                                    link = link,
+                                    idCompany = newCompanyId
+                                )
+                                companyRepository.createSocialNetwork(snInput)
+                                    .onSuccess { snResponse ->
+                                        Log.d("UsersViewModel", "Red social creada: $snResponse")
+                                    }
+                                    .onFailure { ex ->
+                                        Log.e("UsersViewModel", "Error al crear red social: ${ex.message}")
+                                    }
+                            }
+
+                            // 9) Construye el DTO para crear el inbox usando idCompany
                             val inboxInput = InboxxInput(
                                 idCompany = newCompanyId
                             )
 
-                            // 9) Llama a createInboxx
+                            // 10) Llama a createInboxx
                             repository.createInboxx(inboxInput)
                                 .onSuccess { inboxResponse ->
                                     Log.d("UsersViewModel", "Inbox creado: $inboxResponse")
@@ -773,7 +797,6 @@ class UsersViewModel @Inject constructor(
                 }
         }
     }
-
 
 
 

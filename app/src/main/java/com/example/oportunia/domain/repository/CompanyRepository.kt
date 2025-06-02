@@ -9,11 +9,19 @@ import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
 import com.example.oportunia.data.remote.dto.PublicationDetailDTO
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Company
+import com.example.oportunia.domain.model.CompanyInputCM
 import com.example.oportunia.domain.model.CompanyPublicationInput
 import com.example.oportunia.domain.model.CompanyWithNetworks
 import com.example.oportunia.domain.model.MessageInput
 import com.example.oportunia.domain.model.MessageResponseC
 import com.example.oportunia.domain.model.MessageResponseS
+import com.example.oportunia.domain.model.SocialNetwork
+import com.example.oportunia.domain.model.SocialNetworkInputRS
+import com.example.oportunia.domain.model.SocialNetworkInputSn
+import com.example.oportunia.domain.model.SocialNetworkResponseRS
+import com.example.oportunia.domain.model.SocialNetworkResponseSn
+import com.example.oportunia.domain.model.UserImgInputCM
+import com.example.oportunia.domain.model.UserImgResponseCM
 import com.example.oportunia.domain.model.UserResponseCompany
 
 interface CompanyRepository {
@@ -59,7 +67,7 @@ interface CompanyRepository {
     suspend fun findCompanyByUser(userId: Int): Result<CompanyResponseU>
 
 
-    suspend fun findSocialNetworksByCompany(companyId: Int): Result<List<com.example.oportunia.domain.model.SocialNetwork>>
+    suspend fun findSocialNetworksByCompany(companyId: Int): Result<List<SocialNetwork>>
 
 
     suspend fun findUserCompanyById(token: String, userIdCompany: Int): Result<UserResponseCompany>
@@ -74,6 +82,29 @@ interface CompanyRepository {
     suspend fun findMessagesByCompany(
         companyId: Int
     ): Result<List<MessageResponseC>>
+
+
+    suspend fun createSocialNetwork(
+        input: SocialNetworkInputSn
+    ): Result<SocialNetworkResponseSn>
+
+    suspend fun updateSocialNetwork(
+        token: String,
+        id: Int,
+        input: SocialNetworkInputRS
+    ): Result<SocialNetworkResponseRS>
+
+    suspend fun updateUserImg(
+        token: String,
+        userId: Int,
+        input: UserImgInputCM
+    ): Result<UserImgResponseCM>
+
+    suspend fun updateCompany(
+        token: String,
+        id: Int,
+        input: CompanyInputCM
+    ): Result<Unit>
 
 
 //    suspend fun saveCompanyNoId(dto: CompanyWithoutIdDTO): Result<Company>

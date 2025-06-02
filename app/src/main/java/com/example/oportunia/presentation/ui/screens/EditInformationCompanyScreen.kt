@@ -1,6 +1,7 @@
 // RegisterInformationCompanyScreen.kt
 package com.example.oportunia.presentation.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
+import com.example.oportunia.domain.model.SocialNetwork
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.deepSkyBlue
@@ -33,12 +35,20 @@ import com.example.oportunia.presentation.ui.theme.lilGray
 import com.example.oportunia.presentation.ui.theme.midnightBlue
 import com.example.oportunia.presentation.ui.theme.royalBlue
 import com.example.oportunia.presentation.ui.theme.walterWhite
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
+
+
+
+
+
+
 @Composable
-fun RegisterInformationCompanyScreen(
+fun EditInformationCompanyScreen(
     navController: NavHostController,
-    usersViewModel: UsersViewModel
+    usersViewModel: UsersViewModel,
+    companyViewModel: CompanyViewModel
 ) {
     var companyName by remember { mutableStateOf(TextFieldValue("")) }
     var social1 by remember { mutableStateOf(TextFieldValue("")) }
@@ -48,6 +58,26 @@ fun RegisterInformationCompanyScreen(
     var showDescriptionDialog by remember { mutableStateOf(false) }
     var descriptionText by remember { mutableStateOf(TextFieldValue("")) }
     var showEmptyAlert by remember { mutableStateOf(false) }
+    var showConfirmDialog by remember { mutableStateOf(false) }
+
+    val socialList by companyViewModel.companySocialNetworks.collectAsState()
+    val imgValue by companyViewModel.imgShow.collectAsState()
+    val nameValue by companyViewModel.companyNameC.collectAsState()
+    val descValue by companyViewModel.companyDescriptionC.collectAsState()
+
+    LaunchedEffect(Unit) {
+        companyViewModel.fetchCompanySocialNetworks()
+    }
+    LaunchedEffect(socialList) {
+        social1 = TextFieldValue(socialList.getOrNull(0)?.link.orEmpty())
+        social2 = TextFieldValue(socialList.getOrNull(1)?.link.orEmpty())
+        social3 = TextFieldValue(socialList.getOrNull(2)?.link.orEmpty())
+    }
+    LaunchedEffect(nameValue, imgValue, descValue) {
+        companyName = TextFieldValue(nameValue.orEmpty())
+        logoLink = TextFieldValue(imgValue.orEmpty())
+        descriptionText = TextFieldValue(descValue.orEmpty())
+    }
 
     Box(
         modifier = Modifier
@@ -67,7 +97,6 @@ fun RegisterInformationCompanyScreen(
             color = Color.Transparent
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
-                // Encabezado a todo ancho
                 Box(
                     modifier = Modifier
                         .height(150.dp)
@@ -98,7 +127,6 @@ fun RegisterInformationCompanyScreen(
                         .verticalScroll(rememberScrollState()),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    // Título de la pantalla
                     Text(
                         text = stringResource(R.string.screenTitleInfo),
                         fontSize = 32.sp,
@@ -107,7 +135,6 @@ fun RegisterInformationCompanyScreen(
                             .padding(top = 32.dp, bottom = 16.dp)
                     )
 
-                    // Nombre de la Compañía
                     Text(
                         text = "Nombre de la Compañía",
                         fontSize = 14.sp,
@@ -133,7 +160,6 @@ fun RegisterInformationCompanyScreen(
                         )
                     }
 
-                    // Red Social 1
                     Text(
                         text = "Red Social 1",
                         fontSize = 14.sp,
@@ -159,7 +185,6 @@ fun RegisterInformationCompanyScreen(
                         )
                     }
 
-                    // Red Social 2
                     Text(
                         text = "Red Social 2",
                         fontSize = 14.sp,
@@ -185,7 +210,6 @@ fun RegisterInformationCompanyScreen(
                         )
                     }
 
-                    // Red Social 3
                     Text(
                         text = "Red Social 3",
                         fontSize = 14.sp,
@@ -211,7 +235,6 @@ fun RegisterInformationCompanyScreen(
                         )
                     }
 
-                    // Link del Logo
                     Text(
                         text = "Link del Logo",
                         fontSize = 14.sp,
@@ -239,7 +262,6 @@ fun RegisterInformationCompanyScreen(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Botón para agregar descripción
                     Button(
                         onClick = { showDescriptionDialog = true },
                         modifier = Modifier
@@ -260,70 +282,91 @@ fun RegisterInformationCompanyScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    // Botón de confirmación (con validación)
-                    Box(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 60.dp)
-                            .shadow(
-                                elevation = 10.dp,
-                                shape = RoundedCornerShape(24.dp),
-                                clip = false
-                            )
-                            .background(
-                                brush = Brush.linearGradient(
-                                    colors = listOf(
-                                        royalBlue,
-                                        deepSkyBlue,
-                                        midnightBlue
-                                    ),
-                                    start = Offset(0f, 0f),
-                                    end = Offset(1000f, 1000f)
-                                ),
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                            .clickable {
-                                // Validación: companyName, logoLink y description no pueden quedar vacíos
-                                // y al menos uno de los campos social1, social2 o social3 debe estar lleno
-                                val nameOk = companyName.text.isNotBlank()
-                                val logoOk = logoLink.text.isNotBlank()
-                                val descOk = descriptionText.text.isNotBlank()
-                                val atLeastOneSocial = social1.text.isNotBlank() ||
-                                        social2.text.isNotBlank() ||
-                                        social3.text.isNotBlank()
-
-                                if (nameOk && logoOk && descOk && atLeastOneSocial) {
-                                    usersViewModel.saveCompanyData(
-                                        companyName.text,
-                                        social1.text,
-                                        social2.text,
-                                        social3.text,
-                                        logoLink.text,
-                                        descriptionText.text
-                                    )
-                                    navController.navigate(NavRoutes.RegisterCredentialsScreen.ROUTE)
-                                } else {
-                                    showEmptyAlert = true
-                                }
-                            },
-                        contentAlignment = Alignment.Center
+                            .padding(horizontal = 60.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = stringResource(R.string.bTextConfirmar),
-                            fontSize = 25.sp,
-                            color = walterWhite,
-                            textAlign = TextAlign.Center,
+                        Box(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 12.dp)
-                        )
+                                .weight(1f)
+                                .height(52.dp)
+                                .clip(RoundedCornerShape(24.dp))
+                                .shadow(
+                                    elevation = 6.dp,
+                                    shape = RoundedCornerShape(24.dp),
+                                    clip = false
+                                )
+                                .background(Color.LightGray)
+                                .clickable {
+                                    navController.popBackStack()
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "CANCELAR",
+                                fontSize = 18.sp,
+                                color = Color.Black,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(vertical = 12.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(52.dp)
+                                .clip(RoundedCornerShape(24.dp))
+                                .shadow(
+                                    elevation = 10.dp,
+                                    shape = RoundedCornerShape(24.dp),
+                                    clip = false
+                                )
+                                .background(
+                                    brush = Brush.linearGradient(
+                                        colors = listOf(
+                                            royalBlue,
+                                            deepSkyBlue,
+                                            midnightBlue
+                                        ),
+                                        start = Offset(0f, 0f),
+                                        end = Offset(1000f, 1000f)
+                                    ),
+                                    shape = RoundedCornerShape(24.dp)
+                                )
+                                .clickable {
+                                    val nameOk = companyName.text.isNotBlank()
+                                    val logoOk = logoLink.text.isNotBlank()
+                                    val descOk = descriptionText.text.isNotBlank()
+                                    val atLeastOneSocial = social1.text.isNotBlank() ||
+                                            social2.text.isNotBlank() ||
+                                            social3.text.isNotBlank()
+
+                                    if (nameOk && logoOk && descOk && atLeastOneSocial) {
+                                        showConfirmDialog = true
+                                    } else {
+                                        showEmptyAlert = true
+                                    }
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = stringResource(R.string.bTextConfirmar),
+                                fontSize = 18.sp,
+                                color = walterWhite,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(vertical = 12.dp)
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))
                 }
             }
 
-            // Popup de descripción
             if (showDescriptionDialog) {
                 AlertDialog(
                     onDismissRequest = { showDescriptionDialog = false },
@@ -358,7 +401,69 @@ fun RegisterInformationCompanyScreen(
                 )
             }
 
-            // AlertDialog si faltan campos
+            if (showConfirmDialog) {
+                AlertDialog(
+                    onDismissRequest = { showConfirmDialog = false },
+                    title = { Text(text = "¿Está seguro?") },
+                    text = { Text(text = "Se guardarán los datos ingresados.") },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            // 1) Construir la lista actualizada de redes sociales
+                            val updatedSocials = mutableListOf<SocialNetwork>()
+                            socialList.getOrNull(0)?.let { sn0 ->
+                                updatedSocials.add(
+                                    SocialNetwork(
+                                        idSocialNetwork = sn0.idSocialNetwork,
+                                        link = social1.text
+                                    )
+                                )
+                            }
+                            socialList.getOrNull(1)?.let { sn1 ->
+                                updatedSocials.add(
+                                    SocialNetwork(
+                                        idSocialNetwork = sn1.idSocialNetwork,
+                                        link = social2.text
+                                    )
+                                )
+                            }
+                            socialList.getOrNull(2)?.let { sn2 ->
+                                updatedSocials.add(
+                                    SocialNetwork(
+                                        idSocialNetwork = sn2.idSocialNetwork,
+                                        link = social3.text
+                                    )
+                                )
+                            }
+
+                            // 2) Imprimir valores antes de llamar al ViewModel
+                            Log.d("EditCompany", "→ companyNameText = ${companyName.text}")
+                            Log.d("EditCompany", "→ descriptionText = ${descriptionText.text}")
+                            Log.d("EditCompany", "→ logoLinkText = ${logoLink.text}")
+                            updatedSocials.forEach { sn ->
+                                Log.d("EditCompany", "→ social id=${sn.idSocialNetwork}, link=${sn.link}")
+                            }
+
+                            // 3) Llamar al método del ViewModel con la lista actualizada
+                            companyViewModel.confirmEditCompany(
+                                companyName.text,
+                                descriptionText.text,
+                                logoLink.text,
+                                updatedSocials
+                            )
+                            showConfirmDialog = false
+                        }) {
+                            Text(text = "OK")
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showConfirmDialog = false }) {
+                            Text(text = "Cancelar")
+                        }
+                    }
+                )
+            }
+
+
             if (showEmptyAlert) {
                 AlertDialog(
                     onDismissRequest = { showEmptyAlert = false },
@@ -378,5 +483,3 @@ fun RegisterInformationCompanyScreen(
         }
     }
 }
-
-

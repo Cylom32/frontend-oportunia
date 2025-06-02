@@ -12,6 +12,7 @@ import com.example.oportunia.presentation.ui.screens.CVScreen
 import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenForCompany
 import com.example.oportunia.presentation.ui.screens.CompanyInfoScreenS
 import com.example.oportunia.presentation.ui.screens.CompanyMessagesScreen
+import com.example.oportunia.presentation.ui.screens.EditInformationCompanyScreen
 import com.example.oportunia.presentation.ui.screens.EditUCVScreen
 import com.example.oportunia.presentation.ui.screens.GridPublicationsCompany
 import com.example.oportunia.presentation.ui.screens.GridPublicationsScreenS
@@ -114,6 +115,14 @@ fun NavGraph(
         composable(NavRoutes.CompanyMessagesScreen.ROUTE) {
             CompanyMessagesScreen(
                 navController = navController,
+                companyViewModel = companyViewModel
+            )
+        }
+
+        composable(NavRoutes.EditInformationCompanyScreen.ROUTE) {
+            EditInformationCompanyScreen(
+                navController = navController,
+                usersViewModel = usersViewModel,
                 companyViewModel = companyViewModel
             )
         }

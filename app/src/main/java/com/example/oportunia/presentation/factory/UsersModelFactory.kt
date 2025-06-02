@@ -4,6 +4,7 @@ package com.example.oportunia.presentation.factory
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.oportunia.domain.repository.CompanyRepository
 import com.example.oportunia.domain.repository.UniversityRepository
 import com.example.oportunia.domain.repository.UsersRepository
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
@@ -16,6 +17,7 @@ import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
  */
 class UsersViewModelFactory(
     private val usersRepository: UsersRepository,
+    private val companyRepository: CompanyRepository,
     private val universityRepository: UniversityRepository,  // ← inyecta también el repo de universidades
     private val appContext: Context
 ) : ViewModelProvider.Factory {
@@ -24,6 +26,7 @@ class UsersViewModelFactory(
             @Suppress("UNCHECKED_CAST")
             return UsersViewModel(
                 usersRepository,
+                companyRepository,
                 universityRepository,  // ← pásaselo al ViewModel
                 appContext
             ) as T

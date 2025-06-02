@@ -106,5 +106,9 @@ sealed class NavRoutes {
 
     }
 
+    data object EditInformationCompanyScreen : NavRoutes() {
+        const val ROUTE = "editInformationCompanyScreen"
+    }
+
 
 }
