@@ -21,8 +21,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.oportunia.R
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.theme.lilGray
 import com.example.oportunia.presentation.ui.theme.walterWhite
@@ -79,7 +81,7 @@ fun CvAnalisys(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Análisis de CV",
+                        text = stringResource(R.string.Analisis_cv),
                         color = walterWhite,
                         fontSize = 39.sp
                     )
@@ -105,7 +107,7 @@ fun CvAnalisys(
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text(text = "Seleccionar PDF para Análisis")
+                        Text(text = stringResource(R.string.Seleccionar_PDF))
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -128,7 +130,7 @@ fun CvAnalisys(
                             ) {
                                 CircularProgressIndicator()
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = "Analizando PDF...", fontSize = 16.sp)
+                                Text(text = stringResource(R.string.Analizando_PDF), fontSize = 16.sp)
                             }
                         }
                         is StudentViewModel.CvUploadState.Success -> {
@@ -136,7 +138,7 @@ fun CvAnalisys(
                                 (uploadState as StudentViewModel.CvUploadState.Success).response
                             Column(modifier = Modifier.fillMaxWidth()) {
                                 Text(
-                                    text = "Análisis completo:",
+                                    text = stringResource(R.string.Analisis_completo),
                                     fontSize = 18.sp,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )

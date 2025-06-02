@@ -59,7 +59,8 @@ class CompanyViewModel @Inject constructor(
     }
 
 
-///////////////////////////////  -------------  PARA GUARDAR EL ID DE LA COMPAÑIA SELECCIONADA EN EL SCROLL   --------  ///////////////////////
+///////////////////////////////  -------------  PARA
+// GUARDAR EL ID DE LA COMPAÑIA SELECCIONADA EN EL SCROLL   --------  ///////////////////////
 
 
 

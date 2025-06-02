@@ -264,7 +264,7 @@ fun StudentInformationSettings(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Cancelar",
+                            text = stringResource(R.string.Cancelar),
                             fontSize = 18.sp,
                             color = Color.White,
                             textAlign = TextAlign.Center
@@ -315,7 +315,7 @@ fun StudentInformationSettings(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Guardar",
+                            text = stringResource(R.string.Guardar),
                             fontSize = 18.sp,
                             color = Color.Black,
                             textAlign = TextAlign.Center

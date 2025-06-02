@@ -112,7 +112,7 @@ fun EditUCVScreen(
                 when (studentState) {
                     is StudentState.Loading -> {
                         Text(
-                            text = "Cargando…",
+                            text = stringResource(R.string.cargando),
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold

@@ -94,7 +94,7 @@ fun CVScreen(studentViewModel: StudentViewModel, navController: NavHostControlle
                  when (studentState) {
                      is StudentState.Loading -> {
                          Text(
-                             text = "Cargando...",
+                             text = stringResource(R.string.cargando),
                              color = Color.White,
                              fontSize = 20.sp,
                              fontWeight = FontWeight.Bold
@@ -133,7 +133,7 @@ fun CVScreen(studentViewModel: StudentViewModel, navController: NavHostControlle
 
                      StudentState.Empty -> {
                          Text(
-                             text = "Sin datos de estudiante",
+                             text = stringResource(R.string.sin_datos),
                              color = Color.LightGray,
                              fontSize = 20.sp,
                              fontWeight = FontWeight.Bold
@@ -231,7 +231,7 @@ fun ButtonSection(navController: NavHostController) {
             )
             Spacer(modifier = Modifier.width(12.dp))
             Text(
-                text = "Neuro CV",
+                text = stringResource(R.string.neuro_cv),
                 fontSize = 22.sp,
                 color = Color.Black
             )
