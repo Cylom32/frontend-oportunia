@@ -1,52 +1,30 @@
 package com.example.oportunia.presentation.ui.screens
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.OpenableColumns
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
-import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-import java.io.File
-import java.io.FileOutputStream
+
 
 
 @Composable
@@ -63,7 +41,7 @@ fun RequestScreen(
         val token by userViewModel.token.collectAsState()
         val inboxResult by companyViewModel.inboxByCompany.collectAsState()
         val studentId by studentViewModel.studentIdd.collectAsState()
-        val sendSuccess by companyViewModel.sendSuccess.collectAsState()     // <-- Estado del envío
+        val sendSuccess by companyViewModel.sendSuccess.collectAsState()
 
         val cvList by studentViewModel.cvlista.collectAsState()
 
@@ -71,14 +49,14 @@ fun RequestScreen(
         var selectedCvFile by remember { mutableStateOf("") }
         var showDialog by remember { mutableStateOf(false) }
 
-        // ② Cuando cvList cambie, precargamos el primer cv.file (si existe)
+
         LaunchedEffect(cvList) {
             if (cvList.isNotEmpty() && selectedCvFile.isBlank()) {
                 selectedCvFile = cvList.first().file
             }
         }
 
-        // ③ Contexto necesario para lanzar el Intent
+
         val context = LocalContext.current
 
         Scaffold(
@@ -111,7 +89,6 @@ fun RequestScreen(
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
-                    // ─── CAJA QUE MUESTRA EL CV SELECCIONADO y abre el popup ──────────────────
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -128,7 +105,6 @@ fun RequestScreen(
                         )
                     }
 
-                    // ─── DIALOGO PARA SELECCIONAR UN CV Y ABRIRLO EN NAVEGADOR ───────────────
                     if (showDialog) {
                         AlertDialog(
                             onDismissRequest = { showDialog = false },
@@ -250,7 +226,7 @@ fun RequestScreen(
                 }
             }
 
-            // ─── ALERTDIALOG DE CONFIRMACIÓN ────────────────────────────────────────────
+
             if (sendSuccess == true) {
                 AlertDialog(
                     onDismissRequest = {
@@ -271,7 +247,6 @@ fun RequestScreen(
                     }
                 )
             }
-            // ───────────────────────────────────────────────────────────────────────────────
         }
     }
 }

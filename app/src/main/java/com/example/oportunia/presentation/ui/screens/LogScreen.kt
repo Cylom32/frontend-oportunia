@@ -1,13 +1,12 @@
 package com.example.oportunia.presentation.ui.screens
-
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.Text
-import androidx.compose.foundation.Image
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.geometry.Offset
@@ -22,14 +21,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-
 import androidx.navigation.NavHostController
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
+//import coil.compose.AsyncImage
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.PasswordLabel
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
@@ -37,6 +33,8 @@ import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.painterResource
+
 
 
 @Composable
@@ -86,13 +84,15 @@ fun LogScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
 
-                        AsyncImage(
-                            model = "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/Instagram_logo_2022.svg/2048px-Instagram_logo_2022.svg.png",
-                            contentDescription = "Logo handshake",
+                        Image(
+                            painter = painterResource(id = R.drawable.bombillo),
+                            contentDescription = "Logo Oportunia",
                             modifier = Modifier
-                                .size(150.dp)
-                                .padding(top = 20.dp)
+                                .size(200.dp)
+                                .padding(top = 20.dp),
+
                         )
+
 
 
                         Spacer(modifier = Modifier.height(50.dp))

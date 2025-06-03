@@ -267,7 +267,7 @@ fun RegisterOptionScreenPAndE(
                         Text(stringResource(R.string.acceptText))
                     }
                 },
-                title = { Text("Error") },
+                title = { Text(stringResource(R.string.error)) },
                 text = { Text(alertMessage) }
             )
         }

@@ -99,6 +99,20 @@
     <string name="cargando">Loading</string>
     <string name="sin_datos">No student data</string>
     <string name="neuro_cv">Neuro CV</string>
+    <string name="max_cvs">You have reached the maximum number of CVs (3)</string>
+    <string name="link_Archivo">File link</string>
+
+    <string name="agregar_pasantia">Add internship</string>
+    <string name="nueva_pasantia">New internship</string>
+    <string name="es_pagada">Is it paid?</string>
+    <string name="subir">Upload</string>
+    <string name="link_publicacion">Publication link</string>
+    <string name="welcome_notifications">Welcome to notifications</string>
+    <string name="text_notifications">Your internship journey starts here</string>
+    <string name="comenzar">Start</string>
+    <string name="tipo_pagada">Type: Paid</string>
+    <string name="tipo_no_pagada">Type: Unpaid</string>
+    <string name="error">Error</string>
 
 
 

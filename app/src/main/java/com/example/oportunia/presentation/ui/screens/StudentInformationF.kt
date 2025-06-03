@@ -4,11 +4,9 @@ package com.example.oportunia.presentation.ui.screens
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.*
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,13 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.oportunia.presentation.ui.theme.lilRedMain
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.ui.unit.sp
@@ -32,30 +25,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
-import com.example.oportunia.data.remote.dto.UniversityDTO
 import com.example.oportunia.domain.model.University
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.components.texAndLable
-import com.example.oportunia.presentation.ui.theme.blackPanter
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.theme.lilGray
-import com.example.oportunia.presentation.ui.theme.walterWhite
-import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-
-
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.runtime.*
-import androidx.compose.ui.unit.dp
+
 
 /** Guardad aquí el ID seleccionado */
 var idSelectedU: Int = 0
@@ -79,7 +60,7 @@ fun RegisterOptionScreenF(
 
 
 
-    // 3) Estados locales para la selección y alerta
+
     var selectedUniversity by remember { mutableStateOf("") }
     var showAlert by remember { mutableStateOf(false) }
 
@@ -113,7 +94,7 @@ fun RegisterOptionScreenF(
 
             Spacer(Modifier.height(32.dp))
 
-            // -- Campos de texto de ejemplo --
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -168,11 +149,7 @@ fun RegisterOptionScreenF(
 
                 Spacer(Modifier.height(16.dp))
 
-//                // Aquí ya puedes usar selectedUniversityId
-//                Text("ID seleccionado: $selectedUniversityId",
-//                    color = Color.Black,
-//                    modifier = Modifier.padding(horizontal = 48.dp))
-//            }
+
 }
 
             Spacer(Modifier.height(120.dp))
@@ -226,7 +203,7 @@ fun RegisterOptionScreenF(
             onDismissRequest = { showAlert = false },
             confirmButton = {
                 TextButton(onClick = { showAlert = false }) {
-                    Text("Aceptar")
+                    Text(stringResource(R.string.acceptText))
                 }
             },
             title = { Text(stringResource(R.string.studentInfoAlertTittle)) },
@@ -254,7 +231,7 @@ fun UniversityDropdown(
             .fillMaxWidth()
             .padding(horizontal = 48.dp)
     ) {
-        // 1) El TextField normal, con texto negro
+
         OutlinedTextField(
             value          = selectedUniversity,
             onValueChange  = { /* readOnly */ },
@@ -268,12 +245,12 @@ fun UniversityDropdown(
                 .clickable { expanded = !expanded }
         )
 
-        // 2) Al expandir, envolvemos el menú en un mini-Theme que ponga fondo oscuro y texto blanco
+
         if (expanded) {
             MaterialTheme(
                 colorScheme = MaterialTheme.colorScheme.copy(
-                    surface   = Color.DarkGray,  // fondo del popup
-                    onSurface = Color.White      // texto de los items
+                    surface   = Color.DarkGray,
+                    onSurface = Color.White
                 )
             ) {
                 ExposedDropdownMenu(

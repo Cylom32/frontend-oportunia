@@ -1,8 +1,4 @@
 package com.example.oportunia.presentation.ui.screens
-
-
-
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,102 +8,45 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.theme.lilGray
 import com.example.oportunia.presentation.ui.theme.walterWhite
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-
-
-import android.content.Intent
-import android.net.Uri
-import android.provider.OpenableColumns
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.pager.VerticalPager
-import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import com.example.oportunia.presentation.ui.theme.*
-import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
-import com.google.accompanist.pager.ExperimentalPagerApi
-import java.io.File
-import java.io.FileOutputStream
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material.ExperimentalMaterialApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
-
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.filled.ArrowDropDown
-
+import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
-import com.example.oportunia.data.remote.dto.PublicationByCompanyDTO
+import com.example.oportunia.R
 import com.example.oportunia.domain.model.Area
 import com.example.oportunia.domain.model.Location
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
@@ -205,7 +144,7 @@ fun GridPublicationsCompany(
                     .padding(16.dp)
                     .fillMaxWidth()
             ) {
-                Text("Agregar pasantía")
+                Text(stringResource(R.string.agregar_pasantia))
             }
 
             // Grid de publicaciones
@@ -249,7 +188,7 @@ fun GridPublicationsCompany(
                                     modifier = Modifier.padding(horizontal = 8.dp)
                                 )
                                 Text(
-                                    text = if (publication.paid) "Pagada" else "No pagada",
+                                    text = if (publication.paid) stringResource(R.string.estado_pagado) else stringResource(R.string.estado_no_pagado),
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
                                     modifier = Modifier
@@ -283,20 +222,20 @@ fun GridPublicationsCompany(
             if (showDialog.value) {
                 AlertDialog(
                     onDismissRequest = { showDialog.value = false },
-                    title = { Text("Nueva pasantía") },
+                    title = { Text(stringResource(R.string.nueva_pasantia))},
                     text = {
                         Column(modifier = Modifier.fillMaxWidth()) {
 
                             // Área
                             // Área
                             var areaExpanded by remember { mutableStateOf(false) }
-                            Text("Área")
+                            Text(stringResource(R.string.etiqueta_area))
                             Box {
                                 OutlinedTextField(
                                     value = selectedArea?.name ?: "Seleccione área",
                                     onValueChange = {},
                                     readOnly = true,
-                                    label = { Text("Seleccione área") },
+                                    label = { Text(stringResource(R.string.etiqueta_seleccionar_area)) },
                                     trailingIcon = {
                                         Icon(
                                             imageVector = Icons.Default.ArrowDropDown,
@@ -331,13 +270,13 @@ fun GridPublicationsCompany(
                             // Ubicación
                             // Ubicación
                             var locationExpanded by remember { mutableStateOf(false) }
-                            Text("Ubicación")
+                            Text(stringResource(R.string.etiqueta_ubicacion))
                             Box {
                                 OutlinedTextField(
                                     value = selectedLocation?.name ?: "Seleccione ubicación",
                                     onValueChange = {},
                                     readOnly = true,
-                                    label = { Text("Seleccione ubicación") },
+                                    label = { Text(stringResource(R.string.etiqueta_seleccionar_ubicacion)) },
                                     trailingIcon = {
                                         Icon(
                                             imageVector = Icons.Default.ArrowDropDown,
@@ -370,13 +309,13 @@ fun GridPublicationsCompany(
                             Spacer(modifier = Modifier.height(12.dp))
 
                             // ¿Pagada?
-                            Text("¿Es pagada?")
+                            Text(stringResource(R.string.es_pagada))
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 RadioButton(selected = isPaid, onClick = { isPaid = true })
-                                Text("Sí")
+                                Text(stringResource(R.string.respuesta_si))
                                 Spacer(modifier = Modifier.width(16.dp))
                                 RadioButton(selected = !isPaid, onClick = { isPaid = false })
-                                Text("No")
+                                Text(stringResource(R.string.respuesta_no))
                             }
 
                             Spacer(modifier = Modifier.height(12.dp))
@@ -385,7 +324,7 @@ fun GridPublicationsCompany(
                             OutlinedTextField(
                                 value = publicationLink,
                                 onValueChange = { publicationLink = it },
-                                label = { Text("Link de la publicación") },
+                                label = { Text(stringResource(R.string.link_publicacion)) },
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
@@ -429,21 +368,18 @@ fun GridPublicationsCompany(
                                 }
                             }
                         ) {
-                            Text("Subir")
+                            Text(stringResource(R.string.subir))
                         }
                     }
-
 
                     ,
                     dismissButton = {
                         TextButton(onClick = { showDialog.value = false }) {
-                            Text("Cancelar")
+                            Text(stringResource(R.string.Cancelar))
                         }
                     }
                 )
             }
-
-
         }
     }
 }

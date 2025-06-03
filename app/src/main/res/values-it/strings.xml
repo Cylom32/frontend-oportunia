@@ -99,6 +99,21 @@
     <string name="cargando">Caricamento</string>
     <string name="sin_datos">Nessun dato dello studente</string>
     <string name="neuro_cv">Neuro CV</string>
+    <string name="max_cvs">Hai raggiunto il numero massimo di CV (3)</string>
+    <string name="link_Archivo">Link del file</string>
+
+
+    <string name="agregar_pasantia">Aggiungi tirocinio</string>
+    <string name="nueva_pasantia">Nuovo tirocinio</string>
+    <string name="es_pagada">È retribuito?</string>
+    <string name="subir">Carica</string>
+    <string name="link_publicacion">Link della pubblicazione</string>
+    <string name="welcome_notifications">Benvenuto alle notifiche</string>
+    <string name="text_notifications">Il tuo viaggio di tirocinio inizia qui</string>
+    <string name="comenzar">Inizia</string>
+    <string name="tipo_pagada">Tipo: Retribuito</string>
+    <string name="tipo_no_pagada">Tipo: Non retribuito</string>
+    <string name="error">Errore</string>
 
 
 </resources>

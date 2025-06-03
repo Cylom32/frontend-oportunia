@@ -8,7 +8,6 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.oportunia.presentation.navigation.NavRoutes
 
@@ -18,20 +17,15 @@ fun BottomNavigationBar(selectedScreen: String, onScreenSelected: (String) -> Un
     NavigationBar {
         NavigationBarItem(
             icon = { Icon(Icons.Default.AccountBox, contentDescription = "Cv") },
-           // label = { Text("Cv") },
+
             selected = selectedScreen == NavRoutes.CV.ROUTE,
             onClick = { onScreenSelected(NavRoutes.CV.ROUTE) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
-          //  label = { Text("Home") },
+
             selected = selectedScreen == NavRoutes.HomeScreenS.ROUTE,
-            onClick = { onScreenSelected(NavRoutes.HomeScreenS.ROUTE) }  /*
-
-            HAY QUE ARREGLAR QUE SIEMPRE VAYA A HOME
-            CUANDO ESTOY EN OTRA PANTALLA Y TOCO EL ICONO DE HOME NO ME MANDA A HOME
-
-            */
+            onClick = { onScreenSelected(NavRoutes.HomeScreenS.ROUTE) }
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.ChatBubbleOutline, contentDescription = "Notifications") },

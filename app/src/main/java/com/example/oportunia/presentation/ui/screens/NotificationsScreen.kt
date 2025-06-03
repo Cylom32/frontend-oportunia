@@ -15,11 +15,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.oportunia.R
 import com.example.oportunia.presentation.ui.theme.OportunIATheme
+
 
 
 @Composable
@@ -33,7 +36,7 @@ fun NotificationsScreen (modifier: Modifier = Modifier) {
     ) {
         // Welcome Header
         Text(
-            text = "Welcome to Notifications",
+            text = stringResource(R.string.welcome_notifications),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
             color = MaterialTheme.colorScheme.primary
@@ -43,7 +46,7 @@ fun NotificationsScreen (modifier: Modifier = Modifier) {
 
         // Description
         Text(
-            text = "Your internship journey starts here",
+            text = stringResource(R.string.text_notifications),
             style = MaterialTheme.typography.bodyLarge,
             color = Color.Gray,
             modifier = Modifier.padding(horizontal = 32.dp),
@@ -60,7 +63,7 @@ fun NotificationsScreen (modifier: Modifier = Modifier) {
                 .height(50.dp)
         ) {
             Text(
-                text = "Get Started",
+                text = stringResource(R.string.comenzar),
                 fontSize = 16.sp
             )
         }
@@ -74,3 +77,9 @@ fun NotificationScreenPreview() {
         NotificationsScreen()
     }
 }
+
+
+
+
+
+

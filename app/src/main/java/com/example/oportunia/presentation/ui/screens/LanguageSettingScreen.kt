@@ -7,12 +7,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.Text
-import androidx.compose.foundation.Image
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.sp
 import com.example.oportunia.R
 import androidx.compose.runtime.Composable
@@ -23,24 +19,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-
-import androidx.navigation.NavHostController
-import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.presentation.ui.components.PasswordLabel
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.theme.lilGray
-import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
-import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-import kotlinx.coroutines.launch
+
 
 
 @Preview

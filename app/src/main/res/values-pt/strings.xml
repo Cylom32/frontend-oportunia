@@ -98,8 +98,21 @@
     <string name="cargando">Carregando</string>
     <string name="sin_datos">Sem dados do estudante</string>
     <string name="neuro_cv">Neuro CV</string>
+    <string name="max_cvs">Você atingiu o número máximo de CVs (3)</string>
+    <string name="link_Archivo">Link do arquivo</string>
 
 
+    <string name="agregar_pasantia">Adicionar estágio</string>
+    <string name="nueva_pasantia">Novo estágio</string>
+    <string name="es_pagada">É remunerado?</string>
+    <string name="subir">Enviar</string>
+    <string name="link_publicacion">Link da publicação</string>
+    <string name="welcome_notifications">Bem-vindo às notificações</string>
+    <string name="text_notifications">Sua jornada de estágio começa aqui</string>
+    <string name="comenzar">Começar</string>
+    <string name="tipo_pagada">Tipo: Paga</string>
+    <string name="tipo_no_pagada">Tipo: Não paga</string>
+    <string name="error">Erro</string>
 
 
 </resources>

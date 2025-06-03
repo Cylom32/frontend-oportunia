@@ -97,12 +97,12 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp), // Eliminamos .height(90.dp) para que la columna crezca según el contenido
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
-            onClick = { /* Handle Edit Account action */
+            onClick = {
             navController.navigate(NavRoutes.StudentInformationSettings2.ROUTE)
             },
             modifier = Modifier
@@ -129,7 +129,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
 
 
         Button(
-            onClick = { /* Handle Edit Language action */ },
+            onClick = {  },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(125.dp),
@@ -152,11 +152,11 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { /* Handle Logout action */
-                usersViewModel.logout() // Cerrar sesión
-                navController.navigate(NavRoutes.Log.ROUTE) { // Redirigir a la pantalla de login
-                    popUpTo(navController.graph.startDestinationId) // Limpiar el backstack
-                    launchSingleTop = true// Evitar multiples instancias
+            onClick = {
+                usersViewModel.logout()
+                navController.navigate(NavRoutes.Log.ROUTE) {
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
                 }
 
 
@@ -166,11 +166,11 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
                 .fillMaxWidth()
                 .height(125.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = walterWhite, // Cambiamos el color de fondo a walterWhite
-                contentColor = Color.Black // Cambiamos el color del contenido a negro
+                containerColor = walterWhite,
+                contentColor = Color.Black
             ),
-            shape = RoundedCornerShape(34.dp), // Añadimos la misma forma que el botón "Cuenta"
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp) // Añadimos la misma elevación
+            shape = RoundedCornerShape(34.dp),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logout),
@@ -182,7 +182,7 @@ fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersV
             Text(
                 text = stringResource(R.string.logout_text),
                 fontSize = 22.sp,
-                color = Color.Black // Aseguramos que el texto sea negro
+                color = Color.Black
             )
         }
     }

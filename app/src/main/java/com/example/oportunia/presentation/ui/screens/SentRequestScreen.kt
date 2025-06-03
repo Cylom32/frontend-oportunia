@@ -1,22 +1,12 @@
 package com.example.oportunia.presentation.ui.screens
-
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.OpenableColumns
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,20 +20,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
-import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import com.example.oportunia.domain.model.MessageResponseS
-import java.io.File
-import java.io.FileOutputStream
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.window.DialogProperties
 
@@ -53,23 +38,23 @@ fun SentRequestScreen(
     navController: NavHostController,
     userViewModel: UsersViewModel,
     studentViewModel: StudentViewModel,
-    companyViewModel: CompanyViewModel // aunque no lo usemos aquí para mensajes, lo dejamos en la firma
+    companyViewModel: CompanyViewModel
 ) {
-    // 1) Recuperar token y studentId desde los ViewModels
+
     val token by userViewModel.token.collectAsState()
     val studentId by studentViewModel.studentIdd.collectAsState()
 
-    // 2) Recuperar la lista de mensajes desde StudentViewModel
+
     val messages by studentViewModel.messagesByStudent.collectAsState()
 
-    // 3) Disparar la petición en el ViewModel cuando tengamos token y studentId válidos
+
     LaunchedEffect(token, studentId) {
         if (!token.isNullOrBlank() && studentId != null) {
             studentViewModel.fetchMessagesByStudent(token!!, studentId!!)
         }
     }
 
-    // 4) Estado para el mensaje seleccionado (para mostrar el popup)
+
     var selectedMessage by remember { mutableStateOf<MessageResponseS?>(null) }
     val context = LocalContext.current
 
@@ -122,7 +107,7 @@ fun SentRequestScreen(
                             items = list,
                             key = { message -> message.idMessage }
                         ) { message ->
-                            // Mostramos solo detalle parcial y fecha en la tarjeta
+
                             InternshipCard(
                                 partialDetail = message.detail
                                     .take(20)
@@ -137,7 +122,7 @@ fun SentRequestScreen(
             }
         }
 
-        // Si hay un mensaje seleccionado, mostramos un AlertDialog con sus detalles
+
         selectedMessage?.let { msg ->
             AlertDialog(
                 onDismissRequest = { selectedMessage = null },
@@ -165,12 +150,11 @@ fun SentRequestScreen(
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp)
                                 .clickable {
-                                    // Abrir en navegador usando la URL real del archivo
                                     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(msg.file))
                                     context.startActivity(intent)
                                 },
                             fontSize = 14.sp,
-                            color = Color(0xFF1E88E5) // azul para enlace
+                            color = Color(0xFF1E88E5)
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(text =  stringResource(R.string.etiqueta_fecha_envio))
@@ -228,7 +212,7 @@ fun InternshipCard(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Detalle parcial en el centro (uso weight = 1f para que ocupe el espacio restante)
+
             Text(
                 text = partialDetail,
                 modifier = Modifier
@@ -240,7 +224,7 @@ fun InternshipCard(
 
             Spacer(modifier = Modifier.width(12.dp))
 
-            // Fecha a la derecha
+
             Text(
                 text = date,
                 fontSize = 12.sp,

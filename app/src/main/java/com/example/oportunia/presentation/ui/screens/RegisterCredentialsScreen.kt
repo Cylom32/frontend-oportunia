@@ -99,7 +99,7 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
                 ) {
                     // Email
                     Text(
-                        text = "Email",
+                        text = stringResource(R.string.emailL),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -129,7 +129,7 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
 
                     // Contraseña
                     Text(
-                        text = "Contraseña",
+                        text = stringResource(R.string.passworL),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -159,7 +159,7 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
 
                     // Confirmar Contraseña
                     Text(
-                        text = "Confirmar Contraseña",
+                        text = stringResource(R.string.passworC),
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
@@ -189,6 +189,7 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
 
                     Spacer(modifier = Modifier.height(24.dp))
                 }
+
 
                 // Botón de confirmación al fondo
                 Box(
@@ -249,16 +250,6 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
                                 }
 
 
-                                /*
-                                    Si las contraseñas coinciden necesito llamar este metodo del usersviewmodel :
-                                    fun fetchUserByEmail(
-                                        email: String,
-                                        onResult: (Int?) -> Unit
-                                    )
-
-                                    el cual devuelve un 200 si encuentra ese correo, o sea que si lo encuentra diga que ese correo no está disponible
-                                    que el usuario tiene que elegi otro
-                                 */
 
 
                             }
@@ -281,11 +272,11 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
             if (showErrorDialog) {
                 AlertDialog(
                     onDismissRequest = { showErrorDialog = false },
-                    title = { Text(text = "Error") },
+                    title = { Text(text = stringResource(R.string.error)) },
                     text = { Text(text = errorMessage) },
                     confirmButton = {
                         TextButton(onClick = { showErrorDialog = false }) {
-                            Text(text = "OK")
+                            Text(text = stringResource(R.string.etiqueta_ok))
                         }
                     }
                 )

@@ -1,5 +1,4 @@
 package com.example.oportunia.presentation.ui.screens
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -19,63 +18,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
-import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.presentation.ui.components.texAndLable
-import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
-import com.example.oportunia.presentation.ui.theme.deepSkyBlue
-import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.theme.lilGray
-import com.example.oportunia.presentation.ui.theme.midnightBlue
-import com.example.oportunia.presentation.ui.theme.royalBlue
-
-
-
-
-
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.provider.OpenableColumns
 import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.shadow
-
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
-import com.example.oportunia.domain.model.CVResponseS
-import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
-import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-import java.io.File
 
 
 
@@ -86,28 +47,28 @@ fun StudentInformationSettings(
     studentViewModel: StudentViewModel,
     companyViewModel: CompanyViewModel
 ) {
-    // 0) Collectar token, userId y studentIdd
+
     val token by usersViewModel.token.collectAsState(initial = null)
     val userId by usersViewModel.userId.collectAsState(initial = null)
     val studentIdd by studentViewModel.studentIdd.collectAsState(initial = null)
 
-    // 1) Estados para los campos de texto
+
     var firstName by remember { mutableStateOf("") }
     var lastName1 by remember { mutableStateOf("") }
     var lastName2 by remember { mutableStateOf("") }
 
-    // 2) Estado para el dropdown de universidades
+
     var expanded by remember { mutableStateOf(false) }
     var selectedUniversityName by remember { mutableStateOf("") }
     var idSelectedU by remember { mutableStateOf(0) }
 
-    // 3) Collect de la lista de universidades desde UsersViewModel
+
     val universityList by usersViewModel.universities.collectAsState(initial = emptyList())
 
-    // 4) Estado para mostrar alerta si faltan datos
+
     var showAlert by remember { mutableStateOf(false) }
 
-    // 5) Cargar universidades al iniciar
+
     LaunchedEffect(Unit) {
         usersViewModel.fetchUniversities()
     }
@@ -146,14 +107,14 @@ fun StudentInformationSettings(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // ——— CONTENIDO PRINCIPAL ———
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // — Campos de texto —
+
                 OutlinedTextField(
                     value = firstName,
                     onValueChange = { firstName = it },
@@ -184,7 +145,7 @@ fun StudentInformationSettings(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // — DropdownMenu dinámico de universidades —
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -241,17 +202,17 @@ fun StudentInformationSettings(
                     }
                 }
 
-                // — Spacer para empujar los botones al fondo —
+
                 Spacer(modifier = Modifier.weight(1f))
 
-                // — FILA DE BOTONES: CANCELAR (izquierda) Y GUARDAR (derecha) —
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 24.dp)
                 ) {
-                    // Botón CANCELAR (rojo)
+
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -271,7 +232,7 @@ fun StudentInformationSettings(
                         )
                     }
 
-                    // Botón GUARDAR (verde pastel, a la derecha)
+
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -326,16 +287,19 @@ fun StudentInformationSettings(
         }
     }
 
+
     if (showAlert) {
         AlertDialog(
             onDismissRequest = { showAlert = false },
             confirmButton = {
                 TextButton(onClick = { showAlert = false }) {
-                    Text("Aceptar")
+                    Text(stringResource(R.string.acceptText))
                 }
             },
             title = { Text(stringResource(R.string.studentInfoAlertTittle)) },
             text = { Text(stringResource(R.string.studentInfoAlertText)) }
         )
     }
+
+
 }

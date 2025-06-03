@@ -164,4 +164,32 @@
     <string name="sin_datos">Sin datos de estudiante</string>
     <string name="neuro_cv">Neuro CV</string>
 
+
+    <!-- EditCvScreen -->
+    <string name="max_cvs">Has alcanzado el máximo de CVs (3)</string>
+    <string name="link_Archivo">Link del archivo</string>
+
+
+
+    <!-- GridPublicationsCompany -->
+    <string name="agregar_pasantia">Agregar pasantía</string>
+    <string name="nueva_pasantia">Nueva pasantía</string>
+    <string name="es_pagada">¿Es pagada?</string>
+    <string name="subir">Subir</string>
+    <string name="link_publicacion">Link de la publicación</string>
+
+
+    <!-- NotificationsScreen -->
+    <string name="welcome_notifications">Bienvenido a notificaciones</string>
+    <string name="text_notifications">Tu viaje de pasantía comienza aquí</string>
+    <string name="comenzar">Comenzar</string>
+
+
+
+    <!-- PublicationDetilScreen -->
+    <string name="tipo_pagada">Tipo: Pagada</string>
+    <string name="tipo_no_pagada">Tipo: No pagada</string>
+    <string name="error">Error</string>
+
+
 </resources>

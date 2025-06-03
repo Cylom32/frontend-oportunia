@@ -3,10 +3,6 @@ package com.example.oportunia.presentation.ui.screens
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.OpenableColumns
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -30,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import com.example.oportunia.R
 import com.example.oportunia.domain.model.CVResponseS
 import com.example.oportunia.presentation.ui.theme.*
@@ -144,7 +139,7 @@ fun EditUCVScreen(
                     }
                     StudentState.Empty -> {
                         Text(
-                            text = "Sin datos de estudiante",
+                            text = stringResource(R.string.sin_datos),
                             color = Color.LightGray,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
@@ -203,7 +198,7 @@ fun EditUCVScreen(
 
                 if (!canAddCv) {
                     Text(
-                        text = "Has alcanzado el máximo de CVs (3)",
+                        text = stringResource(R.string.max_cvs),
                         color = Color.Red,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(top = 4.dp)
@@ -260,7 +255,7 @@ fun EditUCVScreen(
                         OutlinedTextField(
                             value = newCvName,
                             onValueChange = { newCvName = it },
-                            label = { Text(text = "Nombre del archivo") },
+                            label = { Text(text = stringResource(R.string.etiqueta_nombre_archivo)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
@@ -268,7 +263,7 @@ fun EditUCVScreen(
                         OutlinedTextField(
                             value = newCvLink,
                             onValueChange = { newCvLink = it },
-                            label = { Text(text = "Link del archivo") },
+                            label = { Text(text = stringResource(R.string.link_Archivo)) },
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
@@ -292,7 +287,7 @@ fun EditUCVScreen(
                         newCvName = ""
                         newCvLink = ""
                     }) {
-                        Text(text = "Guardar")
+                        Text(text = stringResource(R.string.Guardar))
                     }
                 },
                 dismissButton = {
@@ -301,7 +296,7 @@ fun EditUCVScreen(
                         newCvName = ""
                         newCvLink = ""
                     }) {
-                        Text(text = "Cancelar")
+                        Text(text =  stringResource(R.string.Cancelar))
                     }
                 }
             )
