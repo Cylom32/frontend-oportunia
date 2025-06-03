@@ -40,6 +40,9 @@ import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.*
 
 @Composable
 fun SettingScreen(
@@ -92,98 +95,95 @@ fun SettingScreen(
 }
 
 @Composable
+fun ButtonSectionSettings(navController: NavHostController, usersViewModel: UsersViewModel) {
+    var showDialog by remember { mutableStateOf(false) }
 
-fun ButtonSectionSettings(navController: NavHostController,usersViewModel:UsersViewModel) {
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Seleccionar idioma") },
+            text = {
+                Column {
+                    listOf("Español", "Inglés", "Portugués", "Italiano").forEach { idioma ->
+                        TextButton(onClick = {
+                            println("Idioma seleccionado: $idioma")
+                            showDialog = false
+                        }) {
+                            Text(idioma)
+                        }
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showDialog = false }) {
+                    Text("Cancelar")
+                }
+            }
+        )
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp), // Eliminamos .height(90.dp) para que la columna crezca según el contenido
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Button(
-            onClick = { /* Handle Edit Account action */
-            navController.navigate(NavRoutes.StudentInformationSettings2.ROUTE)
+            onClick = {
+                navController.navigate(NavRoutes.StudentInformationSettings2.ROUTE)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(125.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = walterWhite,
-                contentColor = Color.Black
-            ),
+            colors = ButtonDefaults.buttonColors(containerColor = walterWhite, contentColor = Color.Black),
             shape = RoundedCornerShape(34.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.AccountCircle,
-                contentDescription = "Edit Account",
-                modifier = Modifier.size(32.dp),
-                tint = Color.Black
-            )
+            Icon(Icons.Default.AccountCircle, contentDescription = "Edit Account", modifier = Modifier.size(32.dp), tint = Color.Black)
             Spacer(modifier = Modifier.width(20.dp))
             Text(text = stringResource(R.string.account_text), fontSize = 22.sp, color = Color.Black)
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-
         Button(
-            onClick = { /* Handle Edit Language action */ },
+            onClick = { showDialog = true },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(125.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = walterWhite,
-                contentColor = Color.Black
-            ),
+            colors = ButtonDefaults.buttonColors(containerColor = walterWhite, contentColor = Color.Black),
             shape = RoundedCornerShape(34.dp),
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
         ) {
-            Icon(
-                imageVector = Icons.Filled.Info,
-                contentDescription = "Edit Account",
-                modifier = Modifier.size(32.dp)
-            )
+            Icon(Icons.Filled.Info, contentDescription = "Edit Language", modifier = Modifier.size(32.dp))
             Spacer(modifier = Modifier.width(34.dp))
             Text(text = stringResource(R.string.language_text), fontSize = 22.sp)
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
         Button(
-            onClick = { /* Handle Logout action */
-                usersViewModel.logout() // Cerrar sesión
-                navController.navigate(NavRoutes.Log.ROUTE) { // Redirigir a la pantalla de login
-                    popUpTo(navController.graph.startDestinationId) // Limpiar el backstack
-                    launchSingleTop = true// Evitar multiples instancias
+            onClick = {
+                usersViewModel.logout()
+                navController.navigate(NavRoutes.Log.ROUTE) {
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
                 }
-
-
-
-                },
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(125.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = walterWhite, // Cambiamos el color de fondo a walterWhite
-                contentColor = Color.Black // Cambiamos el color del contenido a negro
-            ),
-            shape = RoundedCornerShape(34.dp), // Añadimos la misma forma que el botón "Cuenta"
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp) // Añadimos la misma elevación
+            colors = ButtonDefaults.buttonColors(containerColor = walterWhite, contentColor = Color.Black),
+            shape = RoundedCornerShape(34.dp),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.logout),
                 contentDescription = "Logout",
                 modifier = Modifier.size(32.dp),
-                colorFilter = ColorFilter.tint(Color.Black) // Cambiamos el tint del ícono a negro para que coincida con el contentColor
+                colorFilter = ColorFilter.tint(Color.Black)
             )
             Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                text = stringResource(R.string.logout_text),
-                fontSize = 22.sp,
-                color = Color.Black // Aseguramos que el texto sea negro
-            )
+            Text(text = stringResource(R.string.logout_text), fontSize = 22.sp, color = Color.Black)
         }
     }
 }
+
