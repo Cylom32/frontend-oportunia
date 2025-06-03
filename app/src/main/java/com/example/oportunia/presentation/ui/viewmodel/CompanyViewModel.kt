@@ -521,16 +521,22 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
 
 
     fun fetchMessagesByCompany() = viewModelScope.launch {
-        val compId = companyIdC.value ?: return@launch
+        val compId = companyIdC.value ?: run {
+            Log.e("CompanyVM", "❌ companyIdC es null")
+            return@launch
+        }
+
+        Log.d("CompanyVM", "📨 Fetching messages con companyId=$compId")
+
         repository.findMessagesByCompany(compId)
             .onSuccess { list ->
                 _messagesC.value = list
                 _messagesErrorC.value = null
-                Log.d("CompanyVM", "Messages: $list")
+                Log.d("CompanyVM", "✅ Messages recibidos: $list")
             }
             .onFailure { ex ->
                 _messagesErrorC.value = ex.message
-                Log.e("CompanyVM", "Error fetching messages", ex)
+                Log.e("CompanyVM", "❌ Error fetching messages → ${ex.message}", ex)
             }
     }
 

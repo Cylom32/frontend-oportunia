@@ -246,6 +246,8 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
 
                                         Log.d("Registro", "Todo bien")
 
+                                        navController.navigate(NavRoutes.Log.ROUTE)
+
                                     }
                                 }
 

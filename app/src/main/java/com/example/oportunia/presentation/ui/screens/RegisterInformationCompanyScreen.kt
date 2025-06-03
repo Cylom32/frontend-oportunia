@@ -358,7 +358,7 @@ fun RegisterInformationCompanyScreen(
                 )
             }
 
-            // AlertDialog si faltan campos
+
             if (showEmptyAlert) {
                 AlertDialog(
                     onDismissRequest = { showEmptyAlert = false },
