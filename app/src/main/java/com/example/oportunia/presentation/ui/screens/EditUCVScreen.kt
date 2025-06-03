@@ -230,7 +230,7 @@ fun EditUCVScreen(
                                     }
                                 },
                                 onStatusChange = {
-
+                                    // Sin uso por ahora
                                 }
                             )
                         }
@@ -280,7 +280,6 @@ fun EditUCVScreen(
                                     file = newCvLink,
                                     studentId = idEst
                                 )
-                                studentViewModel.fetchCvLista(token!!)
                             }
                         }
                         showAddDialog = false
@@ -296,7 +295,7 @@ fun EditUCVScreen(
                         newCvName = ""
                         newCvLink = ""
                     }) {
-                        Text(text =  stringResource(R.string.Cancelar))
+                        Text(text = stringResource(R.string.Cancelar))
                     }
                 }
             )
@@ -343,7 +342,6 @@ fun EditUCVScreen(
         }
     }
 }
-
 
 @Composable
 fun CVCard(

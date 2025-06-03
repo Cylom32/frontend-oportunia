@@ -132,20 +132,27 @@ fun RequestScreen(
                                                     }
                                                 )
                                                 Spacer(modifier = Modifier.width(8.dp))
+                                                // Dentro de tu AlertDialog, reemplaza el Text clickable por este bloque:
                                                 Text(
                                                     text = displayName,
                                                     fontSize = (screenWidth.value * 0.04).sp,
                                                     modifier = Modifier
                                                         .clickable {
-                                                            Intent(Intent.ACTION_VIEW).also { intent ->
-                                                                intent.data = Uri.parse(cv.file)
-                                                                context.startActivity(intent)
+                                                            if (cv.file.isNotBlank()) {
+                                                                val intent = Intent(Intent.ACTION_VIEW).apply {
+                                                                    data = Uri.parse(cv.file)
+                                                                }
+                                                                // Verifica que exista una actividad capaz de manejar el Intent
+                                                                if (intent.resolveActivity(context.packageManager) != null) {
+                                                                    context.startActivity(intent)
+                                                                }
                                                             }
                                                             showDialog = false
                                                             selectedCvFile = cv.file
                                                         }
                                                         .padding(start = 4.dp)
                                                 )
+
                                             }
                                         }
                                     }

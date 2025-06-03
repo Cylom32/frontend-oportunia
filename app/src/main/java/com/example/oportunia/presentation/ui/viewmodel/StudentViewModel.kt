@@ -287,11 +287,32 @@ class StudentViewModel @Inject constructor(
 
     // Dentro de StudentViewModel.kt
 
-    // 1) Añade esta propiedad para exponer el resultado de la carga
+//    // 1) Añade esta propiedad para exponer el resultado de la carga
+//    private val _createCvResult = MutableStateFlow<Boolean?>(null)
+//    val createCvResult: StateFlow<Boolean?> = _createCvResult
+//
+//    // 2) Método para invocar al repositorio y subir el CV
+//    fun createCv(token: String, name: String, file: String, studentId: Int) {
+//        val cvInput = CVInput(name = name, file = file, idStudent = studentId)
+//        viewModelScope.launch {
+//            repository.createCv(token, cvInput)
+//                .onSuccess {
+//                    _createCvResult.value = true
+//                    Log.d("StudentVM", "CV enviado correctamente: $cvInput")
+//                }
+//                .onFailure { ex ->
+//                    _createCvResult.value = false
+//                    Log.e("StudentVM", "Error al crear CV: ${ex.message}")
+//                }
+//        }
+//    }
+//
+
+
     private val _createCvResult = MutableStateFlow<Boolean?>(null)
     val createCvResult: StateFlow<Boolean?> = _createCvResult
 
-    // 2) Método para invocar al repositorio y subir el CV
+    // 2) Método para invocar al repositorio y subir el CV, recargando la lista en onSuccess
     fun createCv(token: String, name: String, file: String, studentId: Int) {
         val cvInput = CVInput(name = name, file = file, idStudent = studentId)
         viewModelScope.launch {
@@ -299,6 +320,8 @@ class StudentViewModel @Inject constructor(
                 .onSuccess {
                     _createCvResult.value = true
                     Log.d("StudentVM", "CV enviado correctamente: $cvInput")
+                    // Apenas se crea el CV, recargar la lista:
+                    fetchCvLista(token)
                 }
                 .onFailure { ex ->
                     _createCvResult.value = false
@@ -306,7 +329,6 @@ class StudentViewModel @Inject constructor(
                 }
         }
     }
-
 
 
 
