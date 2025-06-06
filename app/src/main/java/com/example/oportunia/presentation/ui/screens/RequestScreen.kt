@@ -26,7 +26,6 @@ import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
 
-
 @Composable
 fun RequestScreen(
     navController: NavHostController,
@@ -36,14 +35,24 @@ fun RequestScreen(
 ) {
     BoxWithConstraints {
         val screenHeight = maxHeight
-        val screenWidth = maxWidth
+        val screenWidth  = maxWidth
 
-        val token by userViewModel.token.collectAsState()
-        val inboxResult by companyViewModel.inboxByCompany.collectAsState()
-        val studentId by studentViewModel.studentIdd.collectAsState()
-        val sendSuccess by companyViewModel.sendSuccess.collectAsState()
 
-        val cvList by studentViewModel.cvlista.collectAsState()
+        val token by userViewModel.token.collectAsState(initial = null)
+        val studentId by studentViewModel.studentIdd.collectAsState(initial = null)
+
+
+
+        LaunchedEffect(token, studentId) {
+            if (!token.isNullOrBlank() && studentId != null) {
+                // Aquí ya sabemos que 'token' y 'studentId' NO son nulos.
+                // Por eso podemos usar !! para forzar el no-null.
+                studentViewModel.fetchCvList(token!!, studentId!!)
+            }
+        }
+
+
+        val cvList by studentViewModel.cvlista.collectAsState(initial = emptyList())
 
         var mensaje by remember { mutableStateOf("") }
         var selectedCvFile by remember { mutableStateOf("") }
@@ -55,7 +64,6 @@ fun RequestScreen(
                 selectedCvFile = cvList.first().file
             }
         }
-
 
         val context = LocalContext.current
 
@@ -85,7 +93,7 @@ fun RequestScreen(
                     Text(
                         text = stringResource(R.string.etiqueta_archivo_adjunto),
                         style = MaterialTheme.typography.bodyLarge,
-                        color =  Color.Black,
+                        color = Color.Black,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
 
@@ -99,7 +107,10 @@ fun RequestScreen(
                         contentAlignment = Alignment.CenterStart
                     ) {
                         Text(
-                            text = if (selectedCvFile.isBlank()) stringResource(R.string.etiqueta_seleccionar_cv) else selectedCvFile,
+                            text = if (selectedCvFile.isBlank())
+                                stringResource(R.string.etiqueta_seleccionar_cv)
+                            else
+                                selectedCvFile,
                             fontSize = (screenWidth.value * 0.045).sp,
                             color = if (cvList.isEmpty()) Color.Gray else Color.Black
                         )
@@ -118,7 +129,7 @@ fun RequestScreen(
                                         )
                                     } else {
                                         cvList.forEach { cv ->
-                                            val displayName = cv.file.substringBeforeLast(".pdf")
+                                            val displayName = cv.name.substringBeforeLast(".pdf")
                                             Row(
                                                 modifier = Modifier
                                                     .fillMaxWidth()
@@ -132,7 +143,6 @@ fun RequestScreen(
                                                     }
                                                 )
                                                 Spacer(modifier = Modifier.width(8.dp))
-                                                // Dentro de tu AlertDialog, reemplaza el Text clickable por este bloque:
                                                 Text(
                                                     text = displayName,
                                                     fontSize = (screenWidth.value * 0.04).sp,
@@ -142,7 +152,6 @@ fun RequestScreen(
                                                                 val intent = Intent(Intent.ACTION_VIEW).apply {
                                                                     data = Uri.parse(cv.file)
                                                                 }
-                                                                // Verifica que exista una actividad capaz de manejar el Intent
                                                                 if (intent.resolveActivity(context.packageManager) != null) {
                                                                     context.startActivity(intent)
                                                                 }
@@ -152,22 +161,20 @@ fun RequestScreen(
                                                         }
                                                         .padding(start = 4.dp)
                                                 )
-
                                             }
                                         }
                                     }
                                 }
                             },
-                            confirmButton = { /* No hace falta botón extra */ },
-                            dismissButton = { /* Se cierra al tocar fuera */ }
+                            confirmButton = { /* No se necesita botón extra */ },
+                            dismissButton = { /* Al tocar fuera cierra */ }
                         )
                     }
-                    // ────────────────────────────────────────────────────────────────────────────────
 
                     Text(
                         text = stringResource(R.string.etiqueta_mensaje_adicional),
                         style = MaterialTheme.typography.bodyLarge,
-                        color= Color.Black,//<-- Lo nuevo
+                        color = Color.Black,
                         modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
                     )
 
@@ -178,43 +185,36 @@ fun RequestScreen(
                             .background(Color.White, shape = RoundedCornerShape(12.dp))
                             .padding(12.dp)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(screenHeight * 0.25f)
-                                .background(Color.White, shape = RoundedCornerShape(12.dp))
-                                .padding(12.dp)
-                        ) {
-                            if (mensaje.isEmpty()) {
-                                Text(
-                                    text = stringResource(R.string.etiqueta_escribe_mensaje),
-                                    fontSize = (screenWidth.value * 0.04).sp,
-                                    color = Color.Gray
-                                )
-                            }
-                            BasicTextField(
-                                value = mensaje,
-                                onValueChange = { mensaje = it },
-                                textStyle = LocalTextStyle.current.copy(
-                                    fontSize = (screenWidth.value * 0.04).sp,
-                                    color = Color.Black
-                                ),
-                                modifier = Modifier.fillMaxSize()
+                        if (mensaje.isEmpty()) {
+                            Text(
+                                text = stringResource(R.string.etiqueta_escribe_mensaje),
+                                fontSize = (screenWidth.value * 0.04).sp,
+                                color = Color.Gray
                             )
                         }
+                        BasicTextField(
+                            value = mensaje,
+                            onValueChange = { mensaje = it },
+                            textStyle = LocalTextStyle.current.copy(
+                                fontSize = (screenWidth.value * 0.04).sp,
+                                color = Color.Black
+                            ),
+                            modifier = Modifier.fillMaxSize()
+                        )
                     }
 
                     Button(
                         onClick = {
+                            // Antes de enviar, validamos que token, studentId y selectedCvFile estén listos
                             val rawToken = token ?: return@Button
-                            val inboxId = inboxResult?.idInbox ?: return@Button
-                            val studId = studentId ?: return@Button
+                            val studId   = studentId ?: return@Button
+                            val inboxId  = companyViewModel.inboxByCompany.value?.idInbox ?: return@Button
 
                             companyViewModel.sendMessage(
                                 rawToken = rawToken,
-                                detail = mensaje,
-                                file = selectedCvFile,
-                                idInbox = inboxId,
+                                detail   = mensaje,
+                                file     = selectedCvFile,
+                                idInbox  = inboxId,
                                 idStudent = studId
                             )
                         },
@@ -233,12 +233,15 @@ fun RequestScreen(
                 }
             }
 
-
+            // ————————————————————————————————————————————————————
+            // 4) Si el envío fue exitoso, mostramos un AlertDialog con OK
+            // ————————————————————————————————————————————————————
+            val sendSuccess by companyViewModel.sendSuccess.collectAsState()
             if (sendSuccess == true) {
                 AlertDialog(
                     onDismissRequest = {
                         companyViewModel.clearSendStatus()
-                        navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE) // Ajusta la ruta deseada
+                        navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
                     },
                     title = { Text(text = stringResource(R.string.etiqueta_exito_mensaje)) },
                     text = { Text(text = stringResource(R.string.etiqueta_enviado_exitosamente)) },

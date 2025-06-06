@@ -32,6 +32,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.oportunia.data.remote.dto.PublicationFilterDTO
 import com.example.oportunia.domain.model.Area
@@ -67,7 +68,7 @@ fun HomeScreenS(companyViewModel: CompanyViewModel, usersViewModel: UsersViewMod
             companyViewModel.fetchPublications()
         }
 
-        val publications by companyViewModel.publications.collectAsState()
+
 
 
 
@@ -449,6 +450,7 @@ fun RemuneradoPopup(
     )
 }
 
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ImageScroll(
@@ -460,7 +462,7 @@ fun ImageScroll(
     navController: NavHostController
 ) {
     val images    = publications.map { it.file }
-    val logos     = publications.map { it.company.user.img } // URLs reales
+    val logos     = publications.map { it.company.user.img }
     val pagerState = rememberPagerState(pageCount = { images.size })
 
     LaunchedEffect(pagerState.currentPage) {
@@ -521,14 +523,28 @@ fun ImageScroll(
                                 navController.navigate(NavRoutes.CompanyInfoScreenS.ROUTE)
 
                                 val logoUrl   = publications[page].company.user.img
-
                                 companyViewModel.setCompanyLogo(logoUrl)
-
                                 companyViewModel.fetchCompanyWithNetworks(companyId)
-
                                 Log.d("ImageScroll", "Logo clicked, companyId=$companyId")
                             }
                     )
+//                    Button(
+//                        onClick = {
+//                            navController.navigate(NavRoutes.RequestScreen.ROUTE)
+//                        },
+//                        modifier = Modifier
+//                            .align(Alignment.BottomCenter)
+//                            .padding(bottom = 16.dp)
+//                            .height(60.dp)
+//                            .width(180.dp),
+//                        shape = RoundedCornerShape(24.dp)
+//                    ) {
+//                        Text(
+//                            text = stringResource(R.string.ApplyButtonText),
+//                            fontSize = 18.sp,
+//                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+//                        )
+//                    }
                 }
             }
         }
