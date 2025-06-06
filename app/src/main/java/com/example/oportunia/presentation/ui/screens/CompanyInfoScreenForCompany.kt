@@ -1,55 +1,37 @@
+// src/main/java/com/example/oportunia/presentation/ui/screens/CompanyInfoScreenForCompany.kt
 package com.example.oportunia.presentation.ui.screens
 
-
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
 import com.example.oportunia.presentation.ui.theme.lilGray
 import com.example.oportunia.presentation.ui.theme.walterWhite
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
+import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import android.net.Uri
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
-import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
-import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.style.TextDecoration
-import coil.compose.AsyncImage
-import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
-
-
-
-
 
 @Composable
 fun CompanyInfoScreenForCompany(
@@ -61,7 +43,6 @@ fun CompanyInfoScreenForCompany(
     val companyId by companyViewModel.companyIdC.collectAsState()
     val imgUrl by companyViewModel.imgShow.collectAsState(initial = null)
 
-    // Cuando companyId cambie (por ejemplo, se establezca en la VM), dispara la carga
     LaunchedEffect(companyId) {
         companyId?.let { id ->
             companyViewModel.fetchCompanyWithNetworksk(id)
@@ -72,13 +53,10 @@ fun CompanyInfoScreenForCompany(
     val company by companyViewModel.companyWithNetworksk.collectAsState()
     val companyName: String = companyViewModel.companyNamek
         .collectAsState(initial = null)
-        .value
-        ?: ""
-
+        .value ?: ""
     val companyDescription: String = companyViewModel.companyDescriptionk
         .collectAsState(initial = null)
-        .value
-        ?: ""
+        .value ?: ""
     val socialNetworks by companyViewModel.socialNetworksk.collectAsState(initial = emptyList())
 
     Scaffold(
@@ -105,6 +83,7 @@ fun CompanyInfoScreenForCompany(
                     .padding(bottom = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Encabezado degradado con el nombre de la compañía
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -120,64 +99,16 @@ fun CompanyInfoScreenForCompany(
                         ),
                     contentAlignment = Alignment.Center
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    ) {
-                        Text(
-                            text = companyName,
-                            color = walterWhite,
-                            fontSize = 29.sp
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        Button(
-                            onClick = {
-                                val authToken = token ?: return@Button
-                                navController.navigate(NavRoutes.GridPublicationsCompany.ROUTE)
-                               // navController.navigate(NavRoutes.EditInformationCompanyScreen.ROUTE)
-
-
-
-                                /*
-
-
-                                EditInformationCompanyScreen
-
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-                                laksjdalsdnaodsnasdkandksa
-
-
-
-
-
-                                 */
-
-
-
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.White),
-                            shape = RoundedCornerShape(24.dp),
-                            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-                        ) {
-                            Text(text = stringResource(R.string.etiqueta_pasantias), color = Color.Black)
-                        }
-                    }
+                    Text(
+                        text = companyName,
+                        color = walterWhite,
+                        fontSize = 29.sp
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(25.dp))
 
+                // Card con logo, nombre, descripción y redes sociales
                 Card(
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
@@ -220,7 +151,6 @@ fun CompanyInfoScreenForCompany(
                         Spacer(modifier = Modifier.height(16.dp))
 
                         val uriHandler = LocalUriHandler.current
-
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -250,6 +180,34 @@ fun CompanyInfoScreenForCompany(
                                 )
                             }
                         }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Botón de pasantías situado abajo y centrado con sombra
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Button(
+                        onClick = {
+                            val authToken = token ?: return@Button
+                            navController.navigate(NavRoutes.GridPublicationsCompany.ROUTE)
+                        },
+                        modifier = Modifier
+                            .shadow(
+                                elevation = 8.dp,
+                                shape = RoundedCornerShape(24.dp),
+                                clip = false
+                            ),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                        shape = RoundedCornerShape(24.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                    ) {
+                        Text(text = stringResource(R.string.etiqueta_pasantias), color = Color.Black)
                     }
                 }
             }
