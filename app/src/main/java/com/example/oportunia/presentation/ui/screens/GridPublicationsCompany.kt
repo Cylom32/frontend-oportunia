@@ -451,18 +451,6 @@ fun GridPublicationsCompany(
                                 )
                             }
 
-
-
-
-
-
-
-
-
-
-
-
-
                         }
                     },
                     confirmButton = {
