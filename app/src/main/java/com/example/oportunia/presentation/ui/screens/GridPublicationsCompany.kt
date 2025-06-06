@@ -1,4 +1,7 @@
 package com.example.oportunia.presentation.ui.screens
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,12 +47,16 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import coil.compose.AsyncImage
 import com.example.oportunia.R
 import com.example.oportunia.domain.model.Area
 import com.example.oportunia.domain.model.Location
+import com.example.oportunia.presentation.ui.cloudinary.CloudinaryService
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
+import kotlinx.coroutines.launch
+import java.io.File
 
 
 @Composable
@@ -79,6 +86,65 @@ fun GridPublicationsCompany(
 
     var isPaid by remember { mutableStateOf(true) }
     var publicationLink by remember { mutableStateOf("") }
+
+
+
+
+// Estados para manejar la carga de imagen
+    var isUploadingImage by remember { mutableStateOf(false) }
+    var uploadError by remember { mutableStateOf<String?>(null) }
+
+    // Scope para corrutinas
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    // Launcher para seleccionar imagen
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            // Iniciar estado de carga
+            isUploadingImage = true
+            uploadError = null
+
+            coroutineScope.launch {
+                try {
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    val file = File(context.cacheDir, "publication_${System.currentTimeMillis()}.jpg").apply {
+                        outputStream().use { output ->
+                            inputStream?.copyTo(output)
+                        }
+                    }
+
+                    // Subir a Cloudinary en hilo de fondo
+                    val cloudinaryService = CloudinaryService("dfffvf0m6", "mi_preset")
+                    val url = cloudinaryService.uploadImage(file)
+
+                    if (url != null) {
+                        publicationLink = url
+                        uploadError = null
+                    } else {
+                        uploadError = "Error al subir la imagen"
+                    }
+                } catch (e: Exception) {
+                    uploadError = "Error: ${e.message}"
+                } finally {
+                    isUploadingImage = false
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 
     val areaOptions = usersViewModel.areas.collectAsState()
@@ -321,12 +387,102 @@ fun GridPublicationsCompany(
                             Spacer(modifier = Modifier.height(12.dp))
 
                             // Link
-                            OutlinedTextField(
-                                value = publicationLink,
-                                onValueChange = { publicationLink = it },
-                                label = { Text(stringResource(R.string.link_publicacion)) },
-                                modifier = Modifier.fillMaxWidth()
+//                            OutlinedTextField(
+//                                value = publicationLink,
+//                                onValueChange = { publicationLink = it },
+//                                label = { Text(stringResource(R.string.link_publicacion)) },
+//                                modifier = Modifier.fillMaxWidth()
+//                            )
+
+
+
+
+
+                            Text(
+                                text = "Imagen de la Publicación",
+                                fontSize = 14.sp,
+                                color = Color.Black,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 4.dp)
                             )
+
+                            Button(
+                                onClick = {
+                                    if (!isUploadingImage) {
+                                        launcher.launch("image/*")
+                                    }
+                                },
+                                enabled = !isUploadingImage,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp)
+                                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp), clip = false),
+                                shape = RoundedCornerShape(8.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (isUploadingImage) Color.Gray else royalBlue
+                                )
+                            ) {
+                                when {
+                                    isUploadingImage -> {
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically,
+                                            horizontalArrangement = Arrangement.Center
+                                        ) {
+                                            CircularProgressIndicator(
+                                                modifier = Modifier.size(16.dp),
+                                                color = Color.White,
+                                                strokeWidth = 2.dp
+                                            )
+                                            Spacer(modifier = Modifier.width(8.dp))
+                                            Text(
+                                                text = "Subiendo...",
+                                                fontSize = 14.sp,
+                                                color = Color.White
+                                            )
+                                        }
+                                    }
+                                    publicationLink.isNotEmpty() -> {
+                                        Text(
+                                            text = "Imagen Seleccionada ✓",
+                                            fontSize = 14.sp,
+                                            color = Color.White,
+                                            modifier = Modifier.padding(vertical = 8.dp)
+                                        )
+                                    }
+                                    else -> {
+                                        Text(
+                                            text = "Seleccionar Imagen",
+                                            fontSize = 14.sp,
+                                            color = Color.White,
+                                            modifier = Modifier.padding(vertical = 8.dp)
+                                        )
+                                    }
+                                }
+                            }
+
+                            // Mostrar error si existe
+                            uploadError?.let { error ->
+                                Text(
+                                    text = error,
+                                    color = Color.Red,
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.padding(top = 4.dp)
+                                )
+                            }
+
+
+
+
+
+
+
+
+
+
+
+
+
                         }
                     },
                     confirmButton = {

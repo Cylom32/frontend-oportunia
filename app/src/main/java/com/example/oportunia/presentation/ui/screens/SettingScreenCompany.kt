@@ -1,5 +1,8 @@
 package com.example.oportunia.presentation.ui.screens
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,11 +25,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -34,18 +44,29 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.presentation.navigation.NavRoutes
+import com.example.oportunia.presentation.ui.cloudinary.CloudinaryService
 import com.example.oportunia.presentation.ui.theme.lilGray
 import com.example.oportunia.presentation.ui.theme.walterWhite
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
+import com.example.oportunia.presentation.ui.viewmodel.LanguageViewModel
+import kotlinx.coroutines.launch
+import java.io.File
 
 
 @Composable
 fun SettingScreenCompany(
     navController: NavHostController,
-    usersViewModel: UsersViewModel
+    usersViewModel: UsersViewModel,
+    languageViewModel: LanguageViewModel
 ) {
+
+
+
+
+
+
 
     Surface(
         modifier = Modifier
@@ -84,7 +105,7 @@ fun SettingScreenCompany(
 
             Spacer(modifier = Modifier.height(25.dp))
 
-            ButtonSectionSettingss(navController,usersViewModel)
+            ButtonSectionSettingss(navController,usersViewModel,languageViewModel= languageViewModel)
         }
     }
 
@@ -93,7 +114,12 @@ fun SettingScreenCompany(
 
 @Composable
 
-fun ButtonSectionSettingss(navController: NavHostController,usersViewModel:UsersViewModel) {
+fun ButtonSectionSettingss(navController: NavHostController,usersViewModel:UsersViewModel,languageViewModel: LanguageViewModel) {
+
+    val currentLanguage by languageViewModel.currentLanguage.collectAsState()
+    var showLanguageDialog by remember { mutableStateOf(false)}
+
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -128,8 +154,12 @@ fun ButtonSectionSettingss(navController: NavHostController,usersViewModel:Users
         Spacer(modifier = Modifier.height(16.dp))
 
 
+
+
+
+
         Button(
-            onClick = {  },
+            onClick = { showLanguageDialog= true },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(125.dp),
@@ -142,7 +172,7 @@ fun ButtonSectionSettingss(navController: NavHostController,usersViewModel:Users
         ) {
             Icon(
                 imageVector = Icons.Filled.Info,
-                contentDescription = "Edit Account",
+                contentDescription = "Language",
                 modifier = Modifier.size(32.dp)
             )
             Spacer(modifier = Modifier.width(34.dp))
@@ -151,6 +181,12 @@ fun ButtonSectionSettingss(navController: NavHostController,usersViewModel:Users
 
         Spacer(modifier = Modifier.height(16.dp))
 
+
+
+
+
+
+
         Button(
             onClick = {
                 usersViewModel.logout()
@@ -158,7 +194,6 @@ fun ButtonSectionSettingss(navController: NavHostController,usersViewModel:Users
                     popUpTo(navController.graph.startDestinationId)
                     launchSingleTop = true
                 }
-
 
 
             },
@@ -185,5 +220,22 @@ fun ButtonSectionSettingss(navController: NavHostController,usersViewModel:Users
                 color = Color.Black
             )
         }
+
+
+        // Diálogo para seleccionar idioma
+        if (showLanguageDialog) {
+            LanguageSelectionDialog(
+                currentLanguage = currentLanguage,
+                onLanguageSelected = { language ->
+                    languageViewModel.changeLanguage(language)
+                    showLanguageDialog = false
+                },
+                onDismiss = { showLanguageDialog = false }
+            )
+        }
+
+
+
+
     }
 }

@@ -35,6 +35,7 @@ import com.example.oportunia.presentation.ui.screens.SettingScreen
 import com.example.oportunia.presentation.ui.screens.SettingScreenCompany
 import com.example.oportunia.presentation.ui.screens.StudentInformationSettings
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
+import com.example.oportunia.presentation.ui.viewmodel.LanguageViewModel
 //import com.example.oportunia.presentation.ui.screens.StudentInformationSettings2
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
@@ -46,7 +47,8 @@ fun NavGraph(
     paddingValues: PaddingValues,
     usersViewModel: UsersViewModel,
     studentViewModel: StudentViewModel,
-    companyViewModel: CompanyViewModel
+    companyViewModel: CompanyViewModel,
+    languageViewModel: LanguageViewModel,
 ) {
     NavHost(
         navController = navController,
@@ -75,7 +77,8 @@ fun NavGraph(
         composable(NavRoutes.SettingScreenCompany.ROUTE) {
             SettingScreenCompany(
                 navController = navController,
-                usersViewModel = usersViewModel
+                usersViewModel = usersViewModel,
+                languageViewModel=languageViewModel
             )
         }
 
@@ -191,6 +194,7 @@ fun NavGraph(
             SettingScreen(
                 navController = navController,
                 usersViewModel = usersViewModel,
+                languageViewModel = languageViewModel
             )
         }
 

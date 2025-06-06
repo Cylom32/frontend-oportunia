@@ -116,4 +116,8 @@
     <string name="error">Errore</string>
 
 
+
+    <string name="select_language">Seleziona la lingua</string>
+
+
 </resources>

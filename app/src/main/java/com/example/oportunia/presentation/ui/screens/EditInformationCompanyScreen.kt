@@ -1,7 +1,10 @@
 // RegisterInformationCompanyScreen.kt
 package com.example.oportunia.presentation.ui.screens
 
+import android.net.Uri
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,6 +21,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -27,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.domain.model.SocialNetwork
+import com.example.oportunia.presentation.ui.cloudinary.CloudinaryService
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.deepSkyBlue
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
@@ -36,11 +41,8 @@ import com.example.oportunia.presentation.ui.theme.royalBlue
 import com.example.oportunia.presentation.ui.theme.walterWhite
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-
-
-
-
-
+import kotlinx.coroutines.launch
+import java.io.File
 
 
 @Composable
@@ -58,6 +60,68 @@ fun EditInformationCompanyScreen(
     var descriptionText by remember { mutableStateOf(TextFieldValue("")) }
     var showEmptyAlert by remember { mutableStateOf(false) }
     var showConfirmDialog by remember { mutableStateOf(false) }
+
+
+
+
+
+
+
+
+    // Estados para manejar la carga de imagen
+    var isUploadingImage by remember { mutableStateOf(false) }
+    var uploadError by remember { mutableStateOf<String?>(null) }
+    var publicationLink by remember { mutableStateOf("") } // Agrega esta variable si no está definida
+
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            isUploadingImage = true
+            uploadError = null
+
+            coroutineScope.launch {
+                try {
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    val file = File(context.cacheDir, "publication_${System.currentTimeMillis()}.jpg").apply {
+                        outputStream().use { output ->
+                            inputStream?.copyTo(output)
+                        }
+                    }
+
+                    val cloudinaryService = CloudinaryService("dfffvf0m6", "mi_preset")
+                    val url = cloudinaryService.uploadImage(file)
+
+                    if (url != null) {
+                        publicationLink = url
+                        uploadError = null
+                    } else {
+                        uploadError = "Error al subir la imagen"
+                    }
+                } catch (e: Exception) {
+                    uploadError = "Error: ${e.message}"
+                } finally {
+                    isUploadingImage = false
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     val socialList by companyViewModel.companySocialNetworks.collectAsState()
     val imgValue by companyViewModel.imgShow.collectAsState()
@@ -234,30 +298,94 @@ fun EditInformationCompanyScreen(
                         )
                     }
 
+
+
+
+
+
+
+
+
                     Text(
-                        text = stringResource(R.string.link_logo),
+                        text = "Imagen de la Compañía",
                         fontSize = 14.sp,
                         color = Color.Black,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 8.dp, bottom = 4.dp)
+                            .padding(bottom = 4.dp)
                     )
-                    Box(
+
+                    Button(
+                        onClick = {
+                            if (!isUploadingImage) {
+                                launcher.launch("image/*")
+                            }
+                        },
+                        enabled = !isUploadingImage,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(8.dp))
-                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp), clip = false)
-                            .background(Color.White)
-                            .padding(horizontal = 8.dp, vertical = 12.dp)
+                            .padding(vertical = 4.dp)
+                            .shadow(elevation = 4.dp, shape = RoundedCornerShape(8.dp), clip = false),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (isUploadingImage) Color.Gray else royalBlue
+                        )
                     ) {
-                        BasicTextField(
-                            value = logoLink,
-                            onValueChange = { logoLink = it },
-                            modifier = Modifier.fillMaxWidth(),
-                            textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
-                            singleLine = true
+                        when {
+                            isUploadingImage -> {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    CircularProgressIndicator(
+                                        modifier = Modifier.size(16.dp),
+                                        color = Color.White,
+                                        strokeWidth = 2.dp
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    Text(
+                                        text = "Subiendo...",
+                                        fontSize = 14.sp,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+
+                            publicationLink.isNotEmpty() -> {
+                                Text(
+                                    text = "Imagen Seleccionada ✓",
+                                    fontSize = 14.sp,
+                                    color = Color.White,
+                                    modifier = Modifier.padding(vertical = 8.dp)
+                                )
+                            }
+
+                            else -> {
+                                Text(
+                                    text = "Seleccionar Imagen",
+                                    fontSize = 14.sp,
+                                    color = Color.White,
+                                    modifier = Modifier.padding(vertical = 8.dp)
+                                )
+                            }
+                        }
+                    }
+
+                    uploadError?.let { error ->
+                        Text(
+                            text = error,
+                            color = Color.Red,
+                            fontSize = 12.sp,
+                            modifier = Modifier.padding(top = 4.dp)
                         )
                     }
+
+
+
+
+
+
+
 
                     Spacer(modifier = Modifier.height(16.dp))
 
