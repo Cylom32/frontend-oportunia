@@ -143,38 +143,34 @@ class CompanyViewModel @Inject constructor(
     private val _publicationsError = MutableStateFlow<String?>(null)
     val publicationsError: StateFlow<String?> = _publicationsError
 
-    /**
-     * @param authToken debe incluir el prefijo "Bearer "
-     * @param companyIdParam ID de la compañía
-     */
-
-
 
     fun fetchPublicationsByCompany(
         authToken: String,
         companyIdParam: Int
-    ) = viewModelScope.launch {
-        repository
-            .findPublicationsByCompany(authToken, companyIdParam)
-            .onSuccess { publications ->
-                _companyPublications.value = publications
-                _publicationsError.value = null
+    ) {
+        // 1) Limpiar antes de pedir los datos nuevos
+        _companyPublications.value = emptyList()
+        _publicationsError.value = null
 
-                // Imprimir cada publicación en el log
-                publications.forEach { pub ->
-                    Log.d("CompanyVM", "Publication fetched: $pub")
+        viewModelScope.launch {
+            repository
+                .findPublicationsByCompany(authToken, companyIdParam)
+                .onSuccess { publicaciones ->
+                    _companyPublications.value = publicaciones
+                    _publicationsError.value = null
+
+                    publicaciones.forEach { pub ->
+                        Log.d("CompanyVM", "Publication fetched: $pub")
+                    }
+                    val json = Gson().toJson(publicaciones)
+                    Log.d("CompanyVM", "Publications JSON: $json")
                 }
-
-                // Imprimir el arreglo completo en JSON
-                val json = Gson().toJson(publications)
-                Log.d("CompanyVM", "Publications JSON: $json")
-            }
-            .onFailure { ex ->
-                _publicationsError.value = ex.message
-                Log.e("CompanyVM", "Error fetching publications: ${ex.message}")
-            }
+                .onFailure { ex ->
+                    _publicationsError.value = ex.message
+                    Log.e("CompanyVM", "Error fetching publications: ${ex.message}")
+                }
+        }
     }
-
 
 
 ///////////////////////////////  -------------  para obtener las publicaciones de la compañia segund id   --------  ///////////////////////
