@@ -287,7 +287,7 @@ fun EditInformationCompanyScreen(
                     Text(
                         text = stringResource(R.string.imagen_compañia),
                         fontSize = 14.sp,
-                        color = Color.White,
+                        color = Color.Black,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 4.dp)

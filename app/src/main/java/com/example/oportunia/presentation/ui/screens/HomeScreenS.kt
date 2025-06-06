@@ -240,7 +240,7 @@ fun SearchBar(onMenuClick: () -> Unit) {
                 .clickable { onMenuClick() }
         )
         Text(
-            text = "filtros de búsqueda",
+            text = stringResource(R.string.etiqueta_filtro_busqueda),
             modifier = Modifier.align(Alignment.Center),
             color = Color.DarkGray,
             style = MaterialTheme.typography.titleMedium,
