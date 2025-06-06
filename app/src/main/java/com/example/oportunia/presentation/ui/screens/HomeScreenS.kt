@@ -11,7 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -222,40 +222,34 @@ fun HomeScreenS(companyViewModel: CompanyViewModel, usersViewModel: UsersViewMod
     }
 }
 
-
 @Composable
 fun SearchBar(onMenuClick: () -> Unit) {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .height(50.dp)
             .background(Color(0xFFE9EEF1), shape = RoundedCornerShape(50))
-            .padding(horizontal = 16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+            .padding(horizontal = 16.dp)
     ) {
         Icon(
             imageVector = Icons.Default.Menu,
             contentDescription = "Menú",
             tint = Color.DarkGray,
-            modifier = Modifier.clickable { onMenuClick() }
-        )
-
-        Text(
-            text =  stringResource(R.string.etiqueta_buscar_home),
             modifier = Modifier
-                .weight(1f)
-                .padding(start = 12.dp),
-            color = Color.DarkGray
+                .align(Alignment.CenterStart)
+                .clickable { onMenuClick() }
         )
-
-        Icon(
-            imageVector = Icons.Default.Search,
-            contentDescription = "Buscar",
-            tint = Color.DarkGray
+        Text(
+            text = "filtros de búsqueda",
+            modifier = Modifier.align(Alignment.Center),
+            color = Color.DarkGray,
+            style = MaterialTheme.typography.titleMedium,
+            textAlign = TextAlign.Center
         )
     }
 }
+
+
 
 
 @Composable

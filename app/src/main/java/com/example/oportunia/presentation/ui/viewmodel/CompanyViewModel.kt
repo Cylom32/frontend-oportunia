@@ -143,7 +143,7 @@ class CompanyViewModel @Inject constructor(
     private val _publicationsError = MutableStateFlow<String?>(null)
     val publicationsError: StateFlow<String?> = _publicationsError
 
-   
+
     fun fetchPublicationsByCompany(
         authToken: String,
         companyIdParam: Int
