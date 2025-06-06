@@ -339,6 +339,9 @@ class StudentViewModel @Inject constructor(
 
     ////////////---------------------      PARA actualizar la info del studiante ///////////////////////////////////////////////////////////////////
 
+
+
+
     fun updateStudent(
         token: String,
         studentId: Int,
@@ -349,16 +352,6 @@ class StudentViewModel @Inject constructor(
         userId: Int
     ) {
         viewModelScope.launch {
-            // Imprimir parámetros antes de llamar al repositorio
-            Log.d("StudentVM", "→ updateStudent llamado con:")
-            Log.d("StudentVM", "   token = $token")
-            Log.d("StudentVM", "   studentId = $studentId")
-            Log.d("StudentVM", "   firstName = $rawFirstName")
-            Log.d("StudentVM", "   lastName1 = $rawLastName1")
-            Log.d("StudentVM", "   lastName2 = $rawLastName2")
-            Log.d("StudentVM", "   universityId = $universityId")
-            Log.d("StudentVM", "   userId = $userId")
-
             val updateDto = StudentUpdateInput(
                 firstName    = rawFirstName,
                 lastName1    = rawLastName1,
@@ -369,13 +362,24 @@ class StudentViewModel @Inject constructor(
 
             repository.updateStudent(token, studentId, updateDto)
                 .onSuccess {
-              //      Log.d("StudentVM", "✅ Estudiante actualizado: id=$studentId")
+                    val currentStudent = (_studentState.value as? StudentState.Success)?.student
+                    if (currentStudent != null) {
+                        val updatedStudent = currentStudent.copy(
+                            name         = rawFirstName,
+                            lastName1    = rawLastName1,
+                            lastName2    = rawLastName2,
+                            universityId = universityId
+                        )
+                        _studentState.value = StudentState.Success(updatedStudent)
+                    }
                 }
                 .onFailure { ex ->
-                 //   Log.e("StudentVM", "❌ Error al actualizar estudiante id=$studentId", ex)
+                    _studentState.value = StudentState.Error(ex.message ?: "Error desconocido")
                 }
         }
     }
+
+
 
 
 

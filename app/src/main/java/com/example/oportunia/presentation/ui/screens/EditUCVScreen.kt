@@ -48,27 +48,26 @@ fun EditUCVScreen(
 ) {
     val context = LocalContext.current
 
-    // 1) Token y studentId
+
     val token by usersViewModel.token.collectAsState()
     val studentId by studentViewModel.studentIdd.collectAsState()
 
-    // 2) Estado de Student y lista de CVs (cvlistaa)
+
     val studentState by studentViewModel.studentState.collectAsState()
     val cvs by studentViewModel.cvlistaa.collectAsState()
     val deleteResult by studentViewModel.deleteResult.collectAsState()
 
-    // 3) Estados para mostrar el dialog de “Agregar CV”
+
     var showAddDialog by remember { mutableStateOf(false) }
     var newCvName by remember { mutableStateOf("") }
     var newCvUri by remember { mutableStateOf<Uri?>(null) }
     var newCvFileName by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
-    // 4) Estados para manejar el popup de detalles
     var selectedCv by remember { mutableStateOf<CVResponseS?>(null) }
     var showDetailsDialog by remember { mutableStateOf(false) }
 
-    // Launcher para seleccionar PDF
+
     val pdfPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -78,20 +77,20 @@ fun EditUCVScreen(
         }
     }
 
-    // Instancia de CloudinaryService (reemplaza con tus credenciales)
+
     val cloudinaryService = CloudinaryService(
         cloudName = "dfffvf0m6",
         uploadPreset = "mi_preset"
     )
 
-    // 5) Cargar lista al iniciar la pantalla
+
     LaunchedEffect(token, studentId) {
         if (!token.isNullOrBlank() && studentId != null) {
             studentViewModel.fetchCvLista(token!!)
         }
     }
 
-    // 6) Cuando deleteResult == true, recargar lista y resetear
+
     LaunchedEffect(deleteResult) {
         if (deleteResult == true && !token.isNullOrBlank()) {
             studentViewModel.fetchCvLista(token!!)

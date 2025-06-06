@@ -35,9 +35,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.style.TextAlign
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
+import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-
 
 
 @Composable
@@ -47,28 +47,48 @@ fun StudentInformationSettings(
     studentViewModel: StudentViewModel,
     companyViewModel: CompanyViewModel
 ) {
-
     val token by usersViewModel.token.collectAsState(initial = null)
     val userId by usersViewModel.userId.collectAsState(initial = null)
     val studentIdd by studentViewModel.studentIdd.collectAsState(initial = null)
 
-
+    // Estado local para los TextFields
     var firstName by remember { mutableStateOf("") }
     var lastName1 by remember { mutableStateOf("") }
     var lastName2 by remember { mutableStateOf("") }
-
 
     var expanded by remember { mutableStateOf(false) }
     var selectedUniversityName by remember { mutableStateOf("") }
     var idSelectedU by remember { mutableStateOf(0) }
 
-
     val universityList by usersViewModel.universities.collectAsState(initial = emptyList())
-
-
     var showAlert by remember { mutableStateOf(false) }
 
+    // Estado del estudiante traído desde el ViewModel
+    val studentState by studentViewModel.studentState.collectAsState()
 
+    // 1) Cuando tengamos token y userId, solicitamos al ViewModel que cargue el estudiante
+    LaunchedEffect(token, userId) {
+        if (!token.isNullOrEmpty() && userId != null) {
+            studentViewModel.fetchStudentByUserId(token!!, userId!!) { /* noop */ }
+        }
+    }
+
+    // 2) Cuando studentState cambie a Success y ya existan universidades, precargamos los TextFields
+    LaunchedEffect(studentState, universityList) {
+        if (studentState is StudentState.Success && universityList.isNotEmpty()) {
+            val student = (studentState as StudentState.Success).student
+            firstName = student.name
+            lastName1 = student.lastName1
+            lastName2 = student.lastName2
+            // Buscar el nombre de la universidad por ID
+            universityList.find { it.idUniversity == student.universityId }?.let { uni ->
+                selectedUniversityName = uni.universityName
+                idSelectedU = uni.idUniversity
+            }
+        }
+    }
+
+    // Cargar la lista de universidades para el dropdown
     LaunchedEffect(Unit) {
         usersViewModel.fetchUniversities()
     }
@@ -92,7 +112,7 @@ fun StudentInformationSettings(
                     .shadow(8.dp, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
                     .background(
                         brush = androidx.compose.ui.graphics.Brush.verticalGradient(
-                            colors = listOf(Color(0xFF42A5F5), Color(0xFF1976D2))
+                            colors = listOf(Color(0xFF8D99AE), Color(0xFF8D99AE))
                         ),
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                     ),
@@ -107,14 +127,12 @@ fun StudentInformationSettings(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
                 OutlinedTextField(
                     value = firstName,
                     onValueChange = { firstName = it },
@@ -145,7 +163,6 @@ fun StudentInformationSettings(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -153,7 +170,7 @@ fun StudentInformationSettings(
                 ) {
                     OutlinedTextField(
                         value = selectedUniversityName,
-                        onValueChange = { /* readOnly */ },
+                        onValueChange = { },
                         readOnly = true,
                         textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
                         label = { Text(stringResource(R.string.UniversityTitle), color = Color.Black) },
@@ -202,9 +219,7 @@ fun StudentInformationSettings(
                     }
                 }
 
-
                 Spacer(modifier = Modifier.weight(1f))
-
 
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
@@ -212,13 +227,13 @@ fun StudentInformationSettings(
                         .fillMaxWidth()
                         .padding(bottom = 24.dp)
                 ) {
-
+                    // Botón Cancelar
                     Box(
                         modifier = Modifier
                             .weight(1f)
                             .height(50.dp)
                             .shadow(8.dp, RoundedCornerShape(24.dp))
-                            .background(Color.Red, RoundedCornerShape(24.dp))
+                            .background(Color(0xFF8D99AE), RoundedCornerShape(24.dp))
                             .clickable {
                                 navController.popBackStack()
                             },
@@ -232,20 +247,18 @@ fun StudentInformationSettings(
                         )
                     }
 
-
+                    // Botón Guardar
                     Box(
                         modifier = Modifier
                             .weight(1f)
                             .height(50.dp)
                             .shadow(10.dp, RoundedCornerShape(24.dp))
-                            .background(Color(0xFFAAF0D1), RoundedCornerShape(24.dp))
+                            .background(Color(0xFF8D99AE), RoundedCornerShape(24.dp))
                             .clickable {
-
                                 Log.d(
                                     "StudentInfoSettings",
                                     "Guardar pulsado con -> firstName: $firstName, lastName1: $lastName1, lastName2: $lastName2, universityId: $idSelectedU, userId: $userId, studentId: $studentIdd, token: $token"
                                 )
-
 
                                 if (
                                     firstName.isNotBlank() &&
@@ -257,7 +270,6 @@ fun StudentInformationSettings(
                                     userId != null &&
                                     studentIdd != null
                                 ) {
-                                    // Llamar a updateStudent en StudentViewModel
                                     studentViewModel.updateStudent(
                                         token = token!!,
                                         studentId = studentIdd!!,
@@ -267,7 +279,6 @@ fun StudentInformationSettings(
                                         universityId = idSelectedU,
                                         userId = userId!!
                                     )
-                                    // Luego, por ejemplo, navegar atrás
                                     navController.popBackStack()
                                 } else {
                                     showAlert = true
@@ -278,7 +289,7 @@ fun StudentInformationSettings(
                         Text(
                             text = stringResource(R.string.Guardar),
                             fontSize = 18.sp,
-                            color = Color.Black,
+                            color = Color.White,
                             textAlign = TextAlign.Center
                         )
                     }
@@ -286,7 +297,6 @@ fun StudentInformationSettings(
             }
         }
     }
-
 
     if (showAlert) {
         AlertDialog(
@@ -300,6 +310,4 @@ fun StudentInformationSettings(
             text = { Text(stringResource(R.string.studentInfoAlertText)) }
         )
     }
-
-
 }
