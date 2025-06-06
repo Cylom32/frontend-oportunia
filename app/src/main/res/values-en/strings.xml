@@ -114,8 +114,15 @@
     <string name="tipo_no_pagada">Type: Unpaid</string>
     <string name="error">Error</string>
 
+    <string name="imagen_compañia">Company image</string>
+    <string name="subiendo">Uploading...</string>
+    <string name="imagen_seleccionada">Image selected ✓</string>
+    <string name="seleccionar_imagen">Select image </string>
+
+
     <string name="select_language">Select language</string>
 
+    <string name="imagen_publicacion">Publication image</string>
 
 
 </resources>

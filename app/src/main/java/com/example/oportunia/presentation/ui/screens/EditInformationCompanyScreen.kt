@@ -285,9 +285,9 @@ fun EditInformationCompanyScreen(
 
                     // Imagen de la compañía
                     Text(
-                        text = "Imagen de la Compañía",
+                        text = stringResource(R.string.imagen_compañia),
                         fontSize = 14.sp,
-                        color = Color.Black,
+                        color = Color.White,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 4.dp)
@@ -322,7 +322,7 @@ fun EditInformationCompanyScreen(
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                     Text(
-                                        text = "Subiendo...",
+                                        text = stringResource(R.string.subiendo),
                                         fontSize = 14.sp,
                                         color = Color.White
                                     )
@@ -330,7 +330,7 @@ fun EditInformationCompanyScreen(
                             }
                             publicationLink.isNotEmpty() -> {
                                 Text(
-                                    text = "Imagen Seleccionada ✓",
+                                    text = stringResource(R.string.imagen_seleccionada),
                                     fontSize = 14.sp,
                                     color = Color.White,
                                     modifier = Modifier.padding(vertical = 8.dp)
@@ -338,7 +338,7 @@ fun EditInformationCompanyScreen(
                             }
                             else -> {
                                 Text(
-                                    text = "Seleccionar Imagen",
+                                    text = stringResource(R.string.seleccionar_imagen),
                                     fontSize = 14.sp,
                                     color = Color.White,
                                     modifier = Modifier.padding(vertical = 8.dp)

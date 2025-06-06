@@ -114,8 +114,13 @@
     <string name="tipo_no_pagada">Tipo: Não paga</string>
     <string name="error">Erro</string>
 
+    <string name="imagen_compañia">Imagem da empresa</string>
+    <string name="subiendo">Enviando...</string>
+    <string name="imagen_seleccionada">Imagem selecionada ✓</string>
+    <string name="seleccionar_imagen">Selecionar imagem </string>
 
 
+    <string name="imagen_publicacion">Imagem da publicação</string>
 
     <string name="select_language">Selecionar idioma</string>
 </resources>

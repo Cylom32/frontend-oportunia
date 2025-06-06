@@ -116,8 +116,15 @@
     <string name="error">Errore</string>
 
 
+    <string name="imagen_compañia">Immagine dell azienda</string>
+    <string name="subiendo">Caricamento...</string>
+    <string name="imagen_seleccionada">Immagine selezionata ✓</string>
+    <string name="seleccionar_imagen">Seleziona immagine </string>
+
+
 
     <string name="select_language">Seleziona la lingua</string>
+    <string name="imagen_publicacion">Immagine della pubblicazione</string>
 
 
 </resources>

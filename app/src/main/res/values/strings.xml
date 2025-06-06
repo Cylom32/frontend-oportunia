@@ -138,6 +138,12 @@
     <string name="Alerta">Alerta</string>
 
 
+    <string name="imagen_compañia">Imagen de la compañia</string>
+    <string name="subiendo">Subiendo...</string>
+    <string name="imagen_seleccionada">Imagen Seleccionada ✓</string>
+    <string name="seleccionar_imagen"> Seleccionar Imagen </string>
+
+
     <!-- StudentInformartionSettings -->
     <string name="Guardar">Guardar</string>
 
@@ -192,7 +198,15 @@
     <string name="error">Error</string>
 
 
+
     <string name="select_language">Seleccionar idioma</string>
+
+
+
+
+    <string name="imagen_publicacion">Imagen de la publicación</string>
+
+
 
 
 </resources>

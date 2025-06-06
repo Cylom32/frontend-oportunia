@@ -185,6 +185,15 @@ fun GridPublicationsCompany(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
+//                    Image(
+//                        painter = painterResource(id = R.drawable.intellogo),
+//                        contentDescription = "Logo placeholder",
+//                        modifier = Modifier
+//                            .size(40.dp)
+//                            .clip(CircleShape),
+//                        contentScale = ContentScale.Crop,
+//                        colorFilter = ColorFilter.tint(walterWhite)
+//                    )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
                         text = nameToShow,
@@ -194,7 +203,7 @@ fun GridPublicationsCompany(
                 }
             }
 
-
+            // Botón Agregar
             Button(
                 onClick = { showDialog.value = true },
                 modifier = Modifier
@@ -275,7 +284,7 @@ fun GridPublicationsCompany(
                 }
             }
 
-            // Alertas
+            // Diálogo emergente
             if (showDialog.value) {
                 AlertDialog(
                     onDismissRequest = { showDialog.value = false },
@@ -377,9 +386,20 @@ fun GridPublicationsCompany(
 
                             Spacer(modifier = Modifier.height(12.dp))
 
+                            // Link
+//                            OutlinedTextField(
+//                                value = publicationLink,
+//                                onValueChange = { publicationLink = it },
+//                                label = { Text(stringResource(R.string.link_publicacion)) },
+//                                modifier = Modifier.fillMaxWidth()
+//                            )
+
+
+
+
 
                             Text(
-                                text = "Imagen de la Publicación",
+                                text = stringResource(R.string.imagen_publicacion),
                                 fontSize = 14.sp,
                                 color = Color.Black,
                                 modifier = Modifier
@@ -416,7 +436,7 @@ fun GridPublicationsCompany(
                                             )
                                             Spacer(modifier = Modifier.width(8.dp))
                                             Text(
-                                                text = "Subiendo...",
+                                                text = stringResource(R.string.subiendo),
                                                 fontSize = 14.sp,
                                                 color = Color.White
                                             )
@@ -424,7 +444,7 @@ fun GridPublicationsCompany(
                                     }
                                     publicationLink.isNotEmpty() -> {
                                         Text(
-                                            text = "Imagen Seleccionada ✓",
+                                            text = stringResource(R.string.imagen_seleccionada),
                                             fontSize = 14.sp,
                                             color = Color.White,
                                             modifier = Modifier.padding(vertical = 8.dp)
@@ -432,7 +452,7 @@ fun GridPublicationsCompany(
                                     }
                                     else -> {
                                         Text(
-                                            text = "Seleccionar Imagen",
+                                            text = stringResource(R.string.seleccionar_imagen),
                                             fontSize = 14.sp,
                                             color = Color.White,
                                             modifier = Modifier.padding(vertical = 8.dp)
