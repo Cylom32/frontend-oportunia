@@ -9,6 +9,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,7 +23,9 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +46,7 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
     var email by remember { mutableStateOf(TextFieldValue("")) }
     var password by remember { mutableStateOf(TextFieldValue("")) }
     var confirmPassword by remember { mutableStateOf(TextFieldValue("")) }
+    var passwordVisible by remember { mutableStateOf(false) }
     var showErrorDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
 
@@ -127,7 +133,7 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
                         )
                     }
 
-                    // Contraseña
+                    // Contraseña (con opción mostrar/ocultar)
                     Text(
                         text = stringResource(R.string.passworL),
                         fontSize = 14.sp,
@@ -146,18 +152,33 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
                                 clip = false
                             )
                             .background(Color.White)
-                            .padding(horizontal = 8.dp, vertical = 12.dp)
+                            .padding(start = 8.dp, end = 8.dp, top = 12.dp, bottom = 12.dp)
                     ) {
                         BasicTextField(
                             value = password,
                             onValueChange = { password = it },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(end = 32.dp), // dejar espacio para el icono
                             textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
-                            singleLine = true
+                            singleLine = true,
+                            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
                         )
+                        IconButton(
+                            onClick = { passwordVisible = !passwordVisible },
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .size(24.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                                contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                                tint = Color.Gray
+                            )
+                        }
                     }
 
-                    // Confirmar Contraseña
+                    // Confirmar Contraseña (siempre oculta)
                     Text(
                         text = stringResource(R.string.passworC),
                         fontSize = 14.sp,
@@ -183,13 +204,13 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
                             onValueChange = { confirmPassword = it },
                             modifier = Modifier.fillMaxWidth(),
                             textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
-                            singleLine = true
+                            singleLine = true,
+                            visualTransformation = PasswordVisualTransformation()
                         )
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
                 }
-
 
                 // Botón de confirmación al fondo
                 Box(
@@ -219,41 +240,21 @@ fun RegisterCredentialsScreen(navController: NavHostController, usersViewModel: 
                                 errorMessage = "Las contraseñas no coinciden."
                                 showErrorDialog = true
                             } else {
-
                                 usersViewModel.fetchUserByEmail(email.text) { userId ->
                                     if (userId != null) {
                                         errorMessage = "Este email ya está asociado a otra cuenta."
                                         showErrorDialog = true
                                     } else {
-                                     //   usersViewModel.registerCompanyUser()
-
-                                        /*
-                                            El el caso de que no se ecuentre una cuenta con ese email ahora si
-                                            proceder con el registro
-
-                                            primero guarde los datos del usuario -> company -> redesSociales si se agregaron
-                                        */
-
                                         usersViewModel.saveCredentials(
                                             email.text,
                                             password.text,
                                             confirmPassword.text
                                         )
-
-                                      //  usersViewModel.registerCompanyAndSaveCompany()
-
                                         usersViewModel.registerCompanySaveCompanyAndInbox()
-
                                         Log.d("Registro", "Todo bien")
-
                                         navController.navigate(NavRoutes.Log.ROUTE)
-
                                     }
                                 }
-
-
-
-
                             }
                         },
                     contentAlignment = Alignment.Center

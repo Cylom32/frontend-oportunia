@@ -30,7 +30,55 @@ import com.example.oportunia.presentation.ui.theme.royalBlue
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import androidx.compose.runtime.rememberCoroutineScope
+import com.example.oportunia.presentation.ui.theme.walterWhite
 import kotlinx.coroutines.launch
+
+
+import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
+import com.example.oportunia.presentation.ui.theme.deepSkyBlue
+import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
+import com.example.oportunia.presentation.ui.theme.lilGray
+import com.example.oportunia.presentation.ui.theme.midnightBlue
+import com.example.oportunia.presentation.ui.theme.royalBlue
+import com.example.oportunia.presentation.ui.theme.walterWhite
+import kotlinx.coroutines.launch
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.ui.text.input.TextFieldValue
+
+
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.*
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
+import com.example.oportunia.presentation.ui.theme.deepSkyBlue
+import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
+import com.example.oportunia.presentation.ui.theme.lilGray
+import com.example.oportunia.presentation.ui.theme.midnightBlue
+import com.example.oportunia.presentation.ui.theme.royalBlue
+import com.example.oportunia.presentation.ui.theme.walterWhite
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+
+
 
 
 @Composable
@@ -42,8 +90,11 @@ fun RegisterOptionScreenPAndE(
     val scope = rememberCoroutineScope()
 
     var correo by remember { mutableStateOf("") }
-    var contra by remember { mutableStateOf("") }
-    var contraVali by remember { mutableStateOf("") }
+
+    // Cambiamos contra y contraVali a TextFieldValue para usar BasicTextField
+    var contra by remember { mutableStateOf(TextFieldValue("")) }
+    var contraVali by remember { mutableStateOf(TextFieldValue("")) }
+    var passwordVisible by remember { mutableStateOf(false) }
 
     var showAlert by remember { mutableStateOf(false) }
     var alertMessage by remember { mutableStateOf("") }
@@ -69,19 +120,17 @@ fun RegisterOptionScreenPAndE(
         ) {}
     }
 
-
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(com.example.oportunia.presentation.ui.theme.lilGray)
+            .background(lilGray)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(com.example.oportunia.presentation.ui.theme.lilGray),
+                .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
 
             Box(
                 modifier = Modifier
@@ -91,8 +140,11 @@ fun RegisterOptionScreenPAndE(
                         elevation = 8.dp,
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
                         clip = false
-                    ).gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)),
-//
+                    )
+                    .gradientBackgroundBlue(
+                        gradientColorsBlue,
+                        RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -103,42 +155,121 @@ fun RegisterOptionScreenPAndE(
                 )
             }
 
-
             Text(
                 text = stringResource(R.string.screenTitleInfo),
                 fontSize = 32.sp,
-                color = com.example.oportunia.presentation.ui.theme.blackPanter,
+                color = Color.Black,
                 modifier = Modifier.padding(top = 32.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Campos de texto
             Column(
                 horizontalAlignment = Alignment.Start,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
-                texAndLable(
-                    titulo = stringResource(R.string.emailL),
-                    placeholder = stringResource(R.string.emailExample),
-                    valor = correo,
-                    alCambiarValor = { correo = it }
+                // Correo (sin cambios)
+                Text(
+                    text = stringResource(R.string.emailL),
+                    fontSize = 14.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(8.dp),
+                            clip = true
+                        )
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 8.dp, vertical = 12.dp)
+                ) {
+                    BasicTextField(
+                        value = TextFieldValue(correo),
+                        onValueChange = { correo = it.text },
+                        modifier = Modifier.fillMaxWidth(),
+                        textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+                        singleLine = true
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
-                texAndLable(
-                    titulo = stringResource(R.string.passworL),
-                    placeholder = "",
-                    valor = contra,
-                    alCambiarValor = { contra = it }
+
+                // Contraseña con toggle (igual que en pantalla de registro anterior)
+                Text(
+                    text = stringResource(R.string.passworL),
+                    fontSize = 14.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(8.dp),
+                            clip = true
+                        )
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .padding(start = 8.dp, end = 8.dp, top = 12.dp, bottom = 12.dp)
+                ) {
+                    BasicTextField(
+                        value = contra,
+                        onValueChange = { contra = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(end = 32.dp), // espacio para el icono
+                        textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+                        singleLine = true,
+                        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation()
+                    )
+                    IconButton(
+                        onClick = { passwordVisible = !passwordVisible },
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .size(24.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (passwordVisible) Icons.Filled.VisibilityOff else Icons.Filled.Visibility,
+                            contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                            tint = Color.Gray
+                        )
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(16.dp))
-                texAndLable(
-                    titulo = stringResource(R.string.passworC),
-                    placeholder = "",
-                    valor = contraVali,
-                    alCambiarValor = { contraVali = it }
+
+                // Confirmar Contraseña (siempre oculta)
+                Text(
+                    text = stringResource(R.string.passworC),
+                    fontSize = 14.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .shadow(
+                            elevation = 4.dp,
+                            shape = RoundedCornerShape(8.dp),
+                            clip = true
+                        )
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 8.dp, vertical = 12.dp)
+                ) {
+                    BasicTextField(
+                        value = contraVali,
+                        onValueChange = { contraVali = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+                        singleLine = true,
+                        visualTransformation = PasswordVisualTransformation()
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(150.dp))
 
@@ -162,17 +293,18 @@ fun RegisterOptionScreenPAndE(
                                 end = Offset(1000f, 1000f)
                             ),
                             shape = RoundedCornerShape(10.dp)
-                        ) .clickable {
+                        )
+                        .clickable {
                             when {
                                 correo.isBlank() -> {
                                     alertMessage = "El correo no puede estar vacío"
                                     showAlert = true
                                 }
-                                contra.isBlank() -> {
+                                contra.text.isBlank() -> {
                                     alertMessage = "La contraseña no puede estar vacía"
                                     showAlert = true
                                 }
-                                contra != contraVali -> {
+                                contra.text != contraVali.text -> {
                                     alertMessage = "Las contraseñas no coinciden"
                                     showAlert = true
                                 }
@@ -181,40 +313,33 @@ fun RegisterOptionScreenPAndE(
                                         usersViewModel.fetchUserByEmail(correo) { idUser ->
                                             if (idUser == null) {
                                                 usersViewModel.setEmail(correo)
-                                                usersViewModel.setPassword(contraVali)
+                                                usersViewModel.setPassword(contraVali.text)
 
-                                                Log.d("Registro", "Contraseña a enviar: $contraVali")
+                                                Log.d("Registro", "Contraseña a enviar: ${contraVali.text}")
 
                                                 usersViewModel.createUserWithoutId(
-                                                    rawEmail     = correo,
-                                                    rawPassword  = contraVali
+                                                    rawEmail    = correo,
+                                                    rawPassword = contraVali.text
                                                 )
-
-                                                ////////////////////////////////////////////////////////////////////
-
 
                                                 scope.launch {
                                                     usersViewModel.fetchUserByEmail(correo) { fetchedId ->
                                                         fetchedId?.let { idUser ->
                                                             Log.d("Registro", "ID de usuario obtenido: $idUser")
 
-                                                            // Lees los campos del UsersViewModel
                                                             val nombre = usersViewModel.nombre.value
                                                             val primerApellido = usersViewModel.primerApellido.value
                                                             val segundoApellido = usersViewModel.segundoApellido.value
-                                                            val uniId: Int = usersViewModel.selectedUniversityId.value  // Ya es Int
+                                                            val uniId: Int = usersViewModel.selectedUniversityId.value
 
-                                                            // Llamas al método del StudentViewModel
                                                             studentViewModel.createStudentWithoutId(
-                                                                userId        = idUser,
-                                                                rawFirstName  = nombre,
-                                                                rawLastName1  = primerApellido,
-                                                                rawLastName2  = segundoApellido,
-                                                                universityId  = uniId
+                                                                userId       = idUser,
+                                                                rawFirstName = nombre,
+                                                                rawLastName1 = primerApellido,
+                                                                rawLastName2 = segundoApellido,
+                                                                universityId = uniId
                                                             )
 
-
-                                                            // Navegas
                                                             navController.navigate(NavRoutes.Log.ROUTE) {
                                                                 popUpTo(0) { inclusive = true }
                                                             }
@@ -223,14 +348,6 @@ fun RegisterOptionScreenPAndE(
                                                         }
                                                     }
                                                 }
-
-
-
-                                                ////////////////////////////////////////////////////////////////////
-
-
-
-
 
                                                 navController.navigate(NavRoutes.Log.ROUTE) {
                                                     popUpTo(0) { inclusive = true }
@@ -242,7 +359,6 @@ fun RegisterOptionScreenPAndE(
                                         }
                                     }
                                 }
-
                             }
                         },
                     contentAlignment = Alignment.Center
@@ -250,14 +366,13 @@ fun RegisterOptionScreenPAndE(
                     Text(
                         text = stringResource(R.string.bTextConfirmar),
                         fontSize = 25.sp,
-                        color = com.example.oportunia.presentation.ui.theme.walterWhite,
+                        color = walterWhite,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.padding(vertical = 12.dp)
                     )
                 }
             }
         }
-
 
         if (showAlert) {
             AlertDialog(

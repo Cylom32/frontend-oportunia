@@ -45,8 +45,6 @@ fun RequestScreen(
 
         LaunchedEffect(token, studentId) {
             if (!token.isNullOrBlank() && studentId != null) {
-                // Aquí ya sabemos que 'token' y 'studentId' NO son nulos.
-                // Por eso podemos usar !! para forzar el no-null.
                 studentViewModel.fetchCvList(token!!, studentId!!)
             }
         }

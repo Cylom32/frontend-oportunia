@@ -150,8 +150,8 @@ fun SentRequestScreen(
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp)
                                 .clickable {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(msg.file))
-                                    context.startActivity(intent)
+//                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(msg.file))
+//                                    context.startActivity(intent)
                                 },
                             fontSize = 14.sp,
                             color = Color(0xFF1E88E5)

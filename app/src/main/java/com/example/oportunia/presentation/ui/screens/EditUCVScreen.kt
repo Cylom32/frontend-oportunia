@@ -1,5 +1,6 @@
 package com.example.oportunia.presentation.ui.screens
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -32,7 +33,11 @@ import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-import java.io.File
+
+
+
+
+
 
 @Composable
 fun EditUCVScreen(
@@ -41,32 +46,32 @@ fun EditUCVScreen(
 ) {
     val context = LocalContext.current
 
-    // 1) Token y studentId
+    // Token y studentId
     val token by usersViewModel.token.collectAsState()
     val studentId by studentViewModel.studentIdd.collectAsState()
 
-    // 2) Estado de Student y lista de CVs (cvlistaa)
+    // Estado de Student y lista de CVs
     val studentState by studentViewModel.studentState.collectAsState()
     val cvs by studentViewModel.cvlistaa.collectAsState()
     val deleteResult by studentViewModel.deleteResult.collectAsState()
 
-    // 3) Estados para mostrar el dialog de “Agregar CV”
+    // Estados para agregar CV
     var showAddDialog by remember { mutableStateOf(false) }
     var newCvName by remember { mutableStateOf("") }
     var newCvLink by remember { mutableStateOf("") }
 
-    // 4) Estados para manejar el popup de detalles
+    // Estados para detalles
     var selectedCv by remember { mutableStateOf<CVResponseS?>(null) }
     var showDetailsDialog by remember { mutableStateOf(false) }
 
-    // 5) Cargar lista al iniciar la pantalla
+    // Cargar lista inicial
     LaunchedEffect(token, studentId) {
         if (!token.isNullOrBlank() && studentId != null) {
             studentViewModel.fetchCvLista(token!!)
         }
     }
 
-    // 6) Cuando deleteResult == true, recargar lista y resetear
+    // Recargar después de delete
     LaunchedEffect(deleteResult) {
         if (deleteResult == true && !token.isNullOrBlank()) {
             studentViewModel.fetchCvLista(token!!)
@@ -85,7 +90,7 @@ fun EditUCVScreen(
                 .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // ——— ENCABEZADO CON DATOS DEL ESTUDIANTE ———
+            // Encabezado
             Box(
                 modifier = Modifier
                     .height(150.dp)
@@ -164,7 +169,6 @@ fun EditUCVScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Condición: solo mostrar o habilitar el botón si hay ≤ 2 CVs
                 val canAddCv = cvs.size <= 2
 
                 Button(
@@ -205,7 +209,6 @@ fun EditUCVScreen(
                     )
                 }
 
-                // ——— LISTA DE CVs SCROLLEABLE ———
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -217,7 +220,7 @@ fun EditUCVScreen(
                                 .fillMaxWidth()
                                 .clickable {
                                     selectedCv = cv
-                                    showDetailsDialog = true
+                                   // showDetailsDialog = true
                                 }
                         ) {
                             CVCard(
@@ -239,7 +242,6 @@ fun EditUCVScreen(
             }
         }
 
-        // ——— DIALOG “AGREGAR CV” ———
         if (showAddDialog) {
             AlertDialog(
                 onDismissRequest = {
@@ -301,7 +303,6 @@ fun EditUCVScreen(
             )
         }
 
-        // ——— DIALOG DETALLES DEL CV SELECCIONADO ———
         if (showDetailsDialog && selectedCv != null) {
             AlertDialog(
                 onDismissRequest = {
@@ -336,6 +337,10 @@ fun EditUCVScreen(
                             fontSize = 12.sp,
                             color = Color.Gray
                         )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = stringResource(R.string.etiqueta_fecha_envio))
+                        Spacer(modifier = Modifier.height(4.dp))
+
                     }
                 }
             )
@@ -371,13 +376,7 @@ fun CVCard(
                 painter = painterResource(id = R.drawable.pdficon),
                 contentDescription = "PDF",
                 modifier = Modifier
-                    .size(48.dp)
-                    .clickable {
-                        // Si filePath es una URL, abrir en el navegador
-                        val uri = Uri.parse(filePath)
-                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                        context.startActivity(intent)
-                    },
+                    .size(48.dp),
                 tint = Color.Unspecified
             )
 
@@ -389,14 +388,22 @@ fun CVCard(
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.Black,
-                    modifier = Modifier.clickable {
-                        // Hacer clic en el nombre del archivo abre la URL
-                        val uri = Uri.parse(filePath)
-                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                        context.startActivity(intent)
-                    }
                 )
                 Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = filePath,
+                    fontSize = 14.sp,
+                    color = Color(0xFF1E88E5),
+                    modifier = Modifier.clickable {
+                        val uri = Uri.parse(filePath)
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            // Si no hay Activity para manejar el intent, ignorar
+                        }
+                    }
+                )
             }
 
             Icon(

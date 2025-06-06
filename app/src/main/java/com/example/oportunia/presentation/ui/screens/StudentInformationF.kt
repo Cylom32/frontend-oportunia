@@ -234,7 +234,7 @@ fun UniversityDropdown(
 
         OutlinedTextField(
             value          = selectedUniversity,
-            onValueChange  = { /* readOnly */ },
+            onValueChange  = {  },
             readOnly       = true,
             textStyle      = LocalTextStyle.current.copy(color = Color.Black),
             label          = { Text(stringResource(R.string.UniversityTitle), color = Color.Black) },
@@ -245,7 +245,6 @@ fun UniversityDropdown(
                 .clickable { expanded = !expanded }
         )
 
-
         if (expanded) {
             MaterialTheme(
                 colorScheme = MaterialTheme.colorScheme.copy(
@@ -254,18 +253,19 @@ fun UniversityDropdown(
                 )
             ) {
                 ExposedDropdownMenu(
-                    expanded        = true,
-                    onDismissRequest= { expanded = false },
-                    modifier        = Modifier.fillMaxWidth(0.8f)
-
+                    expanded         = true,
+                    onDismissRequest = { expanded = false },
+                    modifier         = Modifier.fillMaxWidth(0.8f)
                 ) {
                     options.forEach { uni ->
                         DropdownMenuItem(
-                            text    = { Text(uni.universityName) },
+                            text = { Text(uni.universityName, color = Color.Black) },
                             onClick = {
                                 expanded = false
-                                onUniversitySelected(uni.universityName,
-                                    uni.idUniversity ?: 0)
+                                onUniversitySelected(
+                                    uni.universityName,
+                                    uni.idUniversity ?: 0
+                                )
                             }
                         )
                     }

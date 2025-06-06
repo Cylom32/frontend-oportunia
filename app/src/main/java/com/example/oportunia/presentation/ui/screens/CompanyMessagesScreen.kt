@@ -1,6 +1,7 @@
 // CompanyMessagesScreen.kt
 package com.example.oportunia.presentation.ui.screens
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -171,8 +172,13 @@ fun CompanyMessagesScreen(
                                 .fillMaxWidth()
                                 .padding(horizontal = 8.dp)
                                 .clickable {
-                                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(msg.file))
-                                    context.startActivity(intent)
+                                    val uri = Uri.parse(msg.file)
+                                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                                    try {
+                                        context.startActivity(intent)
+                                    } catch (e: ActivityNotFoundException) {
+                                        // Ignorar si no hay actividad que maneje el Intent
+                                    }
                                 },
                             fontSize = 14.sp,
                             color = Color(0xFF1E88E5)
