@@ -1,8 +1,12 @@
+// EditUCVScreen.kt
 package com.example.oportunia.presentation.ui.screens
 
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.OpenableColumns
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,11 +32,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.oportunia.R
 import com.example.oportunia.domain.model.CVResponseS
+import com.example.oportunia.presentation.ui.cloudinary.CloudinaryService
 import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
+import kotlinx.coroutines.launch
 import java.io.File
+import java.io.FileOutputStream
 
 @Composable
 fun EditUCVScreen(
@@ -53,11 +60,29 @@ fun EditUCVScreen(
     // 3) Estados para mostrar el dialog de “Agregar CV”
     var showAddDialog by remember { mutableStateOf(false) }
     var newCvName by remember { mutableStateOf("") }
-    var newCvLink by remember { mutableStateOf("") }
+    var newCvUri by remember { mutableStateOf<Uri?>(null) }
+    var newCvFileName by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
 
     // 4) Estados para manejar el popup de detalles
     var selectedCv by remember { mutableStateOf<CVResponseS?>(null) }
     var showDetailsDialog by remember { mutableStateOf(false) }
+
+    // Launcher para seleccionar PDF
+    val pdfPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        if (uri != null) {
+            newCvUri = uri
+            newCvFileName = getFileName(context, uri)
+        }
+    }
+
+    // Instancia de CloudinaryService (reemplaza con tus credenciales)
+    val cloudinaryService = CloudinaryService(
+        cloudName = "dfffvf0m6",
+        uploadPreset = "mi_preset"
+    )
 
     // 5) Cargar lista al iniciar la pantalla
     LaunchedEffect(token, studentId) {
@@ -245,7 +270,8 @@ fun EditUCVScreen(
                 onDismissRequest = {
                     showAddDialog = false
                     newCvName = ""
-                    newCvLink = ""
+                    newCvUri = null
+                    newCvFileName = ""
                 },
                 title = {
                     Text(text = stringResource(R.string.boton_agregar_cv))
@@ -260,31 +286,52 @@ fun EditUCVScreen(
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp)
                         )
-                        OutlinedTextField(
-                            value = newCvLink,
-                            onValueChange = { newCvLink = it },
-                            label = { Text(text = stringResource(R.string.link_Archivo)) },
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        )
+                                .clickable { pdfPickerLauncher.launch("application/pdf") }
+                                .background(Color.LightGray, RoundedCornerShape(8.dp))
+                                .padding(12.dp)
+                        ) {
+                            Text(
+                                text = if (newCvFileName.isNotEmpty()) newCvFileName else stringResource(R.string.Seleccionar_PDF),
+                                fontSize = 16.sp,
+                                color = if (newCvFileName.isNotEmpty()) Color.Black else Color.DarkGray,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Icon(
+                                imageVector = Icons.Default.Edit,
+                                contentDescription = "Seleccionar PDF",
+                                tint = Color.DarkGray
+                            )
+                        }
                     }
                 },
                 confirmButton = {
                     TextButton(onClick = {
-                        if (!newCvName.isBlank() && !newCvLink.isBlank() && !token.isNullOrBlank()) {
-                            studentId?.let { idEst ->
-                                studentViewModel.createCv(
-                                    token = token!!,
-                                    name = newCvName,
-                                    file = newCvLink,
-                                    studentId = idEst
-                                )
+                        if (newCvName.isNotBlank() && newCvUri != null && !token.isNullOrBlank()) {
+                            val uri = newCvUri!!
+                            coroutineScope.launch {
+                                val file = uriToFile(context, uri)
+                                val uploadedUrl = cloudinaryService.uploadPdf(file)
+                                if (!uploadedUrl.isNullOrBlank()) {
+                                    studentId?.let { idEst ->
+                                        studentViewModel.createCv(
+                                            token = token!!,
+                                            name = newCvName,
+                                            file = uploadedUrl,
+                                            studentId = idEst
+                                        )
+                                    }
+                                }
                             }
                         }
                         showAddDialog = false
                         newCvName = ""
-                        newCvLink = ""
+                        newCvUri = null
+                        newCvFileName = ""
                     }) {
                         Text(text = stringResource(R.string.Guardar))
                     }
@@ -293,7 +340,8 @@ fun EditUCVScreen(
                     TextButton(onClick = {
                         showAddDialog = false
                         newCvName = ""
-                        newCvLink = ""
+                        newCvUri = null
+                        newCvFileName = ""
                     }) {
                         Text(text = stringResource(R.string.Cancelar))
                     }
@@ -373,7 +421,6 @@ fun CVCard(
                 modifier = Modifier
                     .size(48.dp)
                     .clickable {
-                        // Si filePath es una URL, abrir en el navegador
                         val uri = Uri.parse(filePath)
                         val intent = Intent(Intent.ACTION_VIEW, uri)
                         context.startActivity(intent)
@@ -390,7 +437,6 @@ fun CVCard(
                     fontWeight = FontWeight.Medium,
                     color = Color.Black,
                     modifier = Modifier.clickable {
-                        // Hacer clic en el nombre del archivo abre la URL
                         val uri = Uri.parse(filePath)
                         val intent = Intent(Intent.ACTION_VIEW, uri)
                         context.startActivity(intent)
@@ -411,4 +457,39 @@ fun CVCard(
             )
         }
     }
+}
+
+// Función para convertir Uri a File copiando a cache
+private fun uriToFile(context: Context, uri: Uri): File {
+    val fileName = getFileName(context, uri)
+    val tempFile = File(context.cacheDir, fileName)
+    context.contentResolver.openInputStream(uri)?.use { inputStream ->
+        FileOutputStream(tempFile).use { outputStream ->
+            val buffer = ByteArray(1024)
+            var read: Int
+            while (inputStream.read(buffer).also { read = it } != -1) {
+                outputStream.write(buffer, 0, read)
+            }
+            outputStream.flush()
+        }
+    }
+    return tempFile
+}
+
+// Función auxiliar para obtener el nombre real del archivo desde Uri
+private fun getFileName(context: Context, uri: Uri): String {
+    var name = ""
+    val cursor = context.contentResolver.query(uri, null, null, null, null)
+    cursor?.use {
+        if (it.moveToFirst()) {
+            val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (index != -1) {
+                name = it.getString(index)
+            }
+        }
+    }
+    if (name.isEmpty()) {
+        name = uri.lastPathSegment ?: "temp_file.pdf"
+    }
+    return name
 }

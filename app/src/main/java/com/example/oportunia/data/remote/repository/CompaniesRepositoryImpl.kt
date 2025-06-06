@@ -1,4 +1,4 @@
-// data/remote/repository/CompaniesRepositoryImpl.kt
+
 package com.example.oportunia.data.remote.repository
 
 import com.example.oportunia.data.mapper.CompanyMapper

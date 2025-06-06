@@ -124,10 +124,10 @@ interface CompaniesService {
         @Body input: SocialNetworkInputRS
     ): Response<SocialNetworkResponseRS>
 
-    @PUT("v1/users/{user_id_company}/img")
+    @PUT("v1/users/{userId}/img")
     suspend fun updateUserImg(
         @Header("Authorization") token: String,
-        @Path("user_id_company") userId: Int,
+        @Path("userId") userId: Int,
         @Body input: UserImgInputCM
     ): Response<UserImgResponseCM>
 

@@ -41,15 +41,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextDecoration
 import coil.compose.AsyncImage
 import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
-
-
-
 
 
 

@@ -48,4 +48,36 @@ class CloudinaryService(
             return@withContext null
         }
     }
+
+
+
+    suspend fun uploadPdf(file: File): String? = withContext(Dispatchers.IO) {
+        try {
+            val requestBody: RequestBody = MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("upload_preset", uploadPreset)
+                .addFormDataPart(
+                    "file", file.name,
+                    file.asRequestBody("application/pdf".toMediaTypeOrNull())
+                )
+                .build()
+
+            val request: Request = Request.Builder()
+                .url("https://api.cloudinary.com/v1_1/$cloudName/raw/upload") // <- usar /raw/ para PDF
+                .post(requestBody)
+                .build()
+
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) return@withContext null
+                val body = response.body?.string() ?: return@withContext null
+                val json = JSONObject(body)
+                return@withContext json.getString("secure_url")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return@withContext null
+        }
+    }
+
+
 }

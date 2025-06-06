@@ -138,27 +138,47 @@ class CompaniesRemoteDataSource @Inject constructor(
 
     suspend fun updateSocialNetwork(
         token: String,
-        id: Int,
+        socialId: Int,
         input: SocialNetworkInputRS
     ): Result<SocialNetworkResponseRS> =
-        safeApiCall { service.updateSocialNetwork(token, id, input) }
+        safeApiCall { service.updateSocialNetwork(token, socialId, input) }
 
     suspend fun updateUserImg(
         token: String,
         userId: Int,
         input: UserImgInputCM
-    ): Result<UserImgResponseCM> =
-        safeApiCall { service.updateUserImg(token, userId, input) }
+    ): Result<UserImgResponseCM> = try {
+        val resp = service.updateUserImg(token, userId, input)
+        if (resp.isSuccessful) {
+            // resp.body() ya es un UserImgResponseCM
+            resp.body()?.let { body ->
+                Result.success(body)
+            } ?: Result.failure(Exception("Empty body en updateUserImg"))
+        } else {
+            Result.failure(Exception("HTTP ${resp.code()} ${resp.message()}"))
+        }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
+
+
 
 
     suspend fun updateCompany(
         token: String,
         id: Int,
         input: CompanyInputCM
-    ): Result<Void> =
-        safeApiCall {
-            service.updateCompanyCM(token, id, input)
+    ): Result<Unit> = try {
+
+        val resp = service.updateCompanyCM(token, id, input)
+        if (resp.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(Exception("HTTP ${resp.code()} ${resp.message()}"))
         }
+    } catch (e: Exception) {
+        Result.failure(e)
+    }
 
 
 

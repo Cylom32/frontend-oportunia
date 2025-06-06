@@ -1,4 +1,4 @@
-// RegisterInformationCompanyScreen.kt
+// src/main/java/com/example/oportunia/presentation/ui/screens/EditInformationCompanyScreen.kt
 package com.example.oportunia.presentation.ui.screens
 
 import android.net.Uri
@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
 import com.example.oportunia.domain.model.SocialNetwork
+import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.cloudinary.CloudinaryService
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.deepSkyBlue
@@ -44,7 +45,6 @@ import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 
-
 @Composable
 fun EditInformationCompanyScreen(
     navController: NavHostController,
@@ -55,23 +55,15 @@ fun EditInformationCompanyScreen(
     var social1 by remember { mutableStateOf(TextFieldValue("")) }
     var social2 by remember { mutableStateOf(TextFieldValue("")) }
     var social3 by remember { mutableStateOf(TextFieldValue("")) }
-    var logoLink by remember { mutableStateOf(TextFieldValue("")) }
-    var showDescriptionDialog by remember { mutableStateOf(false) }
+    var logoLinks by remember { mutableStateOf(TextFieldValue("")) }
     var descriptionText by remember { mutableStateOf(TextFieldValue("")) }
     var showEmptyAlert by remember { mutableStateOf(false) }
     var showConfirmDialog by remember { mutableStateOf(false) }
 
-
-
-
-
-
-
-
-    // Estados para manejar la carga de imagen
+    // Variables para carga de imagen
     var isUploadingImage by remember { mutableStateOf(false) }
     var uploadError by remember { mutableStateOf<String?>(null) }
-    var publicationLink by remember { mutableStateOf("") } // Agrega esta variable si no está definida
+    var publicationLink by remember { mutableStateOf("") }
 
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -86,7 +78,7 @@ fun EditInformationCompanyScreen(
             coroutineScope.launch {
                 try {
                     val inputStream = context.contentResolver.openInputStream(uri)
-                    val file = File(context.cacheDir, "publication_${System.currentTimeMillis()}.jpg").apply {
+                    val file = File(context.cacheDir, "company_logo_${System.currentTimeMillis()}.jpg").apply {
                         outputStream().use { output ->
                             inputStream?.copyTo(output)
                         }
@@ -97,6 +89,8 @@ fun EditInformationCompanyScreen(
 
                     if (url != null) {
                         publicationLink = url
+                        // Asigna inmediatamente el nuevo link al campo logoLinks:
+                        logoLinks = TextFieldValue(publicationLink)
                         uploadError = null
                     } else {
                         uploadError = "Error al subir la imagen"
@@ -109,19 +103,6 @@ fun EditInformationCompanyScreen(
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     val socialList by companyViewModel.companySocialNetworks.collectAsState()
     val imgValue by companyViewModel.imgShow.collectAsState()
@@ -138,7 +119,8 @@ fun EditInformationCompanyScreen(
     }
     LaunchedEffect(nameValue, imgValue, descValue) {
         companyName = TextFieldValue(nameValue.orEmpty())
-        logoLink = TextFieldValue(imgValue.orEmpty())
+        // Inicializa logoLinks con el valor actual de imgValue
+        logoLinks = TextFieldValue(imgValue.orEmpty())
         descriptionText = TextFieldValue(descValue.orEmpty())
     }
 
@@ -160,6 +142,7 @@ fun EditInformationCompanyScreen(
             color = Color.Transparent
         ) {
             Column(modifier = Modifier.fillMaxSize()) {
+                // Encabezado
                 Box(
                     modifier = Modifier
                         .height(150.dp)
@@ -198,6 +181,7 @@ fun EditInformationCompanyScreen(
                             .padding(top = 32.dp, bottom = 16.dp)
                     )
 
+                    // Nombre de la compañía
                     Text(
                         text = stringResource(R.string.etiqueta_nombre_compania),
                         fontSize = 14.sp,
@@ -223,6 +207,7 @@ fun EditInformationCompanyScreen(
                         )
                     }
 
+                    // Redes sociales 1, 2 y 3
                     Text(
                         text = stringResource(R.string.etiqueta_red_social),
                         fontSize = 14.sp,
@@ -298,14 +283,7 @@ fun EditInformationCompanyScreen(
                         )
                     }
 
-
-
-
-
-
-
-
-
+                    // Imagen de la compañía
                     Text(
                         text = "Imagen de la Compañía",
                         fontSize = 14.sp,
@@ -350,7 +328,6 @@ fun EditInformationCompanyScreen(
                                     )
                                 }
                             }
-
                             publicationLink.isNotEmpty() -> {
                                 Text(
                                     text = "Imagen Seleccionada ✓",
@@ -359,7 +336,6 @@ fun EditInformationCompanyScreen(
                                     modifier = Modifier.padding(vertical = 8.dp)
                                 )
                             }
-
                             else -> {
                                 Text(
                                     text = "Seleccionar Imagen",
@@ -371,6 +347,7 @@ fun EditInformationCompanyScreen(
                         }
                     }
 
+                    // Mostrar errores de carga
                     uploadError?.let { error ->
                         Text(
                             text = error,
@@ -380,17 +357,11 @@ fun EditInformationCompanyScreen(
                         )
                     }
 
-
-
-
-
-
-
-
                     Spacer(modifier = Modifier.height(16.dp))
 
+                    // Button para agregar descripción
                     Button(
-                        onClick = { showDescriptionDialog = true },
+                        onClick = { /* abre diálogo de descripción */ },
                         modifier = Modifier
                             .width(200.dp)
                             .padding(vertical = 8.dp)
@@ -409,6 +380,7 @@ fun EditInformationCompanyScreen(
 
                     Spacer(modifier = Modifier.height(24.dp))
 
+                    // Botones Cancelar y Confirmar
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -466,7 +438,7 @@ fun EditInformationCompanyScreen(
                                 )
                                 .clickable {
                                     val nameOk = companyName.text.isNotBlank()
-                                    val logoOk = logoLink.text.isNotBlank()
+                                    val logoOk = logoLinks.text.isNotBlank()
                                     val descOk = descriptionText.text.isNotBlank()
                                     val atLeastOneSocial = social1.text.isNotBlank() ||
                                             social2.text.isNotBlank() ||
@@ -494,40 +466,7 @@ fun EditInformationCompanyScreen(
                 }
             }
 
-            if (showDescriptionDialog) {
-                AlertDialog(
-                    onDismissRequest = { showDescriptionDialog = false },
-                    title = { Text(text = stringResource(R.string.Descripcion)) },
-                    text = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.White)
-                                .padding(horizontal = 8.dp, vertical = 12.dp)
-                        ) {
-                            BasicTextField(
-                                value = descriptionText,
-                                onValueChange = { descriptionText = it },
-                                modifier = Modifier.fillMaxWidth(),
-                                textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
-                                singleLine = false
-                            )
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(onClick = { showDescriptionDialog = false }) {
-                            Text(text = stringResource(R.string.etiqueta_ok))
-                        }
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showDescriptionDialog = false }) {
-                            Text(text = stringResource(R.string.Cancelar))
-                        }
-                    }
-                )
-            }
-
+            // Diálogo de confirmación
             if (showConfirmDialog) {
                 AlertDialog(
                     onDismissRequest = { showConfirmDialog = false },
@@ -565,18 +504,22 @@ fun EditInformationCompanyScreen(
                             // 2) Imprimir valores antes de llamar al ViewModel
                             Log.d("EditCompany", "→ companyNameText = ${companyName.text}")
                             Log.d("EditCompany", "→ descriptionText = ${descriptionText.text}")
-                            Log.d("EditCompany", "→ logoLinkText = ${logoLink.text}")
+                            Log.d("EditCompany", "→ logoLinkText = ${logoLinks.text}")
                             updatedSocials.forEach { sn ->
                                 Log.d("EditCompany", "→ social id=${sn.idSocialNetwork}, link=${sn.link}")
                             }
 
-                            // 3) Llamar al método del ViewModel con la lista actualizada
+                            // 3) Llamar al método del ViewModel
                             companyViewModel.confirmEditCompany(
                                 companyName.text,
                                 descriptionText.text,
-                                logoLink.text,
+                                logoLinks.text,
                                 updatedSocials
                             )
+
+                            // 4) Navegar luego de guardar
+                            navController.navigate(NavRoutes.SettingScreenCompany.ROUTE)
+
                             showConfirmDialog = false
                         }) {
                             Text(text = stringResource(R.string.etiqueta_ok))
@@ -591,6 +534,7 @@ fun EditInformationCompanyScreen(
             }
 
 
+            // Diálogo de alerta si faltan campos
             if (showEmptyAlert) {
                 AlertDialog(
                     onDismissRequest = { showEmptyAlert = false },

@@ -185,15 +185,6 @@ fun GridPublicationsCompany(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 ) {
-//                    Image(
-//                        painter = painterResource(id = R.drawable.intellogo),
-//                        contentDescription = "Logo placeholder",
-//                        modifier = Modifier
-//                            .size(40.dp)
-//                            .clip(CircleShape),
-//                        contentScale = ContentScale.Crop,
-//                        colorFilter = ColorFilter.tint(walterWhite)
-//                    )
                     Spacer(modifier = Modifier.width(12.dp))
                     Text(
                         text = nameToShow,
@@ -203,7 +194,7 @@ fun GridPublicationsCompany(
                 }
             }
 
-            // Botón Agregar
+
             Button(
                 onClick = { showDialog.value = true },
                 modifier = Modifier
@@ -284,7 +275,7 @@ fun GridPublicationsCompany(
                 }
             }
 
-            // Diálogo emergente
+            // Alertas
             if (showDialog.value) {
                 AlertDialog(
                     onDismissRequest = { showDialog.value = false },
@@ -385,17 +376,6 @@ fun GridPublicationsCompany(
                             }
 
                             Spacer(modifier = Modifier.height(12.dp))
-
-                            // Link
-//                            OutlinedTextField(
-//                                value = publicationLink,
-//                                onValueChange = { publicationLink = it },
-//                                label = { Text(stringResource(R.string.link_publicacion)) },
-//                                modifier = Modifier.fillMaxWidth()
-//                            )
-
-
-
 
 
                             Text(

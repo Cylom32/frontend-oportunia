@@ -24,6 +24,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import android.util.Base64
 
 @HiltViewModel
 class CompanyViewModel @Inject constructor(
@@ -581,34 +582,45 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
 ///////////////////////////////  -------------  PARA EDITAR TODOO DE LA COMPAÑIA --------  ///////////////////////
 // Dentro de tu ViewModel (por ejemplo EditCompanyViewModel):
 
+
+
+
     fun confirmEditCompany(
         companyNameText: String,
         companyDescriptionText: String,
         logoLinkText: String,
         socialList: List<SocialNetwork>
     ) = viewModelScope.launch {
+        // 1) Obtener y loguear el token
         val token = tokenC.value ?: run {
             Log.e("EditCompany", "Token nulo")
             return@launch
         }
+        Log.d("EditCompany", "Token recibido → $token")
+
+        // 2) Obtener y loguear el userId
         val userId = userIdC.value ?: run {
             Log.e("EditCompany", "userId nulo")
             return@launch
         }
+        Log.d("EditCompany", "→ userId = $userId")
+
+        // 3) Obtener y loguear el companyId
         val companyId = companyIdC.value ?: run {
             Log.e("EditCompany", "companyId nulo")
             return@launch
         }
+        Log.d("EditCompany", "→ companyId = $companyId")
 
-        // Imprimir todas las redes sociales que se pasan
+        // 4) Imprimir redes sociales entrantes
         socialList.forEach { sn ->
-            Log.d("EditCompany", "Red social pasada → id=${sn.idSocialNetwork}, link=${sn.link}")
+            Log.d("EditCompany", "→ social id=${sn.idSocialNetwork}, link=${sn.link}")
         }
 
-        // 1) Actualizar Company
+        // 5) Actualizar Company
         val companyInput = CompanyInputCM(
-            companyName = companyNameText,
-            companyDescription = companyDescriptionText
+            companyName = companyNameText.trim(),
+            companyDescription = companyDescriptionText.trim()
         )
         val companyResult = repository.updateCompany(token, companyId, companyInput)
         if (companyResult.isSuccess) {
@@ -620,8 +632,8 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
             )
         }
 
-        // 2) Actualizar imagen de usuario
-        val userImgInput = UserImgInputCM(img = logoLinkText)
+        // 6) Actualizar imagen de usuario
+        val userImgInput = UserImgInputCM(img = logoLinkText.trim())
         val imgResult = repository.updateUserImg(token, userId, userImgInput)
         if (imgResult.isSuccess) {
             Log.d("EditCompany", "✅ Imagen de usuario (userId=$userId) actualizada correctamente")
@@ -632,9 +644,9 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
             )
         }
 
-        // 3) Iterar y actualizar cada red social
+        // 7) Iterar y actualizar cada red social
         socialList.forEach { sn ->
-            val snInput = SocialNetworkInputRS(link = sn.link)
+            val snInput = SocialNetworkInputRS(link = sn.link.trim())
             val snResult = repository.updateSocialNetwork(token, sn.idSocialNetwork, snInput)
             if (snResult.isSuccess) {
                 Log.d(
@@ -648,6 +660,8 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
                 )
             }
         }
+
+        fetchUserCompanyById()
     }
 
 
