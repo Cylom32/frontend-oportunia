@@ -59,6 +59,7 @@ fun EditInformationCompanyScreen(
     var descriptionText by remember { mutableStateOf(TextFieldValue("")) }
     var showEmptyAlert by remember { mutableStateOf(false) }
     var showConfirmDialog by remember { mutableStateOf(false) }
+    var showDescriptionDialog by remember { mutableStateOf(false) }
 
     // Variables para carga de imagen
     var isUploadingImage by remember { mutableStateOf(false) }
@@ -89,7 +90,6 @@ fun EditInformationCompanyScreen(
 
                     if (url != null) {
                         publicationLink = url
-                        // Asigna inmediatamente el nuevo link al campo logoLinks:
                         logoLinks = TextFieldValue(publicationLink)
                         uploadError = null
                     } else {
@@ -119,7 +119,6 @@ fun EditInformationCompanyScreen(
     }
     LaunchedEffect(nameValue, imgValue, descValue) {
         companyName = TextFieldValue(nameValue.orEmpty())
-        // Inicializa logoLinks con el valor actual de imgValue
         logoLinks = TextFieldValue(imgValue.orEmpty())
         descriptionText = TextFieldValue(descValue.orEmpty())
     }
@@ -361,7 +360,9 @@ fun EditInformationCompanyScreen(
 
                     // Button para agregar descripción
                     Button(
-                        onClick = { /* abre diálogo de descripción */ },
+                        onClick = {
+                            showDescriptionDialog = true
+                        },
                         modifier = Modifier
                             .width(200.dp)
                             .padding(vertical = 8.dp)
@@ -474,7 +475,6 @@ fun EditInformationCompanyScreen(
                     text = { Text(text = stringResource(R.string.mensaje_guardar)) },
                     confirmButton = {
                         TextButton(onClick = {
-                            // 1) Construir la lista actualizada de redes sociales
                             val updatedSocials = mutableListOf<SocialNetwork>()
                             socialList.getOrNull(0)?.let { sn0 ->
                                 updatedSocials.add(
@@ -501,7 +501,6 @@ fun EditInformationCompanyScreen(
                                 )
                             }
 
-                            // 2) Imprimir valores antes de llamar al ViewModel
                             Log.d("EditCompany", "→ companyNameText = ${companyName.text}")
                             Log.d("EditCompany", "→ descriptionText = ${descriptionText.text}")
                             Log.d("EditCompany", "→ logoLinkText = ${logoLinks.text}")
@@ -509,7 +508,6 @@ fun EditInformationCompanyScreen(
                                 Log.d("EditCompany", "→ social id=${sn.idSocialNetwork}, link=${sn.link}")
                             }
 
-                            // 3) Llamar al método del ViewModel
                             companyViewModel.confirmEditCompany(
                                 companyName.text,
                                 descriptionText.text,
@@ -517,9 +515,7 @@ fun EditInformationCompanyScreen(
                                 updatedSocials
                             )
 
-                            // 4) Navegar luego de guardar
                             navController.navigate(NavRoutes.SettingScreenCompany.ROUTE)
-
                             showConfirmDialog = false
                         }) {
                             Text(text = stringResource(R.string.etiqueta_ok))
@@ -532,7 +528,6 @@ fun EditInformationCompanyScreen(
                     }
                 )
             }
-
 
             // Diálogo de alerta si faltan campos
             if (showEmptyAlert) {
@@ -551,6 +546,67 @@ fun EditInformationCompanyScreen(
                     }
                 )
             }
+
+            // Diálogo para editar descripción
+            // Dentro de EditInformationCompanyScreen, reemplaza el bloque del diálogo de descripción por este:
+
+// Diálogo para editar descripción (con contador de caracteres)
+            if (showDescriptionDialog) {
+                AlertDialog(
+                    onDismissRequest = { showDescriptionDialog = false },
+                    title = { Text(text = stringResource(R.string.Agregar_Descripcion)) },
+                    text = {
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            // Caja de texto multilínea, limitando a 255 caracteres
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(120.dp)
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.White)
+                                    .padding(8.dp)
+                            ) {
+                                BasicTextField(
+                                    value = descriptionText,
+                                    onValueChange = {
+                                        if (it.text.length <= 255) {
+                                            descriptionText = it
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+                                    singleLine = false
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            // Contador de caracteres
+                            Text(
+                                text = "${descriptionText.text.length}/255",
+                                fontSize = 12.sp,
+                                color = if (descriptionText.text.length < 255) Color.Gray else Color.Red,
+                                modifier = Modifier.align(Alignment.End)
+                            )
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            showDescriptionDialog = false
+                        }) {
+                            Text(text = stringResource(R.string.etiqueta_ok))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = {
+                            showDescriptionDialog = false
+                        }) {
+                            Text(text = stringResource(R.string.Cancelar))
+                        }
+                    }
+                )
+            }
+
         }
     }
 }

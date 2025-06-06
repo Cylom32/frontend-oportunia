@@ -428,19 +428,34 @@ fun RegisterInformationCompanyScreen(
                     onDismissRequest = { showDescriptionDialog = false },
                     title = { Text(text = stringResource(R.string.Descripcion)) },
                     text = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clip(RoundedCornerShape(8.dp))
-                                .background(Color.White)
-                                .padding(horizontal = 8.dp, vertical = 12.dp)
-                        ) {
-                            BasicTextField(
-                                value = descriptionText,
-                                onValueChange = { descriptionText = it },
-                                modifier = Modifier.fillMaxWidth(),
-                                textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
-                                singleLine = false
+                        Column(modifier = Modifier.fillMaxWidth()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(8.dp))
+                                    .background(Color.White)
+                                    .padding(8.dp)
+                            ) {
+                                BasicTextField(
+                                    value = descriptionText,
+                                    onValueChange = {
+                                        if (it.text.length <= 255) {
+                                            descriptionText = it
+                                        }
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(100.dp),
+                                    textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+                                    singleLine = false
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(4.dp))
+                            Text(
+                                text = "${descriptionText.text.length}/255",
+                                fontSize = 12.sp,
+                                color = if (descriptionText.text.length < 255) Color.Gray else Color.Red,
+                                modifier = Modifier.align(Alignment.End)
                             )
                         }
                     },
