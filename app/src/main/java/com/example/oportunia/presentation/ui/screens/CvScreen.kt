@@ -45,119 +45,118 @@ import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 
 
-
-
-
 @Composable
-fun CVScreen(studentViewModel: StudentViewModel, navController: NavHostController)
- {
-/////////////////////////////////////////////////////////////////////////////////
-     val studentState by studentViewModel.studentState.collectAsState()
-
-     Surface(
-         modifier = Modifier
-             .fillMaxSize()
-             .background(lilGray)
-     ) {
-         Column(
-             modifier = Modifier
-                 .fillMaxSize()
-                 .background(lilGray),
-             horizontalAlignment = Alignment.CenterHorizontally
-         ) {
-
-             // Encabezado
-             Box(
-                 modifier = Modifier
-                     .height(150.dp)
-                     .fillMaxWidth()
-                     .shadow(
-                         elevation = 8.dp,
-                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
-                         clip = false
-                     )
-                     .background(
-                         brush = Brush.linearGradient(
-                             colors = listOf(
-                                 royalBlue,
-                                 deepSkyBlue,
-                                 midnightBlue
-                             ),
-                             start = Offset(0f, 0f),
-                             end = Offset(1000f, 1000f)
-                         ),
-                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
-                     ),
-                 contentAlignment = Alignment.Center
-             )
-             {
-                 when (studentState) {
-                     is StudentState.Loading -> {
-                         Text(
-                             text = stringResource(R.string.cargando),
-                             color = Color.White,
-                             fontSize = 20.sp,
-                             fontWeight = FontWeight.Bold
-                         )
-                     }
-
-                     is StudentState.Success -> {
-                         val student = (studentState as StudentState.Success).student
-
-                         Column(
-                             horizontalAlignment = Alignment.CenterHorizontally,
-                             modifier = Modifier.fillMaxWidth()
-                         ) {
-                             Text(
-                                 text = "${student.name} ${student.lastName1}",
-                                 color = Color.White,
-                                 fontSize = 25.sp,
-                                 fontWeight = FontWeight.Bold
-                             )
-
-                             Spacer(modifier = Modifier.height(12.dp))
-
-                         }
-                     }
+fun CVScreen(
+    studentViewModel: StudentViewModel,
+    navController: NavHostController
+) {
 
 
-                     is StudentState.Error -> {
-                         val message = (studentState as StudentState.Error).message
-                         Text(
-                             text = "Error: $message",
-                             color = Color.Red,
-                             fontSize = 20.sp,
-                             fontWeight = FontWeight.Bold
-                         )
-                     }
+    val studentState by studentViewModel.studentState.collectAsState()
 
-                     StudentState.Empty -> {
-                         Text(
-                             text = stringResource(R.string.sin_datos),
-                             color = Color.LightGray,
-                             fontSize = 20.sp,
-                             fontWeight = FontWeight.Bold
-                         )
-                     }
-                 }
-             }
+    Surface(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(lilGray)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(lilGray),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-             // Título
-             Text(
-                 text = stringResource(R.string.titleCV),
-                 fontSize = 32.sp,
-                 color = com.example.oportunia.presentation.ui.theme.blackPanter,
-                 modifier = Modifier.padding(top = 20.dp)
-             )
+            // Encabezado
+            Box(
+                modifier = Modifier
+                    .height(150.dp)
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
+                        clip = false
+                    )
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                royalBlue,
+                                deepSkyBlue,
+                                midnightBlue
+                            ),
+                            start = Offset(0f, 0f),
+                            end = Offset(1000f, 1000f)
+                        ),
+                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            )
+            {
+                when (studentState) {
+                    is StudentState.Loading -> {
+                        Text(
+                            text = stringResource(R.string.cargando),
+                            color = Color.White,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
 
-                     Spacer(modifier = Modifier.height(20.dp))
-        // Buttons Section
-        ButtonSection(navController)
-         }
-     }
+                    is StudentState.Success -> {
+                        val student = (studentState as StudentState.Success).student
+
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text(
+                                text = "${student.name} ${student.lastName1}",
+                                color = Color.White,
+                                fontSize = 25.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Spacer(modifier = Modifier.height(12.dp))
+
+                        }
+                    }
+
+
+                    is StudentState.Error -> {
+                        val message = (studentState as StudentState.Error).message
+                        Text(
+                            text = "Error: $message",
+                            color = Color.Red,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    StudentState.Empty -> {
+                        Text(
+                            text = stringResource(R.string.sin_datos),
+                            color = Color.LightGray,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+
+            // Título
+            Text(
+                text = stringResource(R.string.titleCV),
+                fontSize = 32.sp,
+                color = com.example.oportunia.presentation.ui.theme.blackPanter,
+                modifier = Modifier.padding(top = 20.dp)
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+            // Buttons Section
+            ButtonSection(navController)
+        }
+    }
 
 }
-
 
 
 @Composable
@@ -210,7 +209,6 @@ fun ButtonSection(navController: NavHostController) {
         Button(
             onClick = {
                 navController.navigate(NavRoutes.CvAnalisys.ROUTE)
-
 
 
             },
