@@ -2,7 +2,15 @@ package com.example.oportunia.presentation.ui.screens
 
 
 import android.util.Log
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.VerticalPager
@@ -31,6 +39,9 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -52,14 +63,12 @@ fun HomeScreenS(companyViewModel: CompanyViewModel, usersViewModel: UsersViewMod
         val screenWidth = maxWidth
 
         var selectedCompanyId by remember { mutableStateOf<Int?>(null) }
-
         var showMainPopup by remember { mutableStateOf(false) }
         var showAreaPopup by remember { mutableStateOf(false) }
         var showUbicacionPopup by remember { mutableStateOf(false) }
         var showModalidadPopup by remember { mutableStateOf(false) }
         var showRemuneradoPopup by remember { mutableStateOf(false) }
 
-        // Estados para filtros
         var selectedAreaIds by remember { mutableStateOf(listOf<Int>()) }
         var selectedLocationIds by remember { mutableStateOf(listOf<Int>()) }
         var selectedRemunerado by remember { mutableStateOf<Boolean?>(null) }
@@ -67,9 +76,6 @@ fun HomeScreenS(companyViewModel: CompanyViewModel, usersViewModel: UsersViewMod
         LaunchedEffect(Unit) {
             companyViewModel.fetchPublications()
         }
-
-
-
 
 
         Surface(
@@ -105,7 +111,6 @@ fun HomeScreenS(companyViewModel: CompanyViewModel, usersViewModel: UsersViewMod
                     })
 
                 }
-
 
 
                 val publications by companyViewModel.publications.collectAsState()
@@ -509,45 +514,85 @@ fun ImageScroll(
                         modifier = Modifier.fillMaxSize(),
                         contentScale = ContentScale.Crop
                     )
-                    AsyncImage(
-                        model = logos[page],
-                        contentDescription = "Logo empresa",
+
+                    // LOGO CON CÍRCULO GIRANDO
+                    val infiniteTransition = rememberInfiniteTransition()
+                    val rotationAngle by infiniteTransition.animateFloat(
+                        initialValue = 0f,
+                        targetValue = 360f,
+                        animationSpec = infiniteRepeatable(
+                            animation = tween(2000, easing = LinearEasing),
+                            repeatMode = RepeatMode.Restart
+                        )
+                    )
+
+                    Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .padding(12.dp)
-                            .size(72.dp)
-                            .clip(CircleShape)
-                            .clickable {
-                                val companyId = publications[page].company.idCompany
-                                companyViewModel.setSelectedCompanyId(companyId)
-                                navController.navigate(NavRoutes.CompanyInfoScreenS.ROUTE)
+                            .size(80.dp)
+                    ) {
+                        // Círculo girando
+                        Canvas(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .rotate(rotationAngle)
+                        ) {
+                            val strokeWidth = 3.dp.toPx()
 
-                                val logoUrl   = publications[page].company.user.img
-                                companyViewModel.setCompanyLogo(logoUrl)
-                                companyViewModel.fetchCompanyWithNetworks(companyId)
-                                Log.d("ImageScroll", "Logo clicked, companyId=$companyId")
-                            }
-                    )
-//                    Button(
-//                        onClick = {
-//                            navController.navigate(NavRoutes.RequestScreen.ROUTE)
-//                        },
-//                        modifier = Modifier
-//                            .align(Alignment.BottomCenter)
-//                            .padding(bottom = 16.dp)
-//                            .height(60.dp)
-//                            .width(180.dp),
-//                        shape = RoundedCornerShape(24.dp)
-//                    ) {
-//                        Text(
-//                            text = stringResource(R.string.ApplyButtonText),
-//                            fontSize = 18.sp,
-//                            modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
-//                        )
-//                    }
+                            // Arco blanco
+                            drawArc(
+                                color = androidx.compose.ui.graphics.Color.White,
+                                startAngle = 0f,
+                                sweepAngle = 90f,
+                                useCenter = false,
+                                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                            )
+
+                            // Arco azul
+                            drawArc(
+                                color = androidx.compose.ui.graphics.Color.Blue,
+                                startAngle = 180f,
+                                sweepAngle = 90f,
+                                useCenter = false,
+                                style = Stroke(width = strokeWidth, cap = StrokeCap.Round)
+                            )
+                        }
+
+                        // Logo en el centro
+                        AsyncImage(
+                            model = logos[page],
+                            contentDescription = "Logo empresa",
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(56.dp)
+                                .background(
+                                    Color.White.copy(alpha = 0.9f),
+                                    CircleShape
+                                )
+                                .border(
+                                    2.dp,
+                                    Color.White,
+                                    CircleShape
+                                )
+                                .padding(4.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    val companyId = publications[page].company.idCompany
+                                    companyViewModel.setSelectedCompanyId(companyId)
+                                    navController.navigate(NavRoutes.CompanyInfoScreenS.ROUTE)
+
+                                    val logoUrl = publications[page].company.user.img
+                                    companyViewModel.setCompanyLogo(logoUrl)
+                                    companyViewModel.fetchCompanyWithNetworks(companyId)
+                                    Log.d("ImageScroll", "Logo clicked, companyId=$companyId")
+                                }
+                        )
+                    }
                 }
             }
         }
+
         PullRefreshIndicator(
             refreshing = isRefreshing,
             state = pullRefreshState,

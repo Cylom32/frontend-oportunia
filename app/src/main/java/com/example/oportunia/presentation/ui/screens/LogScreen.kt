@@ -65,7 +65,7 @@ fun LogScreen(
     studentViewModel: StudentViewModel,
     companyViewModel: CompanyViewModel
 ) {
-   // val token by usersViewModel.token.collectAsState()
+    // val token by usersViewModel.token.collectAsState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showAlert by remember { mutableStateOf(false) }
@@ -301,15 +301,15 @@ fun LogScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(
-                                text = stringResource(id = R.string.forgotPassword),
-                                fontSize = 17.sp,
-                                color = Color.White,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 5.dp),
-                                textAlign = TextAlign.Center
-                            )
+//                            Text(
+//                                text = stringResource(id = R.string.forgotPassword),
+//                                fontSize = 17.sp,
+//                                color = Color.White,
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .padding(bottom = 5.dp),
+//                                textAlign = TextAlign.Center
+//                            )
 
                             Text(
                                 text = stringResource(id = R.string.craeteAccount),

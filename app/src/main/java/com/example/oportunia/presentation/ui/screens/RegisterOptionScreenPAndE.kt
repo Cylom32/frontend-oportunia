@@ -189,8 +189,8 @@ fun RegisterOptionScreenPAndE(
                         .padding(horizontal = 8.dp, vertical = 12.dp)
                 ) {
                     BasicTextField(
-                        value = TextFieldValue(correo),
-                        onValueChange = { correo = it.text },
+                        value = correo,
+                        onValueChange = { correo = it },
                         modifier = Modifier.fillMaxWidth(),
                         textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
                         singleLine = true

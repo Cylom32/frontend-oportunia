@@ -7,7 +7,7 @@ plugins {
    // id("org.jetbrains.kotlin.kapt")
 
 
-
+    id("com.google.gms.google-services") version "4.4.2" apply false
 
     kotlin("kapt")
 
@@ -56,6 +56,18 @@ android {
 }
 
 dependencies {
+
+
+
+
+    // Import the Firebase BoM
+    implementation(platform("com.google.firebase:firebase-bom:33.15.0"))
+
+
+    // TODO: Add the dependencies for Firebase products you want to use
+    // When using the BoM, don't specify versions in Firebase dependencies
+    implementation("com.google.firebase:firebase-analytics")
+
 
 
     implementation(libs.androidx.core.ktx)
@@ -137,6 +149,8 @@ dependencies {
     ///////////////////////////////////
 
 }
+
+apply(plugin = "com.google.gms.google-services")
 
 kapt {
     correctErrorTypes = true
