@@ -23,6 +23,7 @@ material3    = "1.4.0"
 
 
 datastorePreferences = "1.0.0"
+documentfile = "1.1.0"
 
 [libraries]
 
@@ -67,6 +68,7 @@ accompanist-pager-indicators = { group = "com.google.accompanist", name = "accom
 accompanist-swiperefresh = { group = "com.google.accompanist", name = "accompanist-swiperefresh", version = "0.30.1" }
 
 converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+androidx-documentfile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentfile" }
 
 
 

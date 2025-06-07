@@ -230,7 +230,7 @@ fun SearchBar(onMenuClick: () -> Unit) {
             .fillMaxWidth(0.9f)
             .height(50.dp)
             .background(Color(0xFFE9EEF1), shape = RoundedCornerShape(50))
-            .padding(horizontal = 16.dp)
+            .padding(horizontal = 16.dp).clickable{onMenuClick()}
     ) {
         Icon(
             imageVector = Icons.Default.Menu,
@@ -242,7 +242,7 @@ fun SearchBar(onMenuClick: () -> Unit) {
         )
         Text(
             text = stringResource(R.string.etiqueta_filtro_busqueda),
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier.align(Alignment.Center).clickable{onMenuClick()},
             color = Color.DarkGray,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center

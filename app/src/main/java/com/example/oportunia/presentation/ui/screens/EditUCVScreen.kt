@@ -25,6 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.oportunia.R
@@ -185,7 +186,7 @@ fun EditUCVScreen(
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
                     modifier = Modifier
                         .height(50.dp)
-                        .width(200.dp)
+                        .padding(horizontal = 8.dp)
                 ) {
                     Text(
                         text = stringResource(R.string.boton_agregar_cv),
@@ -250,8 +251,14 @@ fun EditUCVScreen(
                     newCvLink = ""
                 },
                 title = {
-                    Text(text = stringResource(R.string.boton_agregar_cv))
-                },
+                    Text(
+                        text = stringResource(R.string.boton_agregar_cv),
+                        fontSize = 18.sp,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                ,
                 text = {
                     Column {
                         OutlinedTextField(

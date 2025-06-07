@@ -90,6 +90,7 @@ dependencies {
 
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.documentfile)
     kapt(libs.hilt.compiler)
 
     // Tests
@@ -125,6 +126,8 @@ dependencies {
     implementation ("org.mindrot:jbcrypt:0.4")
 
 
+
+    implementation ("androidx.documentfile:documentfile:1.0.1")
 //    implementation("com.squareup.moshi:moshi:1.15.0")
 //    // Moshi para Kotlin (reflect), opcional si no usas code-gen en todos
 //    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
