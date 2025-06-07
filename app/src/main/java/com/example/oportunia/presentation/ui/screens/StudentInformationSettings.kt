@@ -1,104 +1,118 @@
 package com.example.oportunia.presentation.ui.screens
-
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowDropUp
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.oportunia.R
-import com.example.oportunia.presentation.navigation.NavRoutes
-import com.example.oportunia.presentation.ui.components.texAndLable
+import com.example.oportunia.presentation.ui.theme.lilGray
+import android.util.Log
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.text.style.TextAlign
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
-import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
-import com.example.oportunia.presentation.ui.theme.deepSkyBlue
-import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
-import com.example.oportunia.presentation.ui.theme.midnightBlue
-import com.example.oportunia.presentation.ui.theme.royalBlue
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
-
-var idSelectedU2 = 0
 
 @Composable
-fun StudentInformationSettings2(studentViewModel: StudentViewModel, navController: NavHostController) {
-    val studentState by studentViewModel.studentState.collectAsState()
+fun StudentInformationSettings(
+    navController: NavHostController,
+    usersViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel,
+    companyViewModel: CompanyViewModel
+) {
+    val token by usersViewModel.token.collectAsState(initial = null)
+    val userId by usersViewModel.userId.collectAsState(initial = null)
+    val studentIdd by studentViewModel.studentIdd.collectAsState(initial = null)
+
+    // Estado local para los TextFields
+    var firstName by remember { mutableStateOf("") }
+    var lastName1 by remember { mutableStateOf("") }
+    var lastName2 by remember { mutableStateOf("") }
+
+    var expanded by remember { mutableStateOf(false) }
+    var selectedUniversityName by remember { mutableStateOf("") }
+    var idSelectedU by remember { mutableStateOf(0) }
+
+    val universityList by usersViewModel.universities.collectAsState(initial = emptyList())
     var showAlert by remember { mutableStateOf(false) }
 
-    // Cargar los datos del estudiante al iniciar la pantalla
+    // Estado del estudiante traído desde el ViewModel
+    val studentState by studentViewModel.studentState.collectAsState()
+
+    // 1) Cuando tengamos token y userId, solicitamos al ViewModel que cargue el estudiante
+    LaunchedEffect(token, userId) {
+        if (!token.isNullOrEmpty() && userId != null) {
+            studentViewModel.fetchStudentByUserId(token!!, userId!!) { /* noop */ }
+        }
+    }
+
+    // 2) Cuando studentState cambie a Success y ya existan universidades, precargamos los TextFields
+    LaunchedEffect(studentState, universityList) {
+        if (studentState is StudentState.Success && universityList.isNotEmpty()) {
+            val student = (studentState as StudentState.Success).student
+            firstName = student.name
+            lastName1 = student.lastName1
+            lastName2 = student.lastName2
+            // Buscar el nombre de la universidad por ID
+            universityList.find { it.idUniversity == student.universityId }?.let { uni ->
+                selectedUniversityName = uni.universityName
+                idSelectedU = uni.idUniversity
+            }
+        }
+    }
+
+    // Cargar la lista de universidades para el dropdown
     LaunchedEffect(Unit) {
-        val userId = studentViewModel.selectedStudent.value?.idUser
-            ?: throw IllegalStateException("No hay usuario autenticado")
-        studentViewModel.loadStudentByUserId(userId)
+        usersViewModel.fetchUniversities()
     }
 
     Surface(
         modifier = Modifier
             .fillMaxSize()
-            .background(com.example.oportunia.presentation.ui.theme.lilGray)
+            .background(lilGray)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(com.example.oportunia.presentation.ui.theme.lilGray),
+                .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Encabezado
+            // ——— CABECERA ———
             Box(
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth()
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp),
-                        clip = false
-                    )
+                    .shadow(8.dp, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
                     .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                royalBlue,
-                                deepSkyBlue,
-                                midnightBlue
-                            ),
-                            start = Offset(0f, 0f),
-                            end = Offset(1000f, 1000f)
+                        brush = androidx.compose.ui.graphics.Brush.verticalGradient(
+                            colors = listOf(Color(0xFF8D99AE), Color(0xFF8D99AE))
                         ),
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                     ),
@@ -107,126 +121,165 @@ fun StudentInformationSettings2(studentViewModel: StudentViewModel, navControlle
                 Text(
                     text = stringResource(R.string.app_name),
                     fontSize = 64.sp,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
+                    color = Color.White
                 )
             }
 
-            // Título
-            Text(
-                text = stringResource(R.string.screenTitleInfo),
-                fontSize = 32.sp,
-                color = com.example.oportunia.presentation.ui.theme.blackPanter,
-                modifier = Modifier.padding(top = 32.dp)
-            )
+            Spacer(modifier = Modifier.height(32.dp))
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedTextField(
+                    value = firstName,
+                    onValueChange = { firstName = it },
+                    label = { Text(stringResource(R.string.nameTitle)) },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                )
+                OutlinedTextField(
+                    value = lastName1,
+                    onValueChange = { lastName1 = it },
+                    label = { Text(stringResource(R.string.FirstSurnameTitle)) },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                )
+                OutlinedTextField(
+                    value = lastName2,
+                    onValueChange = { lastName2 = it },
+                    label = { Text(stringResource(R.string.SecondSurnameTitle)) },
+                    singleLine = true,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                )
 
-            // Mostrar el estado del estudiante
-            when (studentState) {
-                is StudentState.Loading -> {
-                    Text(
-                        text = "Cargando...",
-                        color = com.example.oportunia.presentation.ui.theme.blackPanter,
-                        fontSize = 20.sp
-                    )
-                }
-                is StudentState.Success -> {
-                    val student = (studentState as StudentState.Success).student
+                Spacer(modifier = Modifier.height(24.dp))
 
-                    // Inicializar los valores del ViewModel con los datos del estudiante
-                    LaunchedEffect(student) {
-                        studentViewModel.setNombre(student.name)
-                        studentViewModel.setApellido1(student.lastName1)
-                        studentViewModel.setApellido2(student.lastName2)
-                        studentViewModel.setIdUniversidad(student.universityId ?: 0)
-                    }
-
-                    // Campos de texto
-                    Column(
-                        horizontalAlignment = Alignment.Start,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp)
-                    ) {
-                        val nombre by studentViewModel.nombre.collectAsState()
-                        val apellido1 by studentViewModel.apellido1.collectAsState()
-                        val apellido2 by studentViewModel.apellido2.collectAsState()
-
-                        texAndLable(
-                            titulo = stringResource(R.string.nameTitle),
-                            placeholder = "",
-                            valor = nombre,
-                            alCambiarValor = { studentViewModel.setNombre(it) }
-                        )
-
-                        texAndLable(
-                            titulo = stringResource(R.string.FirstSurnameTitle),
-                            placeholder = "",
-                            valor = apellido1,
-                            alCambiarValor = { studentViewModel.setApellido1(it) }
-                        )
-
-                        texAndLable(
-                            titulo = stringResource(R.string.SecondSurnameTitle),
-                            placeholder = "",
-                            valor = apellido2,
-                            alCambiarValor = { studentViewModel.setApellido2(it) }
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    // Dropdown de universidad
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 48.dp),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        var selectedUniversity by remember { mutableStateOf("") }
-
-                        // Actualizar el nombre de la universidad seleccionada
-                        LaunchedEffect(studentViewModel.universityOptions.collectAsState().value) {
-                            val university = studentViewModel.universityOptions.value.find {
-                                it.id == student.universityId
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                ) {
+                    OutlinedTextField(
+                        value = selectedUniversityName,
+                        onValueChange = { },
+                        readOnly = true,
+                        textStyle = androidx.compose.ui.text.TextStyle(color = Color.Black),
+                        label = { Text(stringResource(R.string.UniversityTitle), color = Color.Black) },
+                        trailingIcon = {
+                            if (expanded) {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowDropUp,
+                                    contentDescription = "Cerrar menú",
+                                    modifier = Modifier.clickable { expanded = false }
+                                )
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Filled.ArrowDropDown,
+                                    contentDescription = "Abrir menú",
+                                    modifier = Modifier.clickable {
+                                        expanded = true
+                                        usersViewModel.fetchUniversities()
+                                    }
+                                )
                             }
-                            selectedUniversity = university?.name ?: ""
-                        }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { expanded = !expanded }
+                    )
 
-                        UniversityDropdown2(
-                            selectedUniversity = selectedUniversity,
-                            onUniversitySelected = { selectedUniversity = it },
-                            studentViewModel = studentViewModel
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        universityList.forEach { uni ->
+                            DropdownMenuItem(
+                                text = { Text(uni.universityName, fontSize = 16.sp) },
+                                onClick = {
+                                    selectedUniversityName = uni.universityName
+                                    idSelectedU = uni.idUniversity
+                                    expanded = false
+                                    Log.d(
+                                        "StudentInfoSettings",
+                                        "Universidad seleccionada: ${uni.universityName} (id=${uni.idUniversity})"
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp)
+                ) {
+                    // Botón Cancelar
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(50.dp)
+                            .shadow(8.dp, RoundedCornerShape(24.dp))
+                            .background(Color(0xFF8D99AE), RoundedCornerShape(24.dp))
+                            .clickable {
+                                navController.popBackStack()
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(R.string.Cancelar),
+                            fontSize = 18.sp,
+                            color = Color.White,
+                            textAlign = TextAlign.Center
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(120.dp))
-
-                    // Botón para guardar cambios
+                    // Botón Guardar
                     Box(
                         modifier = Modifier
-                            .width(350.dp)
-                            .padding(horizontal = 60.dp, vertical = 0.dp)
-                            .shadow(
-                                elevation = 10.dp,
-                                shape = RoundedCornerShape(24.dp),
-                                clip = false
-                            )
-                            .gradientBackgroundBlue(gradientColorsBlue, RoundedCornerShape(10.dp))
+                            .weight(1f)
+                            .height(50.dp)
+                            .shadow(10.dp, RoundedCornerShape(24.dp))
+                            .background(Color(0xFF8D99AE), RoundedCornerShape(24.dp))
                             .clickable {
-                                val nombre = studentViewModel.nombre.value.trim()
-                                val apellido1 = studentViewModel.apellido1.value.trim()
-                                val apellido2 = studentViewModel.apellido2.value.trim()
-                                val universidadId = idSelectedU2
+                                Log.d(
+                                    "StudentInfoSettings",
+                                    "Guardar pulsado con -> firstName: $firstName, lastName1: $lastName1, lastName2: $lastName2, universityId: $idSelectedU, userId: $userId, studentId: $studentIdd, token: $token"
+                                )
 
-                                if (nombre.isNotEmpty() && apellido1.isNotEmpty() && apellido2.isNotEmpty() && universidadId != 0) {
-
-                                    studentViewModel.updateStudent(student.idStudent, student.idUser)
-
-                                    navController.navigate(NavRoutes.Settings.ROUTE)
-                                    studentViewModel.clearStudentData()
-
+                                if (
+                                    firstName.isNotBlank() &&
+                                    lastName1.isNotBlank() &&
+                                    lastName2.isNotBlank() &&
+                                    selectedUniversityName.isNotBlank() &&
+                                    idSelectedU != 0 &&
+                                    !token.isNullOrEmpty() &&
+                                    userId != null &&
+                                    studentIdd != null
+                                ) {
+                                    studentViewModel.updateStudent(
+                                        token = token!!,
+                                        studentId = studentIdd!!,
+                                        rawFirstName = firstName,
+                                        rawLastName1 = lastName1,
+                                        rawLastName2 = lastName2,
+                                        universityId = idSelectedU,
+                                        userId = userId!!
+                                    )
+                                    navController.popBackStack()
                                 } else {
                                     showAlert = true
                                 }
@@ -234,31 +287,14 @@ fun StudentInformationSettings2(studentViewModel: StudentViewModel, navControlle
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Guardar Cambios",
-                            fontSize = 25.sp,
-                            color = com.example.oportunia.presentation.ui.theme.walterWhite,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(vertical = 12.dp)
+                            text = stringResource(R.string.Guardar),
+                            fontSize = 18.sp,
+                            color = Color.White,
+                            textAlign = TextAlign.Center
                         )
                     }
                 }
-                is StudentState.Error -> {
-                    Text(
-                        text = "Error: ${(studentState as StudentState.Error).message}",
-                        color = Color.Red,
-                        fontSize = 20.sp
-                    )
-                }
-                StudentState.Empty -> {
-                    Text(
-                        text = "Sin datos de estudiante",
-                        color = Color.Gray,
-                        fontSize = 20.sp
-                    )
-                }
             }
-
-            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 
@@ -267,78 +303,11 @@ fun StudentInformationSettings2(studentViewModel: StudentViewModel, navControlle
             onDismissRequest = { showAlert = false },
             confirmButton = {
                 TextButton(onClick = { showAlert = false }) {
-                    Text("Aceptar")
+                    Text(stringResource(R.string.acceptText))
                 }
             },
             title = { Text(stringResource(R.string.studentInfoAlertTittle)) },
             text = { Text(stringResource(R.string.studentInfoAlertText)) }
         )
-    }
-}
-
-@Composable
-fun UniversityDropdown2(
-    selectedUniversity: String,
-    onUniversitySelected: (String) -> Unit,
-    studentViewModel: StudentViewModel
-) {
-    LaunchedEffect(Unit) {
-        studentViewModel.loadUniversityOptions()
-    }
-
-    val options by studentViewModel.universityOptions.collectAsState()
-    var expanded by remember { mutableStateOf(false) }
-
-    Box(modifier = Modifier.width(250.dp)) {
-        OutlinedTextField(
-            value = selectedUniversity,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text(stringResource(R.string.UniversityTitle), color = Color.Black) },
-            trailingIcon = {
-                IconButton(onClick = { expanded = !expanded }) {
-                    Icon(
-                        imageVector = if (expanded) Icons.Default.ArrowDropUp else Icons.Default.ArrowDropDown,
-                        contentDescription = null,
-                        tint = Color.Black
-                    )
-                }
-            },
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Black,
-                unfocusedBorderColor = Color.Black,
-                disabledBorderColor = Color.Black,
-                focusedTrailingIconColor = Color.Black,
-                unfocusedTrailingIconColor = Color.Black,
-                focusedLabelColor = Color.Black,
-                unfocusedLabelColor = Color.Black,
-                cursorColor = Color.Black,
-                disabledLabelColor = Color.Black,
-                focusedTextColor = Color.Black,
-                unfocusedTextColor = Color.Black,
-                disabledTextColor = Color.Black
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expanded = !expanded }
-        )
-
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.background(Color.White)
-        ) {
-            options.forEach { university ->
-                DropdownMenuItem(
-                    text = { Text(university.name, color = Color.Black) },
-                    onClick = {
-                        idSelectedU2 = university.id
-                        studentViewModel.setIdUniversidad(university.id)
-                        onUniversitySelected(university.name)
-                        expanded = false
-                    }
-                )
-            }
-        }
     }
 }

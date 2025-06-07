@@ -41,6 +41,7 @@ sealed class NavRoutes {
     data object RegisterInformationPAndE : NavRoutes() {
         const val ROUTE = "registerInformationPAndE"
     }
+
     data object StudentInformationSettings2 : NavRoutes() {
         const val ROUTE = "studentInformationSettings2"
     }
@@ -50,4 +51,72 @@ sealed class NavRoutes {
         const val ROUTE = "editUCVScreen"
 
     }
+
+    data object SentRequestScreen : NavRoutes() {
+        const val ROUTE = "sentRequestScreen"
+    }
+
+    data object HomeScreenS : NavRoutes() {
+        const val ROUTE = "homeScreenS"
+
+    }
+
+    data object LanguageOptionsSC : NavRoutes() {
+        const val ROUTE = "languageOptionsSC"
+    }
+
+    data object CompanyInfoScreenS : NavRoutes() {
+        const val ROUTE = "companyInfoScreenS"
+    }
+
+    data object GridPublicationsScreenS : NavRoutes() {
+        const val ROUTE = "gridPublicationsScreenS"
+    }
+
+    data object IntershipScreen : NavRoutes() {
+        const val ROUTE = "intershipScreen"
+    }
+
+    data object RequestScreen : NavRoutes() {
+        const val ROUTE = "requestScreen"
+    }
+
+    data object RegisterInformationCompanyScreen : NavRoutes() {
+        const val ROUTE = "registerInformationCompanyScreen"
+    }
+
+    data object RegisterCredentialsScreen : NavRoutes() {
+        const val ROUTE = "registerCredentialsScreen"
+    }
+
+    data object CompanyInfoScreenForCompany : NavRoutes() {
+        const val ROUTE = "companyInfoScreenForCompany"
+    }
+
+    data object GridPublicationsCompany : NavRoutes() {
+        const val ROUTE = "gridPublicationsCompany"
+    }
+
+    data object PublicationDetailScreen : NavRoutes() {
+        const val ROUTE = "publicationDetailScreen"
+    }
+
+    data object CompanyMessagesScreen : NavRoutes() {
+        const val ROUTE = "companyMessagesScreen"
+
+    }
+
+    data object EditInformationCompanyScreen : NavRoutes() {
+        const val ROUTE = "editInformationCompanyScreen"
+    }
+
+    data object CvAnalisys : NavRoutes() {
+        const val ROUTE = "cvAnalisys"
+    }
+
+    data object SettingScreenCompany : NavRoutes() {
+        const val ROUTE = "settingScreenCompany"
+    }
+
+
 }

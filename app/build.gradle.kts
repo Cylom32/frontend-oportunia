@@ -2,8 +2,20 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt.android)
 
-    id("org.jetbrains.kotlin.kapt")
+   // id("org.jetbrains.kotlin.kapt")
+
+
+
+
+    kotlin("kapt")
+
+    ///////////////////////////
+
+
+
+
 }
 
 android {
@@ -44,6 +56,8 @@ android {
 }
 
 dependencies {
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -58,6 +72,16 @@ dependencies {
     implementation(libs.androidx.navigation.runtime)
     implementation(libs.androidx.compose.material)
 
+
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
+
+    implementation(libs.accompanist.swiperefresh)
+
+
+
+
+
     // Retrofit + Gson + OkHttp
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -66,6 +90,7 @@ dependencies {
 
 
     implementation(libs.hilt.android)
+    implementation(libs.androidx.documentfile)
     kapt(libs.hilt.compiler)
 
     // Tests
@@ -76,6 +101,41 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
+
+    //implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+
+    implementation(libs.converter.moshi)
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+
+    implementation(libs.androidx.material.icons.extended)
+
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+
+    ///////////////////////////////////
+
+    /////-----------------------------         lo nuevo por aquello                ---------------------------------/////////////
+
+
+    implementation ("org.mindrot:jbcrypt:0.4")
+
+
+
+    implementation ("androidx.documentfile:documentfile:1.0.1")
+//    implementation("com.squareup.moshi:moshi:1.15.0")
+//    // Moshi para Kotlin (reflect), opcional si no usas code-gen en todos
+//    implementation("com.squareup.moshi:moshi-kotlin:1.15.0")
+//    // Code-gen de Moshi
+//    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+
+    ///////////////////////////////////
+
 }
 
 kapt {

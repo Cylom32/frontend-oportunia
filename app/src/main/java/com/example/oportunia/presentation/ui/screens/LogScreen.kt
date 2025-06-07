@@ -1,14 +1,11 @@
 package com.example.oportunia.presentation.ui.screens
-
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
 import androidx.compose.material3.Text
-import androidx.compose.foundation.Image
-import androidx.compose.runtime.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.sp
@@ -20,30 +17,101 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shadow
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-
 import androidx.navigation.NavHostController
 import com.example.oportunia.presentation.navigation.NavRoutes
 import com.example.oportunia.presentation.ui.components.PasswordLabel
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.window.DialogProperties
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
+import android.net.NetworkCapabilities
+import android.net.NetworkRequest
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+
+
 
 
 @Composable
-fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, studentViewModel: StudentViewModel) {
-
+fun LogScreen(
+    navController: NavHostController,
+    usersViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel,
+    companyViewModel: CompanyViewModel
+) {
+   // val token by usersViewModel.token.collectAsState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showAlert by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
+    // Conectividad
+    var isConnected by remember { mutableStateOf(true) }
+    val connectivityManager =
+        remember { context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager }
+    DisposableEffect(connectivityManager) {
+        val networkRequest = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+        val callback = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                isConnected = true
+            }
+
+            override fun onLost(network: Network) {
+                isConnected = false
+            }
+        }
+        connectivityManager.registerNetworkCallback(networkRequest, callback)
+        onDispose {
+            connectivityManager.unregisterNetworkCallback(callback)
+        }
+    }
+
+    // Mostrar diálogo inquebrantable si no hay conexión
+    if (!isConnected) {
+        AlertDialog(
+            onDismissRequest = { /* No se puede cerrar */ },
+            title = {
+                Text(
+                    text = "Sin conexión",
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(text = "No hay conexión a internet. Por favor, verifique su red.")
+            },
+            confirmButton = { /* Sin botones */ },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        )
+    }
 
     Box(
         modifier = Modifier
@@ -55,7 +123,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                     end = Offset(1000f, 1000f)
                 )
             )
-    ){
+    ) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,12 +145,11 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
                         Image(
-                            painter = painterResource(id = R.drawable.shakehands1062821),
-                            contentDescription = "Descripción accesible",
+                            painter = painterResource(id = R.drawable.bombillo),
+                            contentDescription = "Logo Oportunia",
                             modifier = Modifier
-                                .size(150.dp)
+                                .size(200.dp)
                                 .padding(top = 20.dp),
-                            colorFilter = ColorFilter.tint(Color.White),
                         )
 
                         Spacer(modifier = Modifier.height(50.dp))
@@ -160,7 +227,6 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                         .padding(start = 80.dp, end = 80.dp),
                     contentAlignment = Alignment.TopCenter
                 ) {
-
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -168,7 +234,6 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                         verticalArrangement = Arrangement.SpaceBetween,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-
                         Text(
                             text = "Login",
                             fontSize = 24.sp,
@@ -177,31 +242,48 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                                 .fillMaxWidth()
                                 .padding(top = 16.dp)
                                 .clickable {
-
-
-                                    usersViewModel.probarConexionConMockApi()
-
                                     coroutineScope.launch {
-                                        usersViewModel.validateUserCredentials(
-                                            email,
-                                            password
-                                        ) { isValid ->
-                                            if (isValid && email.isNotEmpty() && password.isNotEmpty()) {
-                                                navController.navigate("home")
-                                                val userId = usersViewModel.getAuthenticatedUserId()
-                                                Log.d(
-                                                    "LoginDebug",
-                                                    "Usuario autenticado con ID: $userId"
-                                                )
-                                                usersViewModel.selectUserById(userId!!)
-                                                studentViewModel.loadStudentByUserId(usersViewModel.selectedUserIdValue())
-                                            } else {
-                                                Log.d(
-                                                    "LoginDebug",
-                                                    "Credenciales inválidas para $email"
-                                                )
-                                                showAlert = true
+                                        if (email.isNotEmpty() && password.isNotEmpty()) {
+                                            usersViewModel.login(email, password) { isValid ->
+                                                if (isValid) {
+                                                    usersViewModel.fetchUserByEmail(email) { userId ->
+                                                        if (userId != null) {
+                                                            val token =
+                                                                usersViewModel.token.value.orEmpty()
+                                                            Log.d("LoginDebug", "Token actual: $token")
+                                                            Log.d(
+                                                                "LoginDebug",
+                                                                "llamando a student viewmodel: $token"
+                                                            )
+                                                            studentViewModel.fetchStudentByUserId(
+                                                                token,
+                                                                userId
+                                                            ) { found ->
+                                                                if (found) {
+                                                                    navController.navigate(NavRoutes.HomeScreenS.ROUTE)
+                                                                } else {
+                                                                    companyViewModel.setTokenC(token)
+                                                                    companyViewModel.fetchCompanyByUserC(userId)
+                                                                    companyViewModel.fetchUserCompanyById()
+                                                                    companyViewModel.fetchCompanyByUserC(userId)
+                                                                    navController.navigate(NavRoutes.CompanyInfoScreenForCompany.ROUTE)
+                                                                }
+                                                            }
+                                                        } else {
+                                                            showAlert = true
+                                                        }
+                                                    }
+                                                } else {
+                                                    Log.d(
+                                                        "LoginDebug",
+                                                        "Credenciales inválidas para $email"
+                                                    )
+                                                    showAlert = true
+                                                }
                                             }
+                                        } else {
+                                            Log.d("LoginDebug", "Campos vacíos")
+                                            showAlert = true
                                         }
                                     }
                                 },
@@ -245,7 +327,6 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                     }
                 }
 
-
                 if (showAlert) {
                     AlertDialog(
                         onDismissRequest = { showAlert = false },
@@ -258,11 +339,7 @@ fun LogScreen(navController: NavHostController, usersViewModel: UsersViewModel, 
                         text = { Text(text = stringResource(id = R.string.logPopUpText)) }
                     )
                 }
-
             }
         }
-
     }
-
-
 }

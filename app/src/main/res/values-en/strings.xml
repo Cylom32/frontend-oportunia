@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OportunIA</string>
+    <string name="emailL">Email</string>
+    <string name="passworL">Password</string>
+    <string name="passworC">Confirm Password</string>
+    <string name="craeteAccount">Create Account</string>
+    <string name="acceptText">Accept</string>
+    <string name="logPopUpText">Please, check your email and your password.</string>
+    <string name="forgotPassword">Forgot your password?</string>
+    <string name="userTypeEst">Student</string>
+    <string name="userTypeCom">Company</string>
+    <string name="userTypTitle">User Type</string>
+    <string name="nameTitle">Name</string>
+    <string name="FirstSurnameTitle">First Last Name</string>
+    <string name="SecondSurnameTitle">Second Last Name</string>
+    <string name="texBoton">Next</string>
+    <string name="UniversityTitle">University</string>
+    <string name="screenTitleInfo">Information</string>
+    <string name="titleCV">Resume</string>
+    <string name="titleSettings">Settings</string>
+    <string name="studentInfoAlertTittle">Incomplete Fields</string>
+    <string name="studentInfoAlertText">Please complete all fields and select a valid university.</string>
+    <string name="bTextConfirmar">Confirm</string>
+    <string name="error_empty_email">Email cannot be empty.</string>
+    <string name="error_empty_password">Password cannot be empty.</string>
+    <string name="error_password_mismatch">Passwords do not match.</string>
+    <string name="LanguageSettingTitle">Language</string>
+    <string name="ApplyButtonText">Apply</string>
+    <string name="LanguageOptiongTitle">Language</string>
+    <string name="account_text">Account</string>
+    <string name="language_text">Language</string>
+    <string name="logout_text">Logout</string>
+    <string name="titulo_solicitudes_enviadas">Sent requests</string>
+    <string name="titulo_detalles_del_mensaje">Message details</string>
+    <string name="etiqueta_detalle_completo">• Full detail:</string>
+    <string name="etiqueta_nombre_archivo">• File name:</string>
+    <string name="etiqueta_fecha_envio">• Sent date:</string>
+    <string name="boton_cerrar_dialogo">Close</string>
+    <string name="boton_editar_cv">Edit CV</string>
+
+    <string name="titulo_edit_cv">CV Editing</string>
+    <string name="boton_agregar_cv">Add CV</string>
+    <string name="etiqueta_id_cv">CV ID:</string>
+    <string name="etiqueta_detalles_del_cv">CV Details</string>
+    <string name="etiqueta_ruta_archivo">File Path:</string>
+    <string name="etiqueta_nombre_archivo_cv">Name</string>
+
+    <string name="etiqueta_buscar_home">Search</string>
+    <string name="etiqueta_filtro_busqueda">Search Filters</string>
+    <string name="etiqueta_area">Area</string>
+    <string name="etiqueta_ubicacion">Location</string>
+    <string name="etiqueta_remunerado">Paid</string>
+
+    <string name="etiqueta_seleccionar_area">Select Area</string>
+    <string name="etiqueta_cargando_area">Loading areas...</string>
+    <string name="etiqueta_ninguna_area">No area selected</string>
+
+    <string name="etiqueta_seleccionar_ubicacion">Select Location</string>
+    <string name="etiqueta_cargando_ubicaciones">Loading locations...</string>
+    <string name="etiqueta_remunerado_q">Paid?</string>
+    <string name="respuesta_si">Yes</string>
+    <string name="respuesta_no">No</string>
+    <string name="no_hay_publicaciones">No posts available</string>
+    <string name="etiqueta_pasantias">Internships</string>
+    <string name="estado_pagado">Paid</string>
+    <string name="estado_no_pagado">Unpaid</string>
+    <string name="etiqueta_archivo_adjunto">Attached File</string>
+    <string name="etiqueta_mensaje_adicional">Additional Message</string>
+    <string name="etiqueta_seleccionar_cv">Select CV</string>
+    <string name="etiqueta_selecciona_cv">Choose a CV</string>
+    <string name="etiqueta_no_hay_cvs">No CVs available</string>
+    <string name="etiqueta_escribe_mensaje">Write your message here...</string>
+    <string name="etiqueta_exito_mensaje">Success</string>
+    <string name="etiqueta_enviado_exitosamente">Successfully sent</string>
+    <string name="etiqueta_ok">OK</string>
+
+
+    <string name="etiqueta_nombre_compania">Company Name</string>
+    <string name="etiqueta_red_social">Social Network 1</string>
+    <string name="link_logo">Logo Link</string>
+    <string name="Agregar_Descripcion">ADD DESCRIPTION</string>
+    <string name="Descripcion">Description</string>
+    <string name="Cancelar">Cancel</string>
+    <string name="Alerta">Alert</string>
+    <string name="Guardar">Save</string>
+
+
+    <string name="Confirmacion_Guardar">Are you sure?</string>
+    <string name="mensaje_guardar">The entered data will be saved.</string>
+    <string name="alerta_alerta">You must fill in Name, Logo Link, Description, and at least one Social Network</string>
+
+    <string name="Analisis_cv">CV Analysis</string>
+
+    <string name="Seleccionar_PDF">Select PDF for Analysis</string>
+    <string name="Analizando_PDF">Analyzing PDF...</string>
+    <string name="Analisis_completo">Analysis complete:</string>
+
+    <string name="cargando">Loading</string>
+    <string name="sin_datos">No student data</string>
+    <string name="neuro_cv">Neuro CV</string>
+    <string name="max_cvs">You have reached the maximum number of CVs (3)</string>
+    <string name="link_Archivo">File link</string>
+
+    <string name="agregar_pasantia">Add internship</string>
+    <string name="nueva_pasantia">New internship</string>
+    <string name="es_pagada">Is it paid?</string>
+    <string name="subir">Upload</string>
+    <string name="link_publicacion">Publication link</string>
+    <string name="welcome_notifications">Welcome to notifications</string>
+    <string name="text_notifications">Your internship journey starts here</string>
+    <string name="comenzar">Start</string>
+    <string name="tipo_pagada">Type: Paid</string>
+    <string name="tipo_no_pagada">Type: Unpaid</string>
+    <string name="error">Error</string>
+
+    <string name="imagen_compañia">Company image</string>
+    <string name="subiendo">Uploading...</string>
+    <string name="imagen_seleccionada">Image selected ✓</string>
+    <string name="seleccionar_imagen">Select image </string>
+
+
+    <string name="select_language">Select language</string>
+
+    <string name="imagen_publicacion">Publication image</string>
+
+
+</resources>

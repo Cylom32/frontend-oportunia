@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OportunIA</string>
+    <string name="emailL">Email</string>
+    <string name="passworL">Password</string>
+    <string name="passworC">Conferma Password</string>
+    <string name="craeteAccount">Crea Account</string>
+    <string name="acceptText">Accetta</string>
+    <string name="logPopUpText">Hai dimenticato la password?</string>
+    <string name="forgotPassword">Studente</string>
+    <string name="userTypeEst">Studente</string>
+    <string name="userTypeCom">Tipo di Utente</string>
+    <string name="userTypTitle">Azienda</string>
+    <string name="nameTitle">Nome</string>
+    <string name="FirstSurnameTitle">Primo Cognome</string>
+    <string name="SecondSurnameTitle">Secondo Cognome</string>
+    <string name="texBoton">Avanti</string>
+    <string name="UniversityTitle">Università</string>
+    <string name="screenTitleInfo">Informazioni</string>
+    <string name="titleCV">Curriculum Vitae</string>
+    <string name="titleSettings">Impostazioni</string>
+    <string name="studentInfoAlertTittle">Campi incompleti</string>
+    <string name="studentInfoAlertText">Per favore, completa tutti i campi e seleziona un\\\'università valida.</string>
+    <string name="bTextConfirmar">Conferma</string>
+    <string name="error_empty_email">L\\\'email non può essere vuota.</string>
+    <string name="error_empty_password">La password non può essere vuota.</string>
+    <string name="error_password_mismatch">Le password non corrispondono.</string>
+    <string name="LanguageSettingTitle">Lingua</string>
+    <string name="LanguageOptiongTitle">Lingua</string>
+    <string name="ApplyButtonText">Applica</string>
+    <string name="account_text">Account</string>
+    <string name="language_text">Lingua</string>
+    <string name="logout_text">Disconnetti</string>
+    <string name="titulo_solicitudes_enviadas">Richieste inviate</string>
+    <string name="titulo_detalles_del_mensaje">Dettagli del messaggio</string>
+    <string name="etiqueta_detalle_completo">• Dettaglio completo:</string>
+    <string name="etiqueta_nombre_archivo">• Nome del file:</string>
+    <string name="etiqueta_fecha_envio">• Data di invio:</string>
+    <string name="boton_cerrar_dialogo">Chiudi</string>
+    <string name="boton_editar_cv">Modifica CV</string>
+    <string name="titulo_edit_cv">Modifica del CV</string>
+    <string name="boton_agregar_cv">Aggiungi CV</string>
+    <string name="etiqueta_id_cv">ID CV:</string>
+    <string name="etiqueta_detalles_del_cv">Dettagli del CV</string>
+    <string name="etiqueta_ruta_archivo">Percorso del file:</string>
+    <string name="etiqueta_nombre_archivo_cv">Nome</string>
+
+    <string name="etiqueta_buscar_home">Cerca</string>
+    <string name="etiqueta_filtro_busqueda">Filtri di ricerca</string>
+    <string name="etiqueta_area">Area</string>
+    <string name="etiqueta_ubicacion">Posizione</string>
+    <string name="etiqueta_remunerado">Retribuito</string>
+
+
+    <string name="etiqueta_seleccionar_area">Seleziona Area</string>
+    <string name="etiqueta_cargando_area">Caricamento aree...</string>
+    <string name="etiqueta_ninguna_area">Nessuna area selezionata</string>
+
+    <string name="etiqueta_seleccionar_ubicacion">Seleziona Posizione</string>
+    <string name="etiqueta_cargando_ubicaciones">Caricamento posizioni...</string>
+
+    <string name="etiqueta_remunerado_q">Retribuito?</string>
+    <string name="respuesta_si">Sì</string>
+    <string name="respuesta_no">No</string>
+    <string name="no_hay_publicaciones">Nessuna pubblicazione disponibile</string>
+    <string name="etiqueta_pasantias">Tirocini</string>
+    <string name="estado_pagado">Pagato</string>
+    <string name="estado_no_pagado">Non pagato</string>
+    <string name="etiqueta_archivo_adjunto">File Allegato</string>
+    <string name="etiqueta_mensaje_adicional">Messaggio Aggiuntivo</string>
+    <string name="etiqueta_seleccionar_cv">Seleziona CV</string>
+    <string name="etiqueta_selecciona_cv">Scegli un CV</string>
+    <string name="etiqueta_no_hay_cvs">Nessun CV disponibile</string>
+    <string name="etiqueta_escribe_mensaje">Scrivi il tuo messaggio qui...</string>
+    <string name="etiqueta_exito_mensaje">Successo</string>
+    <string name="etiqueta_enviado_exitosamente">Inviato con successo</string>
+    <string name="etiqueta_ok">OK</string>
+
+
+    <string name="etiqueta_nombre_compania">Nome della compagnia</string>
+    <string name="etiqueta_red_social">Social Network</string>
+    <string name="link_logo">Link del logo</string>
+    <string name="Agregar_Descripcion">AGGIUNGI DESCRIZIONE</string>
+    <string name="Descripcion">Descrizione</string>
+    <string name="Cancelar">Annulla</string>
+    <string name="Alerta">Avviso</string>
+    <string name="Guardar">Salva</string>
+
+    <string name="Confirmacion_Guardar">Sei sicuro?</string>
+    <string name="mensaje_guardar">I dati inseriti verranno salvati.</string>
+    <string name="alerta_alerta">Devi compilare Nome, Link del logo, Descrizione e almeno un Social Network</string>
+    <string name="Analisis_cv">Analisi del CV</string>
+
+
+    <string name="Seleccionar_PDF">Seleziona PDF per l analisi</string>
+    <string name="Analizando_PDF">Analisi del PDF in corso...</string>
+    <string name="Analisis_completo">Analisi completata:</string>
+
+    <string name="cargando">Caricamento</string>
+    <string name="sin_datos">Nessun dato dello studente</string>
+    <string name="neuro_cv">Neuro CV</string>
+    <string name="max_cvs">Hai raggiunto il numero massimo di CV (3)</string>
+    <string name="link_Archivo">Link del file</string>
+
+
+    <string name="agregar_pasantia">Aggiungi tirocinio</string>
+    <string name="nueva_pasantia">Nuovo tirocinio</string>
+    <string name="es_pagada">È retribuito?</string>
+    <string name="subir">Carica</string>
+    <string name="link_publicacion">Link della pubblicazione</string>
+    <string name="welcome_notifications">Benvenuto alle notifiche</string>
+    <string name="text_notifications">Il tuo viaggio di tirocinio inizia qui</string>
+    <string name="comenzar">Inizia</string>
+    <string name="tipo_pagada">Tipo: Retribuito</string>
+    <string name="tipo_no_pagada">Tipo: Non retribuito</string>
+    <string name="error">Errore</string>
+
+
+    <string name="imagen_compañia">Immagine dell azienda</string>
+    <string name="subiendo">Caricamento...</string>
+    <string name="imagen_seleccionada">Immagine selezionata ✓</string>
+    <string name="seleccionar_imagen">Seleziona immagine </string>
+
+
+
+    <string name="select_language">Seleziona la lingua</string>
+    <string name="imagen_publicacion">Immagine della pubblicazione</string>
+
+
+</resources>

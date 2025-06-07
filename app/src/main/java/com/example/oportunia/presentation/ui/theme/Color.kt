@@ -26,14 +26,16 @@ val mintGreen = Color(0xFF77DD77)
 
 /// degradado para el login
 
-val royalBlue = Color(0xFF0440D9)
-val deepSkyBlue = Color(0xFF037EAA)
-val midnightBlue = Color(0xFF022273)
+val royalBlue = lilGrayDark
+val deepSkyBlue = lilGrayDark
+val midnightBlue = lilGrayDark
 
 val gradientColorsBlue = listOf(
+
     royalBlue,
     deepSkyBlue,
     midnightBlue
+
 )
 
 

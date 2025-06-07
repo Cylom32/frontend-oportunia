@@ -1,17 +1,14 @@
 package com.example.oportunia.presentation.ui.screens
 
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.provider.OpenableColumns
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -26,85 +23,83 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.FileProvider
 import com.example.oportunia.R
+import com.example.oportunia.domain.model.CVResponseS
 import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
-import java.io.File
-import java.io.FileOutputStream
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
+
+
+
+
+
 
 @Composable
 fun EditUCVScreen(
-    studentViewModel: StudentViewModel
+    studentViewModel: StudentViewModel,
+    usersViewModel: UsersViewModel
 ) {
     val context = LocalContext.current
-    val cvs by studentViewModel.cvList.collectAsState()
+
+    // Token y studentId
+    val token by usersViewModel.token.collectAsState()
+    val studentId by studentViewModel.studentIdd.collectAsState()
+
+    // Estado de Student y lista de CVs
     val studentState by studentViewModel.studentState.collectAsState()
+    val cvs by studentViewModel.cvlistaa.collectAsState()
+    val deleteResult by studentViewModel.deleteResult.collectAsState()
 
-    var showLimitDialog by remember { mutableStateOf(false) }
+    // Estados para agregar CV
+    var showAddDialog by remember { mutableStateOf(false) }
+    var newCvName by remember { mutableStateOf("") }
+    var newCvLink by remember { mutableStateOf("") }
 
-    LaunchedEffect(Unit) {
-        studentViewModel.loadCvsBySelectedStudent()
-        studentViewModel.printStudentAndCvs()
+    // Estados para detalles
+    var selectedCv by remember { mutableStateOf<CVResponseS?>(null) }
+    var showDetailsDialog by remember { mutableStateOf(false) }
+
+    // Cargar lista inicial
+    LaunchedEffect(token, studentId) {
+        if (!token.isNullOrBlank() && studentId != null) {
+            studentViewModel.fetchCvLista(token!!)
+        }
     }
 
-    val pdfPickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.OpenDocument(),
-        onResult = { uri ->
-            uri?.let {
-                try {
-                    val fileName = getFileNameFromUri(context, it)
-                        ?: "cv_${System.currentTimeMillis()}.pdf"
-                    val file = File(context.filesDir, fileName)
-
-                    val inputStream = context.contentResolver.openInputStream(it)
-                    val outputStream = FileOutputStream(file)
-                    inputStream?.copyTo(outputStream)
-                    inputStream?.close()
-                    outputStream.close()
-
-                    val localPath = file.absolutePath
-                    Log.d("PDF_COPY", "Archivo copiado a: $localPath")
-
-                    studentViewModel.insertCv(localPath)
-                    studentViewModel.loadCvsBySelectedStudent()
-                } catch (e: Exception) {
-                    Log.e("PDF_COPY", "Error al copiar PDF: ${e.message}", e)
-                }
-            }
+    // Recargar después de delete
+    LaunchedEffect(deleteResult) {
+        if (deleteResult == true && !token.isNullOrBlank()) {
+            studentViewModel.fetchCvLista(token!!)
+            studentViewModel.resetDeleteResult()
         }
-    )
-
-    // Alerta si ya hay 4 CVs
-    if (showLimitDialog) {
-        AlertDialog(
-            onDismissRequest = { showLimitDialog = false },
-            confirmButton = {
-                TextButton(onClick = { showLimitDialog = false }) {
-                    Text("Aceptar")
-                }
-            },
-            title = { Text("Límite alcanzado") },
-            text = { Text("Solo puede tener 4 CVs. Elimine uno para agregar otro.") }
-        )
     }
 
     Surface(
-        modifier = Modifier.fillMaxSize().background(lilGray)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(lilGray)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().background(lilGray),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Encabezado
             Box(
                 modifier = Modifier
                     .height(150.dp)
                     .fillMaxWidth()
-                    .shadow(8.dp, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+                    )
                     .background(
                         brush = Brush.linearGradient(
                             colors = listOf(royalBlue, deepSkyBlue, midnightBlue),
@@ -118,13 +113,12 @@ fun EditUCVScreen(
                 when (studentState) {
                     is StudentState.Loading -> {
                         Text(
-                            text = "Cargando...",
+                            text = stringResource(R.string.cargando),
                             color = Color.White,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
-
                     is StudentState.Success -> {
                         val student = (studentState as StudentState.Success).student
                         Column(
@@ -140,7 +134,6 @@ fun EditUCVScreen(
                             Spacer(modifier = Modifier.height(12.dp))
                         }
                     }
-
                     is StudentState.Error -> {
                         val message = (studentState as StudentState.Error).message
                         Text(
@@ -150,10 +143,9 @@ fun EditUCVScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-
                     StudentState.Empty -> {
                         Text(
-                            text = "Sin datos de estudiante",
+                            text = stringResource(R.string.sin_datos),
                             color = Color.LightGray,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold
@@ -163,7 +155,7 @@ fun EditUCVScreen(
             }
 
             Text(
-                text = "Edición de CV",
+                text = stringResource(R.string.titulo_edit_cv),
                 fontSize = 32.sp,
                 color = blackPanter,
                 modifier = Modifier.padding(top = 20.dp)
@@ -175,50 +167,190 @@ fun EditUCVScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val canAddCv = cvs.size <= 2
+
                 Button(
                     onClick = {
-                        if (cvs.size >= 4) {
-                            showLimitDialog = true
-                        } else {
-                            pdfPickerLauncher.launch(arrayOf("application/pdf"))
+                        if (canAddCv) {
+                            showAddDialog = true
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.White),
+                    enabled = canAddCv,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (canAddCv) Color.White else Color.LightGray
+                    ),
                     shape = RoundedCornerShape(10.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 4.dp),
-                    modifier = Modifier.height(50.dp).width(200.dp)
+                    modifier = Modifier
+                        .height(50.dp)
+                        .padding(horizontal = 8.dp)
                 ) {
-                    Text("Agregar CV", color = Color.Black, fontSize = 18.sp)
+                    Text(
+                        text = stringResource(R.string.boton_agregar_cv),
+                        color = if (canAddCv) Color.Black else Color.DarkGray,
+                        fontSize = 18.sp
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Icon(
                         imageVector = Icons.Default.Edit,
                         contentDescription = "Icono Agregar",
-                        tint = mintGreen
+                        tint = if (canAddCv) mintGreen else Color.Gray
                     )
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                if (!canAddCv) {
+                    Text(
+                        text = stringResource(R.string.max_cvs),
+                        color = Color.Red,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(top = 4.dp)
+                    )
+                }
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(390.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .weight(1f)
                 ) {
-                    itemsIndexed(cvs.take(4)) { _, cv ->
-                        CVCard(
-                            fileName = cv.name,
-                            filePath = cv.file,
-                            status = cv.status,
-                            onDelete = { studentViewModel.deleteCv(cv) },
-                            onStatusChange = { studentViewModel.setCvAsActive(cv.id) }
-                        )
+                    items(cvs) { cv ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    selectedCv = cv
+                                   // showDetailsDialog = true
+                                }
+                        ) {
+                            CVCard(
+                                fileName = cv.name,
+                                filePath = cv.file,
+                                status = true,
+                                onDelete = {
+                                    token?.let { t ->
+                                        studentViewModel.deleteCv(t, cv.idCv)
+                                    }
+                                },
+                                onStatusChange = {
+                                    // Sin uso por ahora
+                                }
+                            )
+                        }
                     }
                 }
             }
+        }
+
+        if (showAddDialog) {
+            AlertDialog(
+                onDismissRequest = {
+                    showAddDialog = false
+                    newCvName = ""
+                    newCvLink = ""
+                },
+                title = {
+                    Text(
+                        text = stringResource(R.string.boton_agregar_cv),
+                        fontSize = 18.sp,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+                ,
+                text = {
+                    Column {
+                        OutlinedTextField(
+                            value = newCvName,
+                            onValueChange = { newCvName = it },
+                            label = { Text(text = stringResource(R.string.etiqueta_nombre_archivo)) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        )
+                        OutlinedTextField(
+                            value = newCvLink,
+                            onValueChange = { newCvLink = it },
+                            label = { Text(text = stringResource(R.string.link_Archivo)) },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        if (!newCvName.isBlank() && !newCvLink.isBlank() && !token.isNullOrBlank()) {
+                            studentId?.let { idEst ->
+                                studentViewModel.createCv(
+                                    token = token!!,
+                                    name = newCvName,
+                                    file = newCvLink,
+                                    studentId = idEst
+                                )
+                            }
+                        }
+                        showAddDialog = false
+                        newCvName = ""
+                        newCvLink = ""
+                    }) {
+                        Text(text = stringResource(R.string.Guardar))
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        showAddDialog = false
+                        newCvName = ""
+                        newCvLink = ""
+                    }) {
+                        Text(text = stringResource(R.string.Cancelar))
+                    }
+                }
+            )
+        }
+
+        if (showDetailsDialog && selectedCv != null) {
+            AlertDialog(
+                onDismissRequest = {
+                    showDetailsDialog = false
+                    selectedCv = null
+                },
+                confirmButton = {
+                    TextButton(onClick = {
+                        showDetailsDialog = false
+                        selectedCv = null
+                    }) {
+                        Text(text = stringResource(R.string.boton_cerrar_dialogo))
+                    }
+                },
+                title = {
+                    Text(text = stringResource(R.string.etiqueta_detalles_del_cv))
+                },
+                text = {
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = stringResource(R.string.etiqueta_id_cv) + " ${selectedCv!!.idCv}",
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = stringResource(R.string.etiqueta_nombre_archivo_cv) + ": ${selectedCv!!.name}"
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = stringResource(R.string.etiqueta_ruta_archivo))
+                        Text(
+                            text = selectedCv!!.file,
+                            fontSize = 12.sp,
+                            color = Color.Gray
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = stringResource(R.string.etiqueta_fecha_envio))
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                    }
+                }
+            )
         }
     }
 }
@@ -232,45 +364,26 @@ fun CVCard(
     onStatusChange: () -> Unit
 ) {
     val context = LocalContext.current
- //   var activo by remember { mutableStateOf(true) }
 
     Card(
-        modifier = Modifier.fillMaxWidth().padding(12.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.pdficon),
                 contentDescription = "PDF",
-                modifier = Modifier.size(48.dp).clickable {
-                    val file = File(filePath)
-                    if (!file.exists()) {
-                        Log.e("CVCard", "Archivo no encontrado: $filePath")
-                        return@clickable
-                    }
-
-                    val uri = FileProvider.getUriForFile(
-                        context,
-                        "${context.packageName}.fileprovider",
-                        file
-                    )
-
-                    val intent = Intent(Intent.ACTION_VIEW).apply {
-                        setDataAndType(uri, "application/pdf")
-                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                    }
-
-                    try {
-                        context.startActivity(intent)
-                    } catch (e: Exception) {
-                        Log.e("CVCard", "No se pudo abrir el PDF: ${e.message}", e)
-                    }
-                },
+                modifier = Modifier
+                    .size(48.dp),
                 tint = Color.Unspecified
             )
 
@@ -281,15 +394,21 @@ fun CVCard(
                     text = fileName,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.Black
+                    color = Color.Black,
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = if (status) "Activo" else "Inactivo",
-                    color = if (status) Color(0xFF4CAF50) else Color.Red,
+                    text = filePath,
                     fontSize = 14.sp,
+                    color = Color(0xFF1E88E5),
                     modifier = Modifier.clickable {
-                        onStatusChange()
+                        val uri = Uri.parse(filePath)
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        try {
+                            context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            // Si no hay Activity para manejar el intent, ignorar
+                        }
                     }
                 )
             }
@@ -305,16 +424,5 @@ fun CVCard(
                     }
             )
         }
-    }
-}
-
-// 🔧 Utilidad para obtener el nombre del archivo original
-fun getFileNameFromUri(context: Context, uri: Uri): String? {
-    return context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-        val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-        if (nameIndex != -1) {
-            cursor.moveToFirst()
-            cursor.getString(nameIndex)
-        } else null
     }
 }

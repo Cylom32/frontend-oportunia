@@ -1,134 +1,168 @@
 package com.example.oportunia
 
+import android.app.Activity
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.oportunia.data.datasource.CvDataSourceImpl
-import com.example.oportunia.data.datasource.UsersDataSourceImple
-import com.example.oportunia.data.datasource.StudentDataSourceImple
-import com.example.oportunia.data.datasource.UniversityDataSourceImpl
-import com.example.oportunia.data.datasource.model.UniversityRepositoryImpl
-import com.example.oportunia.data.datasource.network.UserDeserializer
-import com.example.oportunia.data.datasource.network.UserService
-import com.example.oportunia.data.mapper.CvMapper
-import com.example.oportunia.data.mapper.UsersMapper
-import com.example.oportunia.data.mapper.StudentMapper
-import com.example.oportunia.data.mapper.UniversityMapper
-import com.example.oportunia.data.repository.CvRepositoryImpl
-import com.example.oportunia.data.repository.RemoteUsersRepository
-import com.example.oportunia.data.repository.UsersRepositoryImpl
-import com.example.oportunia.data.repository.StudentRepositoryImpl
-import com.example.oportunia.domain.model.Users
-import com.example.oportunia.presentation.factory.UsersViewModelFactory
-import com.example.oportunia.presentation.factory.StudentViewModelFactory
 import com.example.oportunia.presentation.navigation.NavGraph
 import com.example.oportunia.presentation.navigation.NavRoutes
+import com.example.oportunia.presentation.ui.Investigation.LanguagePreferences
 import com.example.oportunia.presentation.ui.screens.BottomNavigationBar
+import com.example.oportunia.presentation.ui.screens.NavegationBarCompany
 import com.example.oportunia.presentation.ui.theme.OportunIATheme
+import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
+import com.example.oportunia.presentation.ui.viewmodel.LanguageViewModel
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-import com.google.gson.GsonBuilder
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.Locale
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val usersViewModel: UsersViewModel by viewModels {
-        val mapper = UsersMapper()
-        val dataSource = UsersDataSourceImple(mapper)
-        val repository = UsersRepositoryImpl(dataSource, mapper)
-
-        // Ahora con remoteRepo
-        val gson = GsonBuilder()
-            .registerTypeAdapter(Users::class.java, UserDeserializer())
-            .create()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://67e9d753bdcaa2b7f5ba4752.mockapi.io/api/v1/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-
-        val userService = retrofit.create(UserService::class.java)
-        val remoteRepo = RemoteUsersRepository(userService)
-
-        UsersViewModelFactory(repository, remoteRepo)
-    }
-
-
-
-    private val studentViewModel: StudentViewModel by viewModels {
-        val studentMapper = StudentMapper()
-        val universityMapper = UniversityMapper()
-        val cvMapper = CvMapper()
-
-        val studentDataSource = StudentDataSourceImple(studentMapper)
-        val universityDataSource = UniversityDataSourceImpl(universityMapper)
-        val cvDataSource = CvDataSourceImpl(cvMapper)
-
-        val studentRepository = StudentRepositoryImpl(studentDataSource, studentMapper)
-        val universityRepository = UniversityRepositoryImpl(universityDataSource, universityMapper)
-        val cvRepository = CvRepositoryImpl(cvDataSource, cvMapper)
-
-        StudentViewModelFactory(
-            studentRepository = studentRepository,
-            universityRepository = universityRepository,
-            cvRepository = cvRepository
-        )
-    }
-
+    private val usersViewModel: UsersViewModel by viewModels()
+    private val studentViewModel: StudentViewModel by viewModels()
+    private val companyViewModel: CompanyViewModel by viewModels()
+    private val languageViewModel: LanguageViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        val languagePrefs = LanguagePreferences(this)
+        val savedLanguage = languagePrefs.getLanguage()
+        this.updateLanguage(savedLanguage.code) // Usar la función de extensión
+
         setContent {
             OportunIATheme {
-                MainScreen(usersViewModel,studentViewModel)
+                MainScreen(usersViewModel, studentViewModel, companyViewModel, languageViewModel)
             }
         }
     }
+
+    override fun attachBaseContext(newBase: Context?) {
+        if (newBase != null) {
+            val languagePrefs = LanguagePreferences(newBase)
+            val selectedLanguage = languagePrefs.getLanguage()
+
+            // Aplicar idioma directamente sin función de extensión
+            val locale = Locale(selectedLanguage.code)
+            Locale.setDefault(locale)
+            val configuration = Configuration(newBase.resources.configuration)
+            configuration.setLocale(locale)
+            val context = newBase.createConfigurationContext(configuration)
+
+            super.attachBaseContext(context)
+        } else {
+            super.attachBaseContext(newBase)
+        }
+    }
+
+    fun Activity.updateLanguage(languageCode: String) {
+        val locale = Locale(languageCode)
+        Locale.setDefault(locale)
+
+        val configuration = Configuration(resources.configuration)
+        configuration.setLocale(locale)
+
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+    }
+
+
+
+
 }
 
-
 @Composable
-fun MainScreen(usersViewModel: UsersViewModel,studentViewModel: StudentViewModel) {
+fun MainScreen(
+    usersViewModel: UsersViewModel,
+    studentViewModel: StudentViewModel,
+    companyViewModel: CompanyViewModel,
+    languageViewModel: LanguageViewModel
+) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: NavRoutes.Log.ROUTE
-    LaunchedEffect(Unit) {
-       // usersViewModel.findAllUsers()
+
+
+    // Observa si necesita recrear la actividad
+    val shouldRecreate by languageViewModel.shouldRecreate.collectAsState()
+    val context = LocalContext.current
+
+    // Efecto para recrear la actividad cuando cambie el idioma
+    LaunchedEffect(shouldRecreate) {
+        if (shouldRecreate && context is Activity) {
+            languageViewModel.onActivityRecreated()
+            context.recreate()
+        }
     }
 
     Scaffold(
         bottomBar = {
-            if (currentRoute != NavRoutes.Log.ROUTE &&
-                currentRoute != NavRoutes.Login.ROUTE &&
-                currentRoute != NavRoutes.RegisterOption.ROUTE &&
-                currentRoute != NavRoutes.RegisterInformationF.ROUTE &&
-                currentRoute != NavRoutes.RegisterInformationPAndE.ROUTE&&
-                currentRoute != NavRoutes.StudentInformationSettings2.ROUTE
+            // Rutas donde NO se muestra ninguna barra
+            val ocultarBarra =
+                currentRoute == NavRoutes.Log.ROUTE ||
+                        currentRoute == NavRoutes.Login.ROUTE ||
+                        currentRoute == NavRoutes.RegisterOption.ROUTE ||
+                        currentRoute == NavRoutes.RegisterInformationF.ROUTE ||
+                        currentRoute == NavRoutes.RegisterInformationPAndE.ROUTE ||
+                        currentRoute == NavRoutes.StudentInformationSettings2.ROUTE ||
+                        currentRoute == NavRoutes.RegisterInformationCompanyScreen.ROUTE ||
+                        currentRoute == NavRoutes.RegisterCredentialsScreen.ROUTE ||
+                        currentRoute == NavRoutes.EditInformationCompanyScreen.ROUTE ||
+                        currentRoute == NavRoutes.GridPublicationsCompany.ROUTE ||
+                        currentRoute == NavRoutes.PublicationDetailScreen.ROUTE
 
-                ) {
-                BottomNavigationBar(
-                    selectedScreen = currentRoute,
-                    onScreenSelected = { route ->
-                        navController.navigate(route) {
-                            popUpTo(navController.graph.startDestinationId) {
-                                saveState = true
+            // Rutas donde se debe mostrar la barra de empresa
+            val mostrarBarraCompany =
+                currentRoute == NavRoutes.CompanyInfoScreenForCompany.ROUTE ||
+                        currentRoute == NavRoutes.CompanyMessagesScreen.ROUTE ||
+                        currentRoute == NavRoutes.SettingScreenCompany.ROUTE //||
+            //  currentRoute == NavRoutes.GridPublicationsCompany.ROUTE
+
+            when {
+                ocultarBarra -> {
+
+                }
+
+                mostrarBarraCompany -> {
+                    NavegationBarCompany(
+                        selectedScreen = currentRoute,
+                        onScreenSelected = { route: String ->
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    }
-                )
+                    )
+                }
+
+                else -> {
+                    BottomNavigationBar(
+                        selectedScreen = currentRoute,
+                        onScreenSelected = { route: String ->
+                            navController.navigate(route) {
+                                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    )
+                }
             }
         }
     ) { paddingValues ->
@@ -137,9 +171,8 @@ fun MainScreen(usersViewModel: UsersViewModel,studentViewModel: StudentViewModel
             paddingValues = paddingValues,
             usersViewModel = usersViewModel,
             studentViewModel = studentViewModel,
+            companyViewModel = companyViewModel,
+            languageViewModel= languageViewModel
         )
     }
 }
-
-
-

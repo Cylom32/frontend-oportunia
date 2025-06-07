@@ -5,7 +5,10 @@ package com.example.oportunia.domain.model
  * @property id The unique identifier of the social network.
  * @property link The link to the social network.
  */
+// domain/model/SocialNetwork.kt
+
+
 data class SocialNetwork(
-    val id: Int,
+    val idSocialNetwork: Int,
     val link: String
 )

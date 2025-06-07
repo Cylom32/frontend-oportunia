@@ -23,13 +23,15 @@
 
     <string name="SecondSurnameTitle">Segundo apellido</string>
 
+
+
     <string name="texBoton">Siguiente</string>
 
     <string name="UniversityTitle">Universidad</string>
 
     <string name="screenTitleInfo">Información</string>
 
-    <string name="emailExample">ejemplo@algo.com</string>
+    <string name="emailExample" translatable="false">ejemplo@algo.com</string>
 
     <string name="titleCV">Curriculum Vitae</string>
 
@@ -50,6 +52,159 @@
     <string name="error_empty_password">La contraseña no puede estar vacía.</string>
 
     <string name="error_password_mismatch">Las contraseñas no coinciden.</string>
+
+    <string name="LanguageSettingTitle">Idioma</string>
+
+
+    <string name="LanguageOptiongTitle">Idioma</string>
+
+
+    <string name="ApplyButtonText">Aplicar</string>
+
+    <!-- SettingsScreen-->
+    <string name="account_text">Cuenta</string>
+    <string name="language_text">Idioma</string>
+    <string name="logout_text">Logout</string>
+
+    <!-- SentRequestScreen -->
+    <string name="titulo_solicitudes_enviadas">Solicitudes enviadas</string>
+    <string name="titulo_detalles_del_mensaje">Detalles del mensaje</string>
+    <string name="etiqueta_detalle_completo">• Detalle completo:</string>
+    <string name="etiqueta_nombre_archivo">• Nombre de archivo:</string>
+    <string name="etiqueta_fecha_envio">• Fecha de envío:</string>
+    <string name="boton_cerrar_dialogo">Cerrar</string>
+
+    <!-- CvScreen -->
+    <string name="boton_editar_cv">Editar CV</string>
+
+    <!-- EditCvScreen -->
+    <string name="titulo_edit_cv">Edición de CV</string>
+    <string name="boton_agregar_cv">Agregar CV</string>
+    <string name="etiqueta_id_cv">ID CV:</string>
+    <string name="etiqueta_detalles_del_cv">Detalles CV</string>
+    <string name="etiqueta_ruta_archivo">Ruta de archivo:</string>
+    <string name="etiqueta_nombre_archivo_cv">Nombre</string>
+
+
+    <!-- HomeScreen -->
+    <string name="etiqueta_buscar_home">Buscar</string>
+    <string name="etiqueta_filtro_busqueda">Filtros de búsqueda</string>
+    <string name="etiqueta_area">Área</string>
+    <string name="etiqueta_ubicacion">Ubicación</string>
+    <string name="etiqueta_remunerado">Remunerado</string>
+
+    <string name="etiqueta_seleccionar_area">Seleccionar Área</string>
+    <string name="etiqueta_cargando_area">Cargando áreas...</string>
+    <string name="etiqueta_ninguna_area">Ninguna área seleccionada</string>
+
+    <string name="etiqueta_seleccionar_ubicacion">Seleccionar Ubicación</string>
+    <string name="etiqueta_cargando_ubicaciones">Cargando ubicaciones...</string>
+
+    <string name="etiqueta_remunerado_q">¿Remunerado?</string>
+    <string name="respuesta_si">Sí</string>
+    <string name="respuesta_no">No</string>
+    <string name="no_hay_publicaciones">No hay publicaciones</string>
+
+
+
+    <!-- Company InfoScreen -->
+    <string name="etiqueta_pasantias">Pasantías</string>
+
+
+    <!-- GridPublicationsScreen -->
+    <string name="estado_pagado">Pagado</string>
+    <string name="estado_no_pagado">No pagado</string>
+
+
+    <!-- RequestScreen -->
+    <string name="etiqueta_archivo_adjunto">Archivo Adjunto</string>
+    <string name="etiqueta_mensaje_adicional">Mensaje Adicional</string>
+    <string name="etiqueta_seleccionar_cv">Seleccionar CV</string>
+    <string name="etiqueta_selecciona_cv">Selecciona un CV</string>
+    <string name="etiqueta_no_hay_cvs">No hay CVs disponibles</string>
+    <string name="etiqueta_escribe_mensaje">Escribe tu mensaje aquí...</string>
+    <string name="etiqueta_exito_mensaje">Éxito</string>
+    <string name="etiqueta_enviado_exitosamente">Enviado exitosamente</string>
+    <string name="etiqueta_ok">OK</string>
+
+
+    <!-- RegsiterInformationCompanyScreen -->
+    <string name="etiqueta_nombre_compania">Nombre de la compañia</string>
+    <string name="etiqueta_red_social">Red Social </string>
+    <string name="link_logo">Link del logo</string>
+    <string name="Agregar_Descripcion">AGREGAR DESCRIPCION</string>
+    <string name="Descripcion">Descripción</string>
+    <string name="Cancelar">Cancelar</string>
+    <string name="Alerta">Alerta</string>
+
+
+    <string name="imagen_compañia">Imagen de la compañia</string>
+    <string name="subiendo">Subiendo...</string>
+    <string name="imagen_seleccionada">Imagen Seleccionada ✓</string>
+    <string name="seleccionar_imagen"> Seleccionar Imagen </string>
+
+
+    <!-- StudentInformartionSettings -->
+    <string name="Guardar">Guardar</string>
+
+
+    <!-- EditInformationCompanyScreen -->
+    <string name="Confirmacion_Guardar">¿Está seguro?</string>
+    <string name="mensaje_guardar">Se guardarán los datos ingresados.</string>
+
+
+    <!-- StudentInformartionSettings -->
+    <string name="alerta_alerta">Debe llenar Nombre, Link de logo, Descripción y al menos una Red Social </string>
+
+
+
+    <!-- CvAnalisys -->
+    <string name="Analisis_cv">Análisis de CV</string>
+    <string name="Seleccionar_PDF">Seleccionar PDF para Análisis</string>
+    <string name="Analizando_PDF">Analizando PDF...</string>
+    <string name="Analisis_completo">Análisis completo:</string>
+
+
+    <!-- CvScreen -->
+    <string name="cargando">Cargando</string>
+    <string name="sin_datos">Sin datos de estudiante</string>
+    <string name="neuro_cv">Neuro CV</string>
+
+
+    <!-- EditCvScreen -->
+    <string name="max_cvs">Has alcanzado el máximo de CVs (3)</string>
+    <string name="link_Archivo">Link del archivo</string>
+
+
+
+    <!-- GridPublicationsCompany -->
+    <string name="agregar_pasantia">Agregar pasantía</string>
+    <string name="nueva_pasantia">Nueva pasantía</string>
+    <string name="es_pagada">¿Es pagada?</string>
+    <string name="subir">Subir</string>
+    <string name="link_publicacion">Link de la publicación</string>
+
+
+    <!-- NotificationsScreen -->
+    <string name="welcome_notifications">Bienvenido a notificaciones</string>
+    <string name="text_notifications">Tu viaje de pasantía comienza aquí</string>
+    <string name="comenzar">Comenzar</string>
+
+
+
+    <!-- PublicationDetilScreen -->
+    <string name="tipo_pagada">Tipo: Pagada</string>
+    <string name="tipo_no_pagada">Tipo: No pagada</string>
+    <string name="error">Error</string>
+
+
+
+    <string name="select_language">Seleccionar idioma</string>
+
+
+
+
+    <string name="imagen_publicacion">Imagen de la publicación</string>
 
 
 

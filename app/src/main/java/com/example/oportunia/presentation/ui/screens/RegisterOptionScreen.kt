@@ -25,9 +25,10 @@ import com.example.oportunia.presentation.ui.theme.lilGray
 import androidx.compose.ui.res.stringResource
 import com.example.oportunia.presentation.ui.components.gradientBackgroundBlue
 import com.example.oportunia.presentation.ui.theme.gradientColorsBlue
+import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 
 @Composable
-fun RegisterOptionScreen(navController: NavHostController) {
+fun RegisterOptionScreen(usersViewModel: UsersViewModel, navController: NavHostController) {
 
 
     Surface(
@@ -94,6 +95,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                     )
 
                 }
+
                 Box(
                     modifier = Modifier
                         .weight(1f)
@@ -109,6 +111,7 @@ fun RegisterOptionScreen(navController: NavHostController) {
                             shape = RoundedCornerShape(24.dp)
                         )
                         .clickable {
+                            usersViewModel.fetchUniversities()
                             navController.navigate(NavRoutes.RegisterInformationF.ROUTE)
                         },
                     contentAlignment = Alignment.Center
@@ -135,7 +138,10 @@ fun RegisterOptionScreen(navController: NavHostController) {
                         .background(
                             color = com.example.oportunia.presentation.ui.theme.walterWhite,
                             shape = RoundedCornerShape(24.dp)
-                        ),
+                        )
+                        .clickable {
+                            navController.navigate(NavRoutes.RegisterInformationCompanyScreen.ROUTE)
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
