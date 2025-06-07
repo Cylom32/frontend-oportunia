@@ -115,6 +115,9 @@ fun HomeScreenS(companyViewModel: CompanyViewModel, usersViewModel: UsersViewMod
 
                 val publications by companyViewModel.publications.collectAsState()
 
+
+
+
                 // 3) Imagenes en scroll con pull-to-refresh según filtros
                 ImageScroll(
                     publications = publications,

@@ -50,7 +50,7 @@ class CompanyViewModel @Inject constructor(
         repository.findPublicationsByFilter(areaId, locationId, paid)
             .onSuccess { list ->
                 Log.d("CompanyViewModel", "Publicaciones recibidas → $list")
-                _publications.value = list
+                _publications.value = list.sortedByDescending {it.id }
                 _pubError.value = null
             }
             .onFailure { ex ->
