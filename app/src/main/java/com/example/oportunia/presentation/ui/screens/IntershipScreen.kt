@@ -40,8 +40,6 @@ import com.example.oportunia.presentation.ui.viewmodel.CompanyViewModel
 
 
 
-
-
 @Composable
 fun IntershipScreen(
     navController: NavHostController,
@@ -52,23 +50,25 @@ fun IntershipScreen(
 
     val selectedId by companyViewModel.selectedPublicationId.collectAsState()
 
-
-    val token by usersViewModel.token.collectAsState(initial = "")
-
-
-    val studentId by studentViewModel.studentIdd.collectAsState(initial = null)
-
-
     LaunchedEffect(selectedId) {
         selectedId?.let { companyViewModel.fetchPublicationById(it) }
     }
 
-    val publication by companyViewModel.publicationDetail.collectAsState()
-    LaunchedEffect(Unit) {
-
-    }
-
     val publicationDetail by companyViewModel.publicationDetail.collectAsState()
+
+    // Obtener token y studentId
+    val token by usersViewModel.token.collectAsState(initial = null)
+    val studentId by studentViewModel.studentIdd.collectAsState(initial = null)
+
+    // Observar la lista de CVs
+    val cvList by studentViewModel.cvlista.collectAsState(initial = emptyList())
+
+    // Cargar lista de CVs cuando token o studentId cambien
+    LaunchedEffect(token, studentId) {
+        if (!token.isNullOrEmpty() && studentId != null) {
+            studentViewModel.fetchCvList(token!!, studentId!!)
+        }
+    }
 
     Scaffold(
         bottomBar = {
@@ -98,14 +98,13 @@ fun IntershipScreen(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                val companyName by companyViewModel.companyName.collectAsState()
+                val companyName by companyViewModel.companyNamek.collectAsState()
                 Text(
                     text = companyName.orEmpty(),
                     color = walterWhite,
                     fontSize = 29.sp
                 )
             }
-
 
             Box(
                 modifier = Modifier
@@ -119,16 +118,15 @@ fun IntershipScreen(
                     contentScale = ContentScale.FillBounds
                 )
 
-
                 Button(
                     onClick = {
-                        token?.let { t ->
-                            studentId?.let { id ->
-                                studentViewModel.fetchCvList(t, id)
-                                navController.navigate(NavRoutes.RequestScreen.ROUTE)
-                            }
+                        if (cvList.isEmpty()) {
+                            // No hay CV, navegar a pantalla de edición para crear uno
+                            navController.navigate(NavRoutes.EditUCVScreen.ROUTE)
+                        } else {
+                            // Hay CVs, navegar a pantalla de solicitud
+                            navController.navigate(NavRoutes.RequestScreen.ROUTE)
                         }
-                               Log.e("IntershipScreen", "Falta token o studentId")
                     },
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
@@ -136,10 +134,13 @@ fun IntershipScreen(
                         .height(60.dp)
                         .width(180.dp),
                     shape = RoundedCornerShape(24.dp)
-                )  {
-                    Text(text = stringResource(R.string.ApplyButtonText), fontSize = 18.sp, modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp))
+                ) {
+                    Text(
+                        text = stringResource(R.string.ApplyButtonText),
+                        fontSize = 18.sp,
+                        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+                    )
                 }
-
             }
         }
     }

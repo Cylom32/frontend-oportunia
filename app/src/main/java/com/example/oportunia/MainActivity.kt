@@ -124,7 +124,8 @@ fun MainScreen(
                         currentRoute == NavRoutes.RegisterCredentialsScreen.ROUTE ||
                         currentRoute == NavRoutes.EditInformationCompanyScreen.ROUTE ||
                         currentRoute == NavRoutes.GridPublicationsCompany.ROUTE ||
-                        currentRoute == NavRoutes.PublicationDetailScreen.ROUTE
+                        currentRoute == NavRoutes.PublicationDetailScreen.ROUTE ||
+                        currentRoute == NavRoutes.RequestScreen.ROUTE
 
             // Rutas donde se debe mostrar la barra de empresa
             val mostrarBarraCompany =

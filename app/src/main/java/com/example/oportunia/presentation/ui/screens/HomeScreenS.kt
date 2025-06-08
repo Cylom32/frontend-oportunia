@@ -514,11 +514,26 @@ fun ImageScroll(
                     AsyncImage(
                         model = images[page],
                         contentDescription = "Publicación #${page + 1}",
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+//                            .clickable {
+//                                val publicationId = publications[page].id
+//                                val companyId = publications[page].company.idCompany
+//
+//
+//                                // Asumo que PublicationFilterDTO tiene un ID
+//                                // Seteas el id seleccionado en tu ViewModel para que IntershipScreen lo use
+//                                companyViewModel.fetchCompanyWithNetworksk(companyId)
+//                                companyViewModel.fetchPublicationById(publicationId)
+//                                // Navegas a Intershipcreen
+//                                navController.navigate(NavRoutes.IntershipScreen.ROUTE)
+//                            }
+                                ,
                         contentScale = ContentScale.Crop
                     )
 
-                    // LOGO CON CÍRCULO GIRANDO
+                    // --- El resto sin cambios ---
+
                     val infiniteTransition = rememberInfiniteTransition()
                     val rotationAngle by infiniteTransition.animateFloat(
                         initialValue = 0f,
@@ -594,6 +609,7 @@ fun ImageScroll(
                     }
                 }
             }
+
         }
 
         PullRefreshIndicator(

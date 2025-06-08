@@ -3,6 +3,7 @@ package com.example.oportunia.presentation.ui.screens
 import androidx.compose.runtime.Composable
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -253,6 +254,11 @@ fun RequestScreen(
                             val studId   = studentId ?: return@Button
                             val inboxId  = companyViewModel.inboxByCompany.value?.idInbox ?: return@Button
 
+                            Log.d("SendMessageDebug", "rawToken: $rawToken")
+                            Log.d("SendMessageDebug", "mensaje: $mensaje")
+                            Log.d("SendMessageDebug", "selectedCvFile: $selectedCvFile")
+                            Log.d("SendMessageDebug", "inboxId: $inboxId")
+                            Log.d("SendMessageDebug", "studId: $studId")
                             companyViewModel.sendMessage(
                                 rawToken = rawToken,
                                 detail   = mensaje,
@@ -260,6 +266,7 @@ fun RequestScreen(
                                 idInbox  = inboxId,
                                 idStudent = studId
                             )
+
                         },
                         colors = ButtonDefaults.buttonColors(containerColor = lilRed),
                         modifier = Modifier
