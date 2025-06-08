@@ -4,6 +4,9 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.provider.OpenableColumns
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,6 +16,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,14 +34,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.oportunia.R
 import com.example.oportunia.domain.model.CVResponseS
+import com.example.oportunia.presentation.ui.cloudinary.CloudinaryService
 import com.example.oportunia.presentation.ui.theme.*
 import com.example.oportunia.presentation.ui.viewmodel.StudentState
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
-
-
-
-
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
 
 @Composable
@@ -46,6 +50,7 @@ fun EditUCVScreen(
     usersViewModel: UsersViewModel
 ) {
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     // Token y studentId
     val token by usersViewModel.token.collectAsState()
@@ -59,11 +64,45 @@ fun EditUCVScreen(
     // Estados para agregar CV
     var showAddDialog by remember { mutableStateOf(false) }
     var newCvName by remember { mutableStateOf("") }
-    var newCvLink by remember { mutableStateOf("") }
+    var selectedPdfUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedFileName by remember { mutableStateOf("") }
+    var isUploading by remember { mutableStateOf(false) }
+    var uploadError by remember { mutableStateOf<String?>(null) }
 
     // Estados para detalles
     var selectedCv by remember { mutableStateOf<CVResponseS?>(null) }
     var showDetailsDialog by remember { mutableStateOf(false) }
+
+    // Inicializar Cloudinary Service
+    val cloudinaryService = remember {
+        CloudinaryService(
+            cloudName = "dfffvf0m6", // Reemplaza con tu cloud name
+            uploadPreset = "mi_preset" // Reemplaza con tu upload preset
+        )
+    }
+
+    // Launcher para seleccionar archivos PDF
+    val pdfPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        uri?.let {
+            selectedPdfUri = it
+            // Obtener el nombre del archivo
+            val cursor = context.contentResolver.query(it, null, null, null, null)
+            cursor?.use { c ->
+                if (c.moveToFirst()) {
+                    val nameIndex = c.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (nameIndex != -1) {
+                        selectedFileName = c.getString(nameIndex) ?: "documento.pdf"
+                        // Si el nombre del CV está vacío, usar el nombre del archivo sin extensión
+                        if (newCvName.isBlank()) {
+                            newCvName = selectedFileName.substringBeforeLast(".")
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     // Cargar lista inicial
     LaunchedEffect(token, studentId) {
@@ -91,7 +130,7 @@ fun EditUCVScreen(
                 .background(lilGray),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Encabezado
+            // Encabezado (mismo código anterior)
             Box(
                 modifier = Modifier
                     .height(150.dp)
@@ -221,7 +260,7 @@ fun EditUCVScreen(
                                 .fillMaxWidth()
                                 .clickable {
                                     selectedCv = cv
-                                   // showDetailsDialog = true
+                                    // showDetailsDialog = true
                                 }
                         ) {
                             CVCard(
@@ -243,12 +282,15 @@ fun EditUCVScreen(
             }
         }
 
+        // Diálogo mejorado para agregar CV
         if (showAddDialog) {
             AlertDialog(
                 onDismissRequest = {
                     showAddDialog = false
                     newCvName = ""
-                    newCvLink = ""
+                    selectedPdfUri = null
+                    selectedFileName = ""
+                    uploadError = null
                 },
                 title = {
                     Text(
@@ -257,8 +299,7 @@ fun EditUCVScreen(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                }
-                ,
+                },
                 text = {
                     Column {
                         OutlinedTextField(
@@ -267,49 +308,140 @@ fun EditUCVScreen(
                             label = { Text(text = stringResource(R.string.etiqueta_nombre_archivo)) },
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 4.dp)
+                                .padding(vertical = 4.dp),
+                            enabled = !isUploading
                         )
-                        OutlinedTextField(
-                            value = newCvLink,
-                            onValueChange = { newCvLink = it },
-                            label = { Text(text = stringResource(R.string.link_Archivo)) },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 4.dp)
-                        )
-                    }
-                },
-                confirmButton = {
-                    TextButton(onClick = {
-                        if (!newCvName.isBlank() && !newCvLink.isBlank() && !token.isNullOrBlank()) {
-                            studentId?.let { idEst ->
-                                studentViewModel.createCv(
-                                    token = token!!,
-                                    name = newCvName,
-                                    file = newCvLink,
-                                    studentId = idEst
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        // Botón para seleccionar archivo PDF
+                        Button(
+                            onClick = {
+                                pdfPickerLauncher.launch("application/pdf")
+                            },
+                            enabled = !isUploading,
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = mintGreen)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Upload,
+                                contentDescription = "Seleccionar PDF"
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = if (selectedFileName.isNotEmpty())
+                                    "Archivo: $selectedFileName"
+                                else
+                                    "Seleccionar PDF"
+                            )
+                        }
+
+                        // Mostrar progreso de subida
+                        if (isUploading) {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(20.dp),
+                                    color = mintGreen
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "Subiendo archivo...",
+                                    fontSize = 14.sp,
+                                    color = Color.Gray
                                 )
                             }
                         }
-                        showAddDialog = false
-                        newCvName = ""
-                        newCvLink = ""
-                    }) {
+
+                        // Mostrar error si ocurre
+                        uploadError?.let { error ->
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Error: $error",
+                                color = Color.Red,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+                },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            if (!newCvName.isBlank() && selectedPdfUri != null && !token.isNullOrBlank()) {
+                                coroutineScope.launch {
+                                    isUploading = true
+                                    uploadError = null
+
+                                    try {
+                                        // Convertir URI a File temporal
+                                        val inputStream = context.contentResolver.openInputStream(selectedPdfUri!!)
+                                        val tempFile = File(context.cacheDir, selectedFileName)
+
+                                        inputStream?.use { input ->
+                                            FileOutputStream(tempFile).use { output ->
+                                                input.copyTo(output)
+                                            }
+                                        }
+
+                                        // Subir a Cloudinary
+                                        val cloudinaryUrl = cloudinaryService.uploadPdf(tempFile)
+
+                                        if (cloudinaryUrl != null) {
+                                            // Crear CV con la URL de Cloudinary
+                                            studentId?.let { idEst ->
+                                                studentViewModel.createCv(
+                                                    token = token!!,
+                                                    name = newCvName,
+                                                    file = cloudinaryUrl,
+                                                    studentId = idEst
+                                                )
+                                            }
+
+                                            // Limpiar archivo temporal
+                                            tempFile.delete()
+
+                                            // Cerrar diálogo
+                                            showAddDialog = false
+                                            newCvName = ""
+                                            selectedPdfUri = null
+                                            selectedFileName = ""
+                                        } else {
+                                            uploadError = "Error al subir el archivo"
+                                        }
+                                    } catch (e: Exception) {
+                                        uploadError = "Error: ${e.message}"
+                                    } finally {
+                                        isUploading = false
+                                    }
+                                }
+                            }
+                        },
+                        enabled = !newCvName.isBlank() && selectedPdfUri != null && !isUploading
+                    ) {
                         Text(text = stringResource(R.string.Guardar))
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = {
-                        showAddDialog = false
-                        newCvName = ""
-                        newCvLink = ""
-                    }) {
+                    TextButton(
+                        onClick = {
+                            showAddDialog = false
+                            newCvName = ""
+                            selectedPdfUri = null
+                            selectedFileName = ""
+                            uploadError = null
+                        },
+                        enabled = !isUploading
+                    ) {
                         Text(text = stringResource(R.string.Cancelar))
                     }
                 }
             )
         }
 
+        // Diálogo de detalles (mismo código anterior)
         if (showDetailsDialog && selectedCv != null) {
             AlertDialog(
                 onDismissRequest = {
@@ -347,7 +479,6 @@ fun EditUCVScreen(
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = stringResource(R.string.etiqueta_fecha_envio))
                         Spacer(modifier = Modifier.height(4.dp))
-
                     }
                 }
             )
@@ -355,6 +486,7 @@ fun EditUCVScreen(
     }
 }
 
+// CVCard component permanece igual
 @Composable
 fun CVCard(
     fileName: String,
