@@ -530,7 +530,7 @@ fun CVCard(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = filePath,
+                    text = stringResource(R.string.ver_pdf),
                     fontSize = 14.sp,
                     color = Color(0xFF1E88E5),
                     modifier = Modifier.clickable {

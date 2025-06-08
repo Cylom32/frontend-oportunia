@@ -125,6 +125,8 @@
 
     <string name="select_language">Seleziona la lingua</string>
     <string name="imagen_publicacion">Immagine della pubblicazione</string>
+    <string name="ver_pdf">Visualizza PDF</string>
+
 
 
 </resources>

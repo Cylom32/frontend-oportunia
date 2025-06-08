@@ -186,21 +186,21 @@ fun RequestScreen(
                                                         fontSize = (screenWidth.value * 0.04).sp,
                                                         color = Color.Black
                                                     )
-                                                    Text(
-                                                        text = cv.file,
-                                                        fontSize = (screenWidth.value * 0.03).sp,
-                                                        color = Color.Blue,
-                                                        modifier = Modifier
-                                                            .padding(top = 4.dp)
-                                                            .clickable {
-                                                                val intent = Intent(Intent.ACTION_VIEW).apply {
-                                                                    data = Uri.parse(cv.file)
-                                                                }
-                                                                if (intent.resolveActivity(context.packageManager) != null) {
-                                                                    context.startActivity(intent)
-                                                                }
-                                                            }
-                                                    )
+//                                                    Text(
+//                                                        text = cv.file,
+//                                                        fontSize = (screenWidth.value * 0.03).sp,
+//                                                        color = Color.Blue,
+//                                                        modifier = Modifier
+//                                                            .padding(top = 4.dp)
+//                                                            .clickable {
+//                                                                val intent = Intent(Intent.ACTION_VIEW).apply {
+//                                                                    data = Uri.parse(cv.file)
+//                                                                }
+//                                                                if (intent.resolveActivity(context.packageManager) != null) {
+//                                                                    context.startActivity(intent)
+//                                                                }
+//                                                            }
+//                                                    )
                                                 }
 
 

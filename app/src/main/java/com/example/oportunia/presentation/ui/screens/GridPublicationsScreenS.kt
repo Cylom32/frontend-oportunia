@@ -156,7 +156,7 @@ fun GridPublicationsScreenS(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(100.dp),
-                                contentScale = ContentScale.FillBounds
+                                contentScale = ContentScale.Crop
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Text(
