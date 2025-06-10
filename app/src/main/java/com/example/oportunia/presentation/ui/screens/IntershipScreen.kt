@@ -51,7 +51,16 @@ fun IntershipScreen(
     val selectedId by companyViewModel.selectedPublicationId.collectAsState()
 
     LaunchedEffect(selectedId) {
-        selectedId?.let { companyViewModel.fetchPublicationById(it) }
+        selectedId?.let {
+            companyViewModel.fetchPublicationById(it)
+            // AQUÍ AGREGAMOS: También obtener el inbox de la compañía de esta publicación
+            companyViewModel.publicationDetail.value?.let { publication ->
+                val companyId = publication.company.idCompany
+                if (companyId != null) {
+                    companyViewModel.fetchInboxByCompany(companyId)
+                } // Asumiendo que existe este método
+            }
+        }
     }
 
     val publicationDetail by companyViewModel.publicationDetail.collectAsState()
@@ -67,6 +76,14 @@ fun IntershipScreen(
     LaunchedEffect(token, studentId) {
         if (!token.isNullOrEmpty() && studentId != null) {
             studentViewModel.fetchCvList(token!!, studentId!!)
+        }
+    }
+
+    // NUEVO: Cargar inbox cuando tengamos el detalle de la publicación
+    LaunchedEffect(publicationDetail) {
+        publicationDetail?.let { publication ->
+            val companyId = publication.company.idCompany
+            companyId?.let { companyViewModel.fetchInboxByCompany(it) }
         }
     }
 

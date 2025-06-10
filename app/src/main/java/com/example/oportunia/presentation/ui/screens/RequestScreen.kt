@@ -67,14 +67,7 @@ fun RequestScreen(
         val context = LocalContext.current
 
         Scaffold(
-            bottomBar = {
-                BottomNavigationBar(
-                    selectedScreen = NavRoutes.RequestScreen.ROUTE,
-                    onScreenSelected = { route ->
-                        navController.navigate(route)
-                    }
-                )
-            }
+
         ) { innerPadding ->
             Surface(
                 modifier = Modifier
@@ -145,25 +138,6 @@ fun RequestScreen(
 
 
 
-//                                                Text(
-//                                                    text = displayName,
-//                                                    fontSize = (screenWidth.value * 0.04).sp,
-//                                                    modifier = Modifier
-//                                                        .clickable {
-//                                                            if (cv.file.isNotBlank()) {
-//                                                                val intent = Intent(Intent.ACTION_VIEW).apply {
-//                                                                    data = Uri.parse(cv.file)
-//                                                                }
-//                                                                if (intent.resolveActivity(context.packageManager) != null) {
-//                                                                    context.startActivity(intent)
-//                                                                }
-//                                                            }
-//                                                            showDialog = false
-//                                                            selectedCvFile = cv.file
-//                                                        }
-//                                                        .padding(start = 4.dp)
-//                                                )
-//
 
 
 
@@ -187,21 +161,7 @@ fun RequestScreen(
                                                         fontSize = (screenWidth.value * 0.04).sp,
                                                         color = Color.Black
                                                     )
-//                                                    Text(
-//                                                        text = cv.file,
-//                                                        fontSize = (screenWidth.value * 0.03).sp,
-//                                                        color = Color.Blue,
-//                                                        modifier = Modifier
-//                                                            .padding(top = 4.dp)
-//                                                            .clickable {
-//                                                                val intent = Intent(Intent.ACTION_VIEW).apply {
-//                                                                    data = Uri.parse(cv.file)
-//                                                                }
-//                                                                if (intent.resolveActivity(context.packageManager) != null) {
-//                                                                    context.startActivity(intent)
-//                                                                }
-//                                                            }
-//                                                    )
+
                                                 }
 
 
@@ -287,26 +247,32 @@ fun RequestScreen(
             // 4) Si el envío fue exitoso, mostramos un AlertDialog con OK
             // ————————————————————————————————————————————————————
             val sendSuccess by companyViewModel.sendSuccess.collectAsState()
+
             if (sendSuccess == true) {
+                // Mostrar AlertDialog
                 AlertDialog(
-                    onDismissRequest = {
-                        companyViewModel.clearSendStatus()
-                        navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
-                    },
+                    onDismissRequest = { /* Evita que el usuario lo cierre manualmente */ },
                     title = { Text(text = stringResource(R.string.etiqueta_exito_mensaje)) },
                     text = { Text(text = stringResource(R.string.etiqueta_enviado_exitosamente)) },
                     confirmButton = {
-                        TextButton(
-                            onClick = {
-                                companyViewModel.clearSendStatus()
-                                navController.navigate(NavRoutes.GridPublicationsScreenS.ROUTE)
-                            }
-                        ) {
-                            Text(stringResource(R.string.etiqueta_ok))
-                        }
+                        // No mostramos botón, navegación será automática
                     }
                 )
+
+                // Lanzar navegación después de un retardo
+                LaunchedEffect(Unit) {
+                    kotlinx.coroutines.delay(1000L) // Espera 2 segundos
+                    companyViewModel.clearSendStatus()
+                    navController.navigate(NavRoutes.HomeScreenS.ROUTE) {
+                        popUpTo(NavRoutes.HomeScreenS.ROUTE) { inclusive = true }
+                    }
+                }
             }
+
+
+
+
+
         }
     }
 }

@@ -238,6 +238,13 @@ class CompanyViewModel @Inject constructor(
             }
     }
 
+
+
+
+
+
+
+
 ///////////////////////////////  -------------  para obtener la EL IBOX SEGUN ID COMPANY   --------  ///////////////////////
 
 
@@ -666,6 +673,12 @@ private val _sendSuccess = MutableStateFlow<Boolean?>(null)
 
 
 
+// Agregar estas funciones a tu CompanyViewModel
+
+    // Función para guardar el nombre de la compañía cuando se hace click en una publicación
+    fun setCompanyName(companyName: String) {
+        _companyNamek.value = companyName
+    }
 
 
 

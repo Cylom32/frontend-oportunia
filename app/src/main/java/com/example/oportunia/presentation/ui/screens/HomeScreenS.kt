@@ -516,18 +516,22 @@ fun ImageScroll(
                         contentDescription = "Publicación #${page + 1}",
                         modifier = Modifier
                             .fillMaxSize()
-//                            .clickable {
-//                                val publicationId = publications[page].id
-//                                val companyId = publications[page].company.idCompany
-//
-//
-//                                // Asumo que PublicationFilterDTO tiene un ID
-//                                // Seteas el id seleccionado en tu ViewModel para que IntershipScreen lo use
-//                                companyViewModel.fetchCompanyWithNetworksk(companyId)
-//                                companyViewModel.fetchPublicationById(publicationId)
-//                                // Navegas a Intershipcreen
-//                                navController.navigate(NavRoutes.IntershipScreen.ROUTE)
-//                            }
+                            .clickable {
+                                // Aquí es donde agregamos la funcionalidad de click
+                                val publicationId = publications[page].id
+                                val companyName = publications[page].company.companyName
+
+                                // Guardar el ID de la publicación seleccionada
+                                companyViewModel.selectPublication(publicationId)
+
+                                // Guardar el nombre de la compañía
+                                companyViewModel.setCompanyName(companyName)
+
+                                // Navegar a IntershipScreen
+                                navController.navigate(NavRoutes.IntershipScreen.ROUTE)
+
+                                Log.d("ImageScroll", "Publicación clickeada → id=$publicationId, companyName=$companyName")
+                            }
                                 ,
                         contentScale = ContentScale.Crop
                     )
