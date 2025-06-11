@@ -292,7 +292,7 @@ fun FilterPopup(
                 )
                 onDismiss()
             }) {
-                Text( stringResource(R.string.boton_cerrar_dialogo))
+                Text( stringResource(R.string.ApplyButtonText))
             }
         }
     )
