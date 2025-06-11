@@ -127,4 +127,11 @@
     <string name="ver_pdf">View PDF</string>
 
 
+    <string name="pasantia">Internship</string>
+    <string name="inciar">Sign in</string>
+    <string name="cerrar_sesion">Sign out</string>
+    <string name="desliza">Press again to exit</string>
+    <string name="titulo_solicitudes_recibidas">Received requests</string>
+
+
 </resources>

@@ -128,5 +128,12 @@
     <string name="ver_pdf">Visualizza PDF</string>
 
 
+    <string name="pasantia">Stage</string>
+    <string name="inciar">Accedi</string>
+    <string name="cerrar_sesion">Disconnetti</string>
+    <string name="desliza">Premi di nuovo per uscire</string>
+    <string name="titulo_solicitudes_recibidas">Richieste ricevute</string>
+
+
 
 </resources>

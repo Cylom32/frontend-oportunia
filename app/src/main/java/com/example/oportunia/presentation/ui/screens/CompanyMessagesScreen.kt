@@ -83,7 +83,7 @@ fun CompanyMessagesScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = stringResource(R.string.titulo_solicitudes_enviadas),
+                        text = stringResource(R.string.titulo_solicitudes_recibidas),
                         color = walterWhite,
                         fontSize = (screenWidth.value * 0.07).sp
                     )

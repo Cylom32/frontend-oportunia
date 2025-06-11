@@ -112,7 +112,7 @@ fun StudentInformationSettings(
                     .shadow(8.dp, RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
                     .background(
                         brush = androidx.compose.ui.graphics.Brush.verticalGradient(
-                            colors = listOf(Color(0xFF8D99AE), Color(0xFF8D99AE))
+                            colors = listOf(Color(0xFFFFB574), Color(0xFFFFB6C1))
                         ),
                         shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
                     ),

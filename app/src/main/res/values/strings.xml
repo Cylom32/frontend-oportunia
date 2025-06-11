@@ -64,10 +64,12 @@
     <!-- SettingsScreen-->
     <string name="account_text">Cuenta</string>
     <string name="language_text">Idioma</string>
-    <string name="logout_text">Logout</string>
+    <string name="logout_text">Cerrar sesión</string>
 
     <!-- SentRequestScreen -->
     <string name="titulo_solicitudes_enviadas">Solicitudes enviadas</string>
+
+    <string name="titulo_solicitudes_recibidas">Solicitudes recibidas</string>
     <string name="titulo_detalles_del_mensaje">Detalles del mensaje</string>
     <string name="etiqueta_detalle_completo">• Detalle completo:</string>
     <string name="etiqueta_nombre_archivo">• Nombre de archivo:</string>
@@ -206,6 +208,10 @@
 
     <string name="imagen_publicacion">Imagen de la publicación</string>
     <string name="ver_pdf">Ver PDF</string>
+    <string name="pasantia">Pasantía</string>
+    <string name="inciar">Iniciar sesión</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="desliza">Presiona nuevamente para salir</string>
 
 
 

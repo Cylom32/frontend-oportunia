@@ -115,9 +115,9 @@ fun IntershipScreen(
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                val companyName by companyViewModel.companyNamek.collectAsState()
+                val companyName by companyViewModel.companyName.collectAsState()
                 Text(
-                    text = companyName.orEmpty(),
+                    text = stringResource(R.string.pasantia),
                     color = walterWhite,
                     fontSize = 29.sp
                 )

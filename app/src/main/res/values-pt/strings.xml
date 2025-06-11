@@ -127,4 +127,12 @@
     <string name="ver_pdf">Ver PDF</string>
 
 
+
+    <string name="pasantia">Estágio</string>
+    <string name="inciar">Iniciar sessão</string>
+    <string name="cerrar_sesion">Encerrar sessão</string>
+    <string name="desliza">Pressione novamente para sair</string>
+    <string name="titulo_solicitudes_recibidas">Solicitações recebidas</string>
+
+
 </resources>

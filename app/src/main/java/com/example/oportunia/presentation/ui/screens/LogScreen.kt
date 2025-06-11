@@ -235,7 +235,7 @@ fun LogScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "Login",
+                            text = stringResource(R.string.inciar),
                             fontSize = 24.sp,
                             color = Color.White,
                             modifier = Modifier
