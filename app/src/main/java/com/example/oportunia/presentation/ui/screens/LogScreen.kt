@@ -260,13 +260,19 @@ fun LogScreen(
                                                                 userId
                                                             ) { found ->
                                                                 if (found) {
-                                                                    navController.navigate(NavRoutes.HomeScreenS.ROUTE)
+                                                                    navController.navigate(NavRoutes.HomeScreenS.ROUTE) {
+                                                                        popUpTo(0) { inclusive = true }
+                                                                        launchSingleTop = true
+                                                                    }
                                                                 } else {
                                                                     companyViewModel.setTokenC(token)
                                                                     companyViewModel.fetchCompanyByUserC(userId)
                                                                     companyViewModel.fetchUserCompanyById()
                                                                     companyViewModel.fetchCompanyByUserC(userId)
-                                                                    navController.navigate(NavRoutes.CompanyInfoScreenForCompany.ROUTE)
+                                                                    navController.navigate(NavRoutes.CompanyInfoScreenForCompany.ROUTE) {
+                                                                        popUpTo(0) { inclusive = true }
+                                                                        launchSingleTop = true
+                                                                    }
                                                                 }
                                                             }
                                                         } else {
@@ -301,15 +307,7 @@ fun LogScreen(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-//                            Text(
-//                                text = stringResource(id = R.string.forgotPassword),
-//                                fontSize = 17.sp,
-//                                color = Color.White,
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .padding(bottom = 5.dp),
-//                                textAlign = TextAlign.Center
-//                            )
+
 
                             Text(
                                 text = stringResource(id = R.string.craeteAccount),

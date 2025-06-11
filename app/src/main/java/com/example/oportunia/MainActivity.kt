@@ -16,7 +16,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,6 +35,7 @@ import com.example.oportunia.presentation.ui.viewmodel.LanguageViewModel
 import com.example.oportunia.presentation.ui.viewmodel.StudentViewModel
 import com.example.oportunia.presentation.ui.viewmodel.UsersViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -91,6 +94,9 @@ class MainActivity : ComponentActivity() {
 
 }
 
+
+
+
 @Composable
 fun MainScreen(
     usersViewModel: UsersViewModel,
@@ -102,12 +108,10 @@ fun MainScreen(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: NavRoutes.Log.ROUTE
 
-
-    // Observa si necesita recrear la actividad
-    val shouldRecreate by languageViewModel.shouldRecreate.collectAsState()
     val context = LocalContext.current
+    val shouldRecreate by languageViewModel.shouldRecreate.collectAsState()
 
-    // Efecto para recrear la actividad cuando cambie el idioma
+    // Efecto para recrear actividad si cambia idioma
     LaunchedEffect(shouldRecreate) {
         if (shouldRecreate && context is Activity) {
             languageViewModel.onActivityRecreated()
@@ -115,11 +119,31 @@ fun MainScreen(
         }
     }
 
+    // → CONTROL DE BOTÓN ATRÁS PARA SALIR CON DOBLE TOQUE
+    var backPressedOnce by remember { mutableStateOf(false) }
+
+
+    val coroutineScope = rememberCoroutineScope()
+
+    if (currentRoute == NavRoutes.HomeScreenS.ROUTE || currentRoute == NavRoutes.CompanyInfoScreenForCompany.ROUTE) {
+        BackHandler {
+            if (backPressedOnce) {
+                (context as? Activity)?.finish()
+            } else {
+                backPressedOnce = true
+                Toast.makeText(context, "Presione nuevamente para salir", Toast.LENGTH_SHORT).show()
+
+                coroutineScope.launch {
+                    kotlinx.coroutines.delay(2000)
+                    backPressedOnce = false
+                }
+            }
+        }
+    }
 
 
     Scaffold(
         bottomBar = {
-            // Rutas donde NO se muestra ninguna barra
             val ocultarBarra =
                 currentRoute == NavRoutes.Log.ROUTE ||
                         currentRoute == NavRoutes.Login.ROUTE ||
@@ -134,22 +158,17 @@ fun MainScreen(
                         currentRoute == NavRoutes.PublicationDetailScreen.ROUTE ||
                         currentRoute == NavRoutes.RequestScreen.ROUTE
 
-            // Rutas donde se debe mostrar la barra de empresa
             val mostrarBarraCompany =
                 currentRoute == NavRoutes.CompanyInfoScreenForCompany.ROUTE ||
                         currentRoute == NavRoutes.CompanyMessagesScreen.ROUTE ||
-                        currentRoute == NavRoutes.SettingScreenCompany.ROUTE //||
-            //  currentRoute == NavRoutes.GridPublicationsCompany.ROUTE
+                        currentRoute == NavRoutes.SettingScreenCompany.ROUTE
 
             when {
-                ocultarBarra -> {
-
-                }
-
+                ocultarBarra -> {}
                 mostrarBarraCompany -> {
                     NavegationBarCompany(
                         selectedScreen = currentRoute,
-                        onScreenSelected = { route: String ->
+                        onScreenSelected = { route ->
                             navController.navigate(route) {
                                 popUpTo(navController.graph.startDestinationId) { saveState = true }
                                 launchSingleTop = true
@@ -158,11 +177,10 @@ fun MainScreen(
                         }
                     )
                 }
-
                 else -> {
                     BottomNavigationBar(
                         selectedScreen = currentRoute,
-                        onScreenSelected = { route: String ->
+                        onScreenSelected = { route ->
                             navController.navigate(route) {
                                 popUpTo(navController.graph.startDestinationId) { saveState = true }
                                 launchSingleTop = true
@@ -180,7 +198,7 @@ fun MainScreen(
             usersViewModel = usersViewModel,
             studentViewModel = studentViewModel,
             companyViewModel = companyViewModel,
-            languageViewModel= languageViewModel
+            languageViewModel = languageViewModel
         )
     }
 }
